@@ -4,7 +4,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from constants import SMILES_COLUMN
+from constants import ADMET_ALL_SMILES_COLUMN
 
 
 def rdkit_tdc_admet_all(
@@ -12,7 +12,7 @@ def rdkit_tdc_admet_all(
 ) -> None:
     """Compute RDKit features for all the Therapeutics Data Commons (TDC) ADMET datasets.
 
-    :param data_dir: A directory containing the downloaded and prepared TDC ADMET data.
+    :param data_dir: A directory containing all the downloaded and prepared TDC ADMET data.
     """
     # Get dataset paths
     data_paths = sorted(data_dir.glob('*.csv'))
@@ -23,7 +23,7 @@ def rdkit_tdc_admet_all(
             'chemfunc', 'save_fingerprints',
             '--data_path', str(data_path),
             '--save_path', str(data_path.with_suffix('.npz')),
-            '--smiles_column', SMILES_COLUMN
+            '--smiles_column', ADMET_ALL_SMILES_COLUMN
         ])
 
 

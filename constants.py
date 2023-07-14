@@ -41,10 +41,20 @@ TOX_DATASET_TO_TYPE = {
     'ClinTox': 'classification'
 }
 DATASET_TO_TYPE = ADME_DATASET_TO_TYPE | TOX_DATASET_TO_TYPE
+DATASET_TO_TYPE_LOWER = {
+    dataset.lower(): dataset_type
+    for dataset, dataset_type in DATASET_TO_TYPE.items()
+}
+DATASET_TYPE_TO_METRICS_COMMAND_LINE = {
+    'classification': ['--metric', 'prc-auc', '--extra_metrics', 'auc'],
+    'regression': ['--metric', 'mae', '--extra_metrics', 'r2']
+}
 DATASET_TO_LABEL_NAMES = {
     'herg_central': ['hERG_inhib'],
     'Tox21': retrieve_label_name_list('Tox21'),
     'ToxCast': retrieve_label_name_list('Toxcast')
 }
 ADMET_GROUP_SEEDS = [1, 2, 3, 4, 5]
-SMILES_COLUMN = 'smiles'
+ADMET_ALL_SMILES_COLUMN = 'smiles'
+ADMET_GROUP_SMILES_COLUMN = 'Drug'
+ADMET_GROUP_TARGET_COLUMN = 'Y'

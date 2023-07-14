@@ -37,12 +37,14 @@ python tdc_admet_all_prepare.py \
 Compute RDKit features in order to train Chemprop-RDKit models (i.e., Chemprop models augmented with 200 molecular features from RDKit).
 
 Compute RDKit features for the TDC ADMET Benchmark Group data.
+
 ```bash
 python rdkit_tdc_admet_group.py \
     --data_dir data/tdc_admet_group
 ```
 
 Compute RDKit features for all TDC ADMET datasets.
+
 ```bash
 python rdkit_tdc_admet_all.py \
     --data_dir data/tdc_admet_all
@@ -50,6 +52,40 @@ python rdkit_tdc_admet_all.py \
 
 
 ## Train Chemprop ADMET predictors
+
+Train Chemprop and Chemprop-RDKit predictors on the ADMET data.
+
+Train Chemprop ADMET predictors on the TDC ADMET Benchmark Group data.
+```bash
+python train_tdc_admet_group.py \
+    --data_dir data/tdc_admet_group \
+    --save_dir models/tdc_admet_group \
+    --model_type chemprop
+```
+
+Train Chemprop-RDKit ADMET predictors on the TDC ADMET Benchmark Group data.
+```bash
+python train_tdc_admet_group.py \
+    --data_dir data/tdc_admet_group \
+    --save_dir models/tdc_admet_group \
+    --model_type chemprop_rdkit
+```
+
+Train Chemprop ADMET predictors on all the TDC ADMET data.
+```bash
+python train_tdc_admet_all.py \
+    --data_dir data/tdc_admet_all \
+    --save_dir models/tdc_admet_all \
+    --model_type chemprop
+```
+
+Train Chemprop-RDKit ADMET predictors on all the TDC ADMET data.
+```bash
+python train_tdc_admet_all.py \
+    --data_dir data/tdc_admet_all \
+    --save_dir models/tdc_admet_all \
+    --model_type chemprop_rdkit
+```
 
 
 ## Make predictions with Chemprop ADMET predictors

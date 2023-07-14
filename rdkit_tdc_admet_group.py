@@ -4,7 +4,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from constants import ADMET_GROUP_SEEDS
+from constants import ADMET_GROUP_SEEDS, ADMET_GROUP_SMILES_COLUMN
 
 
 def rdkit_tdc_admet_group(
@@ -28,7 +28,7 @@ def rdkit_tdc_admet_group(
                     'chemfunc', 'save_fingerprints',
                     '--data_path', str(data_path),
                     '--save_path', str(data_path.with_suffix('.npz')),
-                    '--smiles_column', 'Drug'
+                    '--smiles_column', ADMET_GROUP_SMILES_COLUMN
                 ])
 
         # Compute features for test set
@@ -36,7 +36,7 @@ def rdkit_tdc_admet_group(
             'chemfunc', 'save_fingerprints',
             '--data_path', str(data_dir / 'test.csv'),
             '--save_path', str(data_dir / 'test.npz'),
-            '--smiles_column', 'Drug'
+            '--smiles_column', ADMET_GROUP_SMILES_COLUMN
         ])
 
 

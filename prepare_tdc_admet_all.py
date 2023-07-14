@@ -7,8 +7,10 @@ from tqdm import tqdm
 
 from constants import (
     ADME_DATASET_TO_TYPE,
+    ADMET_GROUP_SMILES_COLUMN,
+    ADMET_GROUP_TARGET_COLUMN,
     DATASET_TO_LABEL_NAMES,
-    SMILES_COLUMN,
+    ADMET_ALL_SMILES_COLUMN,
     TOX_DATASET_TO_TYPE
 )
 
@@ -47,7 +49,7 @@ def tdc_admet_all_prepare(
         # Get data for each label
         for label_name in tqdm(label_names, desc='Labels'):
             label_data = data_class(name=tdc_data_name, label_name=label_name, path=save_dir).get_data()
-            data.append(dict(zip(label_data['Drug'].tolist(), label_data['Y'].tolist())))
+            data.append(dict(zip(label_data[ADMET_GROUP_SMILES_COLUMN].tolist(), label_data[ADMET_GROUP_TARGET_COLUMN].tolist())))
 
         # Get all SMILES
         smiles = sorted(set.union(*[set(smiles_to_target) for smiles_to_target in data]))
@@ -58,7 +60,7 @@ def tdc_admet_all_prepare(
 
         # Create DataFrame with all SMILES and targets
         data = pd.DataFrame({
-            SMILES_COLUMN: smiles
+            ADMET_ALL_SMILES_COLUMN: smiles
         } | {
             label_name: [smiles_to_target.get(smiles, None) for smiles in smiles]
             for label_name, smiles_to_target in zip(label_names, data)
