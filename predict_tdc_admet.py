@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 
 # TODO: make this faster by doing everything in RAM rather than through CSV files
+# TODO: option to choose certain models to predict with
 
 
 def predict_tdc_admet(
@@ -31,7 +32,7 @@ def predict_tdc_admet(
     # Compute RDKit features if needed
     if model_type == 'chemprop_rdkit':
         subprocess.run([
-            'chemfunc', 'save_features',
+            'chemfunc', 'save_fingerprints',
             '--data_path', str(data_path),
             '--save_path', str(data_path.with_suffix('.npz')),
             '--smiles_column', smiles_column
