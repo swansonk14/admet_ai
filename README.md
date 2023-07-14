@@ -90,3 +90,44 @@ python train_tdc_admet_all.py \
 
 ## Make predictions with Chemprop ADMET predictors
 
+The instructions below illustrate how to make predictions with trained Chemprop ADMET predictors. The instructions assume that you have a file called `data.csv` which contains SMILES strings in a column called `smiles`.
+
+Make predictions with Chemprop ADMET predictors trained on the TDC ADMET Benchmark Group data.
+```bash
+python predict_tdc_admet.py \
+    --data_path data.csv \
+    --save_path preds.csv \
+    --model_dir models/tdc_admet_group/chemprop \
+    --model_type chemprop \
+    --smiles_column smiles
+```
+
+Make predictions with Chemprop-RDKit ADMET predictors trained on the TDC ADMET Benchmark Group data.
+```bash
+python predict_tdc_admet.py \
+    --data_path data.csv \
+    --save_path preds.csv \
+    --model_dir models/tdc_admet_group/chemprop_rdkit \
+    --model_type chemprop_rdkit \
+    --smiles_column smiles
+```
+
+Make predictions with Chemprop ADMET predictors trained on all the TDC ADMET data.
+```bash
+python predict_tdc_admet.py \
+    --data_path data.csv \
+    --save_path preds.csv \
+    --model_dir models/tdc_admet_all/chemprop \
+    --model_type chemprop \
+    --smiles_column smiles
+```
+
+Make predictions with Chemprop-RDKit ADMET predictors trained on all the TDC ADMET data.
+```bash
+python predict_tdc_admet.py \
+    --data_path data.csv \
+    --save_path preds.csv \
+    --model_dir models/tdc_admet_all/chemprop_rdkit \
+    --model_type chemprop_rdkit \
+    --smiles_column smiles
+```
