@@ -8,6 +8,9 @@ import pandas as pd
 from tqdm import tqdm
 
 
+# TODO: make this faster by doing everything in RAM rather than through CSV files
+
+
 def predict_tdc_admet(
         data_path: Path,
         save_path: Path,
@@ -48,7 +51,7 @@ def predict_tdc_admet(
                 '--test_path', str(data_path),
                 '--checkpoint_dir', str(model_dir),
                 '--preds_path', temp_file.name,
-                '--quiet'
+                '--smiles_column', smiles_column,
             ]
 
             if model_type == 'chemprop_rdkit':
@@ -66,8 +69,8 @@ def predict_tdc_admet(
             if preds is None:
                 preds = new_preds
             else:
-                new_columns = new_preds.columns.difference(preds.columns)
-                preds.merge(new_preds[new_columns])
+                new_columns = new_preds.columns.difference(preds.columns).tolist()
+                preds = preds.merge(new_preds[[smiles_column] + new_columns])
 
     # Save predictions
     save_path.parent.mkdir(parents=True, exist_ok=True)
