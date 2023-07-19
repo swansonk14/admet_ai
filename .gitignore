@@ -166,3 +166,6 @@ cython_debug/
 # Slurm
 *.out
 *.err
+
+# Mac
+.DS_Store

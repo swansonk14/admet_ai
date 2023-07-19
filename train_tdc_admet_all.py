@@ -40,6 +40,7 @@ def train_tdc_admet_all(
             '--smiles_column', ADMET_ALL_SMILES_COLUMN,
             *DATASET_TYPE_TO_METRICS_COMMAND_LINE[dataset_type],
             '--num_folds', str(num_folds),
+            '--split_type', 'cv',
             '--save_dir', save_dir / model_type / data_name,
             '--save_preds',
             '--quiet'
