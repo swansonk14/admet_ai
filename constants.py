@@ -58,3 +58,131 @@ ADMET_GROUP_SEEDS = [1, 2, 3, 4, 5]
 ADMET_ALL_SMILES_COLUMN = 'smiles'
 ADMET_GROUP_SMILES_COLUMN = 'Drug'
 ADMET_GROUP_TARGET_COLUMN = 'Y'
+ADMET_GROUPS = ['absorption', 'distribution', 'metabolism', 'excretion', 'toxicity']
+ADMET_PLOTTING_DETAILS = {
+    'absorption': {
+        'Caco2_Wang': {
+            'lower': 'less permeable',
+            'value': 'permeability',
+            'upper': 'more permeable',
+        },
+        'HIA_Hou': {
+            'lower': 'less likely',
+            'value': 'human intestinal absorption',
+            'upper': 'more likely',
+        },
+        'Bioavailability_Ma': {
+            'lower': 'less likely',
+            'value': 'bioavailability',
+            'upper': 'more likely',
+        },
+        'Lipophilicity_AstraZeneca': {
+            'lower': 'less lipophilic',
+            'value': 'lipophilicity',
+            'upper': 'more lipophilic',
+        },
+        'Solubility_AqSolDB': {
+            'lower': 'less soluble',
+            'value': 'solubility',
+            'upper': 'more soluble',
+        },
+    },
+    'distribution': {
+        'BBB_Martins': {
+            'lower': 'less likely',
+            'value': 'blood-brain barrier penetration',
+            'upper': 'more likely',
+        },
+        'PPBR_AZ': {
+            'lower': 'less bound',
+            'value': 'plasma protein binding',
+            'upper': 'more bound',
+        },
+        'VDss_Lombardo': {
+            'lower': 'smaller volume',
+            'value': 'volume of distribution',
+            'upper': 'larger volume',
+        },
+    },
+    'metabolism': {
+        'CYP2C19_Veith': {
+            'lower': 'less likely',
+            'value': 'CYP P450 2C19 inhibition',
+            'upper': 'more likely',
+        },
+        'CYP2D6_Veith': {
+            'lower': 'less likely',
+            'value': 'CYP P450 2D6 inhibition',
+            'upper': 'more likely',
+        },
+        'CYP3A4_Veith': {
+            'lower': 'less likely',
+            'value': 'CYP P450 3A4 inhibition',
+            'upper': 'more likely',
+        },
+        'CYP1A2_Veith': {
+            'lower': 'less likely',
+            'value': 'CYP P450 1A2 inhibition',
+            'upper': 'more likely',
+        },
+        'CYP2C9_Veith': {
+            'lower': 'less likely',
+            'value': 'CYP P450 2C9 inhibition',
+            'upper': 'more likely',
+        },
+        'CYP2C9_Substrate_CarbonMangels': {
+            'lower': 'less likely',
+            'value': 'CYP P450 2C9 substrate',
+            'upper': 'more likely',
+        },
+        'CYP2D6_Substrate_CarbonMangels': {
+            'lower': 'less likely',
+            'value': 'CYP P450 2D6 substrate',
+            'upper': 'more likely',
+        },
+        'CYP3A4_Substrate_CarbonMangels': {
+            'lower': 'less likely',
+            'value': 'CYP P450 3A4 substrate',
+            'upper': 'more likely',
+        },
+    },
+    'excretion': {
+        'Half_Life_Obach': {
+            'lower': 'longer half-life',
+            'value': 'half life',
+            'upper': 'shorter half-life',
+        },
+        'Clearance_Hepatocyte_AZ': {
+            'lower': 'lower clearance',
+            'value': 'hepatocyte clearance',
+            'upper': 'higher clearance',
+        },
+        'Clearance_Microsome_AZ': {
+            'lower': 'lower clearance',
+            'value': 'microsome clearance',
+            'upper': 'higher clearance',
+        },
+    },
+    'toxicity': {
+        'LD50_Zhu': {
+            'lower': 'less toxic',
+            'value': 'LD50 toxicity',
+            'upper': 'more toxic',
+        },
+        'hERG': {
+            'lower': 'less likely',
+            'value': 'hERG inhibition',
+            'upper': 'more likely',
+        },
+        'AMES': {
+            'lower': 'less likely',
+            'value': 'mutagenicity',
+            'upper': 'more likely',
+        },
+        'DILI': {
+            'lower': 'less likely',
+            'value': 'drug induced liver injury',
+            'upper': 'more likely',
+        },
+    }
+}
