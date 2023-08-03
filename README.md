@@ -10,6 +10,8 @@ Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemp
 4. Install requirements: `pip install -r requirements.txt`
 
 
+TODO: random forest RDKit models
+
 ## TODO: pre-trained models
 
 TODO
@@ -130,4 +132,15 @@ python predict_tdc_admet.py \
     --model_dir models/tdc_admet_all/chemprop_rdkit \
     --model_type chemprop_rdkit \
     --smiles_column smiles
+```
+
+
+## Get approved drugs from DrugBank
+
+Get approved drugs from DrugBank to create a comparison set for Chemprop ADMET predictors.
+
+```bash
+python get_drugbank_approved.py \
+    --data_path data/drugbank.xml \
+    --save_path data/drugbank_approved.csv
 ```
