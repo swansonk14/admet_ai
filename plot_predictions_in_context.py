@@ -40,7 +40,7 @@ def plot_predictions_in_context(
     # Loop over the predicted molecules and plot in context of reference data
     for i, pred in tqdm(preds.iterrows(), total=len(preds)):
         # Create directory for saving plots for the molecule
-        pred_save_dir = save_dir / f"molecule_{i}"
+        pred_save_dir = save_dir / f"molecule_{i + 1}"
         pred_save_dir.mkdir(parents=True, exist_ok=True)
 
         # Plot predictions in context of reference data for each ADMET group

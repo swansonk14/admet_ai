@@ -59,6 +59,7 @@ ADMET_ALL_SMILES_COLUMN = 'smiles'
 ADMET_GROUP_SMILES_COLUMN = 'Drug'
 ADMET_GROUP_TARGET_COLUMN = 'Y'
 ADMET_GROUPS = ['absorption', 'distribution', 'metabolism', 'excretion', 'toxicity']
+# TODO: add the other datasets that are not on the leaderboard
 ADMET_PLOTTING_DETAILS = {
     'absorption': {
         'Caco2_Wang': {
