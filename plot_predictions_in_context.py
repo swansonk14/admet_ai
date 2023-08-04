@@ -8,7 +8,11 @@ import scipy.stats as stats
 import seaborn as sns
 from tqdm import tqdm
 
-from constants import ADMET_GROUPS, ADMET_PLOTTING_DETAILS, DATASET_TO_TYPE
+from constants import (
+    ADMET_GROUPS,
+    ADMET_PLOTTING_DETAILS,
+    LABEL_NAME_TO_TYPE,
+)
 
 
 BLUE = sns.color_palette()[0]
@@ -18,7 +22,7 @@ def plot_predictions_in_context(
     preds_path: Path,
     reference_path: Path,
     save_dir: Path,
-    num_plots_per_row: int = 3,
+    num_plots_per_row: int = 5,
     bins: int = 50,
     alpha: float = 0.5,
     linewidth: int = 2,
@@ -47,8 +51,11 @@ def plot_predictions_in_context(
         for admet_group in ADMET_GROUPS:
             plt.clf()
 
+            # Get all tasks across the datasets in the ADMET group
+            props = ADMET_PLOTTING_DETAILS[admet_group]
+
             # Create subplots with at most num_plots_per_row
-            n_plots = len(ADMET_PLOTTING_DETAILS[admet_group])
+            n_plots = len(props)
             n_rows = math.ceil(n_plots / num_plots_per_row)
             n_cols = min(n_plots, num_plots_per_row)
             fig, axes = plt.subplots(n_rows, n_cols, figsize=(6 * n_cols, 6 * n_rows))
@@ -62,20 +69,17 @@ def plot_predictions_in_context(
                 fig.delaxes(axes[i])
 
             # Plot each property
-            for ax, prop, prop_dict in zip(
-                axes,
-                ADMET_PLOTTING_DETAILS[admet_group],
-                ADMET_PLOTTING_DETAILS[admet_group].values(),
-            ):
+            for ax, prop in zip(axes, props):
                 # Get prediction value
                 prop_pred = pred[prop]
+                prop_dict = props[prop]
 
                 # Compute percentile of prediction in reference data
                 percentile = stats.percentileofscore(reference[prop], prop_pred)
 
                 # Set x-axis label value
                 value = prop_dict["value"]
-                if DATASET_TO_TYPE[prop] == "classification":
+                if LABEL_NAME_TO_TYPE[prop] == "classification":
                     value = r"$\it{probability}$ of " + value
 
                 # PLot histogram of reference data
@@ -90,7 +94,7 @@ def plot_predictions_in_context(
                     color="r",
                     linestyle="--",
                     linewidth=linewidth,
-                    label=f"Molecule (percentile: {percentile:.1f}%)",
+                    label=f"Molecule: {prop_pred:.2f} ({percentile:.1f}%)",
                 )
                 ax.legend()
 
