@@ -65,6 +65,7 @@ ADMET_GROUPS = ["absorption", "distribution", "metabolism", "excretion", "toxici
 # TODO: add the multi-task datasets (Tox21, ToxCast?)
 # TODO: redo herg_central as 1 micromolar regression?
 # TODO: add units for regression datasets
+# TODO: double check interpretation of values
 ADMET_PLOTTING_DETAILS = {
     "absorption": {
         "Caco2_Wang": {
@@ -186,9 +187,9 @@ ADMET_PLOTTING_DETAILS = {
     },
     "toxicity": {
         "LD50_Zhu": {
-            "lower": "less toxic",
+            "lower": "more toxic",
             "value": "LD50 toxicity",
-            "upper": "more toxic",
+            "upper": "less toxic",
         },
         "hERG": {
             "lower": "less likely",
