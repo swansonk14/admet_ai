@@ -1,5 +1,6 @@
 chemfunc==1.0.4
 chemprop==1.5.2
+numpy==1.25.1
 pandas==2.0.3
 PyTDC==0.4.0
 scipy==1.10.1
