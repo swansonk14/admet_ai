@@ -58,9 +58,9 @@ def predict_tdc_admet(
     data_loader = MoleculeDataLoader(
         dataset=MoleculeDataset([
             MoleculeDatapoint(
-                smiles=[smiles],
+                smiles=[smile],
                 features=fingerprint,
-            ) for smiles, fingerprint in zip(smiles, fingerprints)
+            ) for smile, fingerprint in zip(smiles, fingerprints)
         ]),
         num_workers=num_workers,
         shuffle=False

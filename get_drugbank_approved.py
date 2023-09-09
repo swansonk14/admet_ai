@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pandas as pd
+from rdkit import Chem
 from tqdm import tqdm
 
 DRUGBANK_NAMESPACES = {'db': 'http://www.drugbank.ca'}
@@ -24,6 +25,7 @@ def get_approved_smiles_from_drugbank(
 
     approved_smiles = []
     approved_names = []
+    approved_atcs = []
 
     # Loop through drugs to find approved drugs and get their SMILES
     for drug in tqdm(drugs):
@@ -82,11 +84,42 @@ def get_approved_smiles_from_drugbank(
 
         name = names[0].text
 
+        # Get ATC codes list
+        atcs_list = drug.findall('db:atc-codes', DRUGBANK_NAMESPACES)
+
+        # ATC codes list length validation
+        if len(atcs_list) == 0:
+            continue
+        elif len(atcs_list) > 1:
+            raise ValueError('More than one ATC code list found')
+
+        # Get ATC codes
+        atc_codes = atcs_list[0].findall('db:atc-code', DRUGBANK_NAMESPACES)
+
+        # Get unique ATC codes
+        unique_atc_codes = set()
+        for atc_code in atc_codes:
+            atc_levels = atc_code.findall('db:level', DRUGBANK_NAMESPACES)
+
+            if len(atc_levels) != 4:
+                raise ValueError("ATC code does not have 4 levels")
+
+            unique_atc_codes.add(tuple(atc_levels[-i].text for i in range(1, 5)))
+
+        # Add info for approved drug
         approved_smiles.append(smiles)
         approved_names.append(name)
+        approved_atcs.append(sorted(unique_atc_codes))
 
     # Create dataset of approved drugs, drop duplicates, and sort
-    data = pd.DataFrame({'name': approved_names, 'smiles': approved_smiles})
+    data = pd.DataFrame({
+        'name': approved_names,
+        'smiles': approved_smiles,
+        **{
+            f'atc_{i + 1}': [';'.join(atc_code[i] for atc_code in atc_codes) for atc_codes in approved_atcs]
+            for i in range(4)
+        }
+    })
     data.drop_duplicates('smiles', inplace=True)
     data.sort_values('name', inplace=True)
 
