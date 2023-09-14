@@ -10,7 +10,7 @@ Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemp
 4. Install requirements: `pip install -r requirements.txt`
 
 
-## TODO: pre-trained models
+## TODO: Downlading and applying trained models
 
 TODO
 
@@ -36,7 +36,11 @@ python prepare_tdc_admet_all.py \
 
 Create multitask datasets for classification and regression for all the TDC ADMET datasets.
 
-TODO
+```bash
+python merge_tdc_admet_all.py \
+    --data_dir data/tdc_admet_all \
+    --save_dir data/tdc_admet_all_multitask
+```
 
 
 ## Compute RDKit features
