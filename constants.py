@@ -39,7 +39,14 @@ TOX_DATASET_TO_TYPE = {
     "ToxCast": "classification",
     "ClinTox": "classification",
 }
-DATASET_TO_TYPE = ADME_DATASET_TO_TYPE | TOX_DATASET_TO_TYPE
+DATASET_TO_TYPE = (
+    ADME_DATASET_TO_TYPE
+    | TOX_DATASET_TO_TYPE
+    | {
+        "admet_regression": "regression",
+        "admet_classification": "classification",
+    }
+)
 DATASET_TO_TYPE_LOWER = {
     dataset.lower(): dataset_type for dataset, dataset_type in DATASET_TO_TYPE.items()
 }

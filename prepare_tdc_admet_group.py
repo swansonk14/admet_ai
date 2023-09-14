@@ -9,15 +9,13 @@ from tqdm import tqdm
 from constants import ADMET_GROUP_SEEDS
 
 
-def prepare_tdc_admet_group(
-        save_dir: Path
-) -> None:
+def prepare_tdc_admet_group(save_dir: Path) -> None:
     """Download and prepare the Therapeutics Data Commons (TDC) ADMET Benchmark Group datasets.
 
     :param save_dir: A directory where the TDC AMDET Benchmark Group data will be saved.
     """
     # Get ADMET Benchmark Group dataset names from TDC
-    data_names = utils.retrieve_benchmark_names('ADMET_Group')
+    data_names = utils.retrieve_benchmark_names("ADMET_Group")
 
     # Download/access the ADMET group
     save_dir.mkdir(parents=True, exist_ok=True)
@@ -29,37 +27,39 @@ def prepare_tdc_admet_group(
         benchmark = group.get(data_name)
 
         # Get name
-        name = benchmark['name']
+        name = benchmark["name"]
 
         # Make data directory
         benchmark_dir = save_dir / name
         benchmark_dir.mkdir(parents=True, exist_ok=True)
 
         # Split data into train_val and test
-        train_val, test = benchmark['train_val'], benchmark['test']
+        train_val, test = benchmark["train_val"], benchmark["test"]
 
         # Save test data
-        test.to_csv(benchmark_dir / 'test.csv')
+        test.to_csv(benchmark_dir / "test.csv")
 
         # Split train_val into 5-fold CV
         for seed in ADMET_GROUP_SEEDS:
             # Split train_val into train and val
-            train, valid = group.get_train_valid_split(benchmark=name, split_type='default', seed=seed)
+            train, valid = group.get_train_valid_split(
+                benchmark=name, split_type="default", seed=seed
+            )
 
             # Make seed directory
             seed_dir = benchmark_dir / str(seed)
             seed_dir.mkdir(parents=True, exist_ok=True)
 
             # Save train and val data
-            train.to_csv(seed_dir / 'train.csv')
-            valid.to_csv(seed_dir / 'val.csv')
+            train.to_csv(seed_dir / "train.csv")
+            valid.to_csv(seed_dir / "val.csv")
 
     # Cleanup of TDC files/directories
-    (save_dir / 'admet_group.zip').unlink()
-    shutil.rmtree(save_dir / 'admet_group')
+    (save_dir / "admet_group.zip").unlink()
+    shutil.rmtree(save_dir / "admet_group")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from tap import tapify
 
     tapify(prepare_tdc_admet_group)

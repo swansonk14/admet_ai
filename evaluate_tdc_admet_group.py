@@ -7,10 +7,7 @@ from tdc.benchmark_group import admet_group
 from constants import ADMET_GROUP_SEEDS, ADMET_GROUP_TARGET_COLUMN
 
 
-def tdc_admet_group_evaluate(
-        data_dir: Path,
-        preds_dir: Path
-) -> None:
+def tdc_admet_group_evaluate(data_dir: Path, preds_dir: Path) -> None:
     """Evaluate predictions from TDC ADMET Benchmark Group models.
 
     :param data_dir: A directory containing the downloaded and prepared TDC ADMET data.
@@ -33,7 +30,7 @@ def tdc_admet_group_evaluate(
         predictions = {}
 
         for name in names:
-            preds_path = preds_dir / name / str(seed) / 'test_preds.csv'
+            preds_path = preds_dir / name / str(seed) / "test_preds.csv"
             preds = pd.read_csv(preds_path)
             predictions[name] = preds[ADMET_GROUP_TARGET_COLUMN].values
 
@@ -46,7 +43,7 @@ def tdc_admet_group_evaluate(
     print(results)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from tap import tapify
 
     tapify(tdc_admet_group_evaluate)

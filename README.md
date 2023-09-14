@@ -9,6 +9,7 @@ Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemp
 3. Activate the conda environment: `conda activate chemprop_admet`
 4. Install requirements: `pip install -r requirements.txt`
 
+Note: If you get the issue `ImportError: libXrender.so.1: cannot open shared object file: No such file or directory`, run `conda install -c conda-forge xorg-libxrender`.
 
 ## TODO: Downlading and applying trained models
 
@@ -50,15 +51,17 @@ Compute RDKit features in order to train Chemprop-RDKit models (i.e., Chemprop m
 Compute RDKit features for the TDC ADMET Benchmark Group data.
 
 ```bash
-python rdkit_tdc_admet_group.py \
-    --data_dir data/tdc_admet_group
+python compute_rdkit_features.py \
+    --data_dir data/tdc_admet_group \
+    --smiles_column smiles
 ```
 
 Compute RDKit features for TDC ADMET multitask datasets.
 
 ```bash
-python rdkit_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all_multitask
+python compute_rdkit_features.py \
+    --data_dir data/tdc_admet_all_multitask \
+    --smiles_column Drug
 ```
 
 
@@ -85,7 +88,7 @@ python train_tdc_admet_group.py \
 Train Chemprop ADMET predictors on the TDC ADMET multitask datasets.
 ```bash
 python train_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all \
+    --data_dir data/tdc_admet_all_multitask \
     --save_dir models/tdc_admet_all_multitask \
     --model_type chemprop
 ```
@@ -93,9 +96,25 @@ python train_tdc_admet_all.py \
 Train Chemprop-RDKit ADMET predictors on the TDC ADMET multitask datasets.
 ```bash
 python train_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all \
+    --data_dir data/tdc_admet_all_multitask \
     --save_dir models/tdc_admet_all_multitask \
     --model_type chemprop_rdkit
+```
+
+## Evaluate TDC ADMET Benchmark Group models
+
+Evaluate Chemprop ADMET predictors trained on the TDC ADMET Benchmark Group data.
+```bash
+python tdc_admet_group_evaluate.py \
+    --data_dir data/tdc_admet_group \
+    --preds_dir models/tdc_admet_group/chemprop
+```
+
+Evaluate Chemprop-RDKit ADMET predictors trained on the TDC ADMET Benchmark Group data.
+```bash
+python tdc_admet_group_evaluate.py \
+    --data_dir data/tdc_admet_group \
+    --preds_dir models/tdc_admet_group/chemprop_rdkit
 ```
 
 
@@ -128,7 +147,7 @@ Make predictions with Chemprop ADMET predictors trained on all the TDC ADMET dat
 python predict_tdc_admet.py \
     --data_path data.csv \
     --save_path preds.csv \
-    --model_dir models/tdc_admet_all/chemprop \
+    --model_dir models/tdc_admet_all_multitask/chemprop \
     --model_type chemprop \
     --smiles_column smiles
 ```
@@ -138,7 +157,7 @@ Make predictions with Chemprop-RDKit ADMET predictors trained on all the TDC ADM
 python predict_tdc_admet.py \
     --data_path data.csv \
     --save_path preds.csv \
-    --model_dir models/tdc_admet_all/chemprop_rdkit \
+    --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --model_type chemprop_rdkit \
     --smiles_column smiles
 ```

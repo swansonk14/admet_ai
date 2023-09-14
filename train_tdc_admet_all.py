@@ -13,10 +13,10 @@ from constants import (
 
 
 def train_tdc_admet_all(
-        data_dir: Path,
-        save_dir: Path,
-        model_type: Literal['chemprop', 'chemprop_rdkit'],
-        num_folds: int = 10
+    data_dir: Path,
+    save_dir: Path,
+    model_type: Literal["chemprop", "chemprop_rdkit"],
+    num_folds: int = 10,
 ) -> None:
     """Train Chemprop models on all the Therapeutics Data Commons (TDC) ADMET datasets.
 
@@ -26,7 +26,7 @@ def train_tdc_admet_all(
     :param num_folds: The number of folds to use for cross-validation.
     """
     # Get dataset paths
-    data_paths = sorted(data_dir.glob('*.csv'))
+    data_paths = sorted(data_dir.glob("*.csv"))
 
     # Train Chemprop or Chemprop-RDKit model on each dataset
     for data_path in tqdm(data_paths):
@@ -34,28 +34,35 @@ def train_tdc_admet_all(
         dataset_type = DATASET_TO_TYPE[data_name]
 
         command = [
-            'chemprop_train',
-            '--data_path', str(data_path),
-            '--dataset_type', dataset_type,
-            '--smiles_column', ADMET_ALL_SMILES_COLUMN,
+            "chemprop_train",
+            "--data_path",
+            str(data_path),
+            "--dataset_type",
+            dataset_type,
+            "--smiles_column",
+            ADMET_ALL_SMILES_COLUMN,
             *DATASET_TYPE_TO_METRICS_COMMAND_LINE[dataset_type],
-            '--num_folds', str(num_folds),
-            '--split_type', 'cv',
-            '--save_dir', save_dir / model_type / data_name,
-            '--save_preds',
-            '--quiet'
+            "--num_folds",
+            str(num_folds),
+            "--split_type",
+            "cv",
+            "--save_dir",
+            save_dir / model_type / data_name,
+            "--save_preds",
+            "--quiet",
         ]
 
-        if model_type == 'chemprop_rdkit':
+        if model_type == "chemprop_rdkit":
             command += [
-                '--features_path', str(data_path.with_suffix('.npz')),
-                '--no_features_scaling'
+                "--features_path",
+                str(data_path.with_suffix(".npz")),
+                "--no_features_scaling",
             ]
 
         subprocess.run(command)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from tap import tapify
 
     tapify(train_tdc_admet_all)

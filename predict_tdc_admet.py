@@ -6,21 +6,27 @@ import numpy as np
 import pandas as pd
 import torch
 from chemfunc.molecular_fingerprints import compute_fingerprints
-from chemprop.data import MoleculeDataLoader, MoleculeDatapoint, MoleculeDataset, set_cache_graph, set_cache_mol
+from chemprop.data import (
+    MoleculeDataLoader,
+    MoleculeDatapoint,
+    MoleculeDataset,
+    set_cache_graph,
+    set_cache_mol,
+)
 from chemprop.train import predict
 from chemprop.utils import load_args, load_checkpoint, load_scalers
 from tqdm import tqdm
 
 
 def predict_tdc_admet(
-        data_path: Path,
-        model_dir: Path,
-        model_type: Literal['chemprop', 'chemprop_rdkit'],
-        save_path: Path | None = None,
-        smiles_column: str = 'smiles',
-        num_workers: int = 0,
-        use_gpu: bool = False,
-        no_cache: bool = False
+    data_path: Path,
+    model_dir: Path,
+    model_type: Literal["chemprop", "chemprop_rdkit"],
+    save_path: Path | None = None,
+    smiles_column: str = "smiles",
+    num_workers: int = 0,
+    use_gpu: bool = False,
+    no_cache: bool = False,
 ) -> None:
     """Make predictions on a dataset using Chemprop models trained on TDC ADMET data (all or Benchmark Data group).
 
@@ -45,10 +51,14 @@ def predict_tdc_admet(
     smiles = list(data[smiles_column])
 
     # Compute fingerprints
-    fingerprints = compute_fingerprints(smiles, fingerprint_type='rdkit') if model_type == 'chemprop_rdkit' else None
+    fingerprints = (
+        compute_fingerprints(smiles, fingerprint_type="rdkit")
+        if model_type == "chemprop_rdkit"
+        else None
+    )
 
     # Set device
-    device = torch.device('cuda') if use_gpu else torch.device('cpu')
+    device = torch.device("cuda") if use_gpu else torch.device("cpu")
 
     # Set up fingerprints
     if fingerprints is None:
@@ -56,14 +66,17 @@ def predict_tdc_admet(
 
     # Build data loader
     data_loader = MoleculeDataLoader(
-        dataset=MoleculeDataset([
-            MoleculeDatapoint(
-                smiles=[smile],
-                features=fingerprint,
-            ) for smile, fingerprint in zip(smiles, fingerprints)
-        ]),
+        dataset=MoleculeDataset(
+            [
+                MoleculeDatapoint(
+                    smiles=[smile],
+                    features=fingerprint,
+                )
+                for smile, fingerprint in zip(smiles, fingerprints)
+            ]
+        ),
         num_workers=num_workers,
-        shuffle=False
+        shuffle=False,
     )
 
     # Get model directory for each ensemble
@@ -73,9 +86,9 @@ def predict_tdc_admet(
     task_to_preds = {}
 
     # Loop through each ensemble and make predictions
-    for ensemble_dir in tqdm(ensemble_dirs, desc='model ensembles'):
+    for ensemble_dir in tqdm(ensemble_dirs, desc="model ensembles"):
         # Get model paths in ensemble
-        model_paths = sorted(ensemble_dir.glob('**/*.pt'))
+        model_paths = sorted(ensemble_dir.glob("**/*.pt"))
 
         # Get task names
         train_args = load_args(model_paths[0])
@@ -88,15 +101,12 @@ def predict_tdc_admet(
         ]
 
         # Load scalers
-        scalers = [
-            load_scalers(path=str(model_path))[0]
-            for model_path in model_paths
-        ]
+        scalers = [load_scalers(path=str(model_path))[0] for model_path in model_paths]
 
         # Make predictions
         preds = [
             predict(model=model, data_loader=data_loader)
-            for model in tqdm(models, desc='individual models')
+            for model in tqdm(models, desc="individual models")
         ]
 
         # Scale predictions if needed (for regression)
@@ -127,7 +137,7 @@ def predict_tdc_admet(
     data_with_preds.to_csv(save_path, index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from tap import tapify
 
     tapify(predict_tdc_admet)
