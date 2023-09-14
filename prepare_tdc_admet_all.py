@@ -50,9 +50,15 @@ def prepare_tdc_admet_all(
         label_names = DATASET_TO_LABEL_NAMES.get(data_name, [None])
         data = []
 
+        # Skin reaction exception
+        if data_name == 'Skin_Reaction':
+            tdc_data_name = 'Skin Reaction'
+        else:
+            tdc_data_name = data_name
+
         # Get data for each label
         for label_name in tqdm(label_names, desc='Labels'):
-            label_data = data_class(name=data_name, label_name=label_name, path=save_dir).get_data()
+            label_data = data_class(name=tdc_data_name, label_name=label_name, path=save_dir).get_data()
             data.append(dict(zip(label_data[ADMET_GROUP_SMILES_COLUMN].tolist(), label_data[ADMET_GROUP_TARGET_COLUMN].tolist())))
 
         # Get all SMILES
@@ -73,8 +79,10 @@ def prepare_tdc_admet_all(
         # Save data
         data.to_csv(save_dir / f'{data_name}.csv', index=False)
 
-        # Clean up TDC data
-        (save_dir / f'{data_name}.tab').unlink()
+    # Clean up TDC data files
+    tdc_files = save_dir.glob('*.tab')
+    for tdc_data_name in tdc_files:
+        tdc_data_name.unlink()
 
 
 if __name__ == '__main__':

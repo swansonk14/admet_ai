@@ -33,7 +33,7 @@ TOX_DATASET_TO_TYPE = {
     "hERG_Karim": "classification",
     "AMES": "classification",
     "DILI": "classification",
-    "Skin Reaction": "classification",
+    "Skin_Reaction": "classification",
     "Carcinogens_Lagunin": "classification",
     "Tox21": "classification",
     "ToxCast": "classification",
@@ -215,7 +215,7 @@ ADMET_PLOTTING_DETAILS = {
             "value": "drug induced liver injury",
             "upper": "more likely",
         },
-        "Skin Reaction": {
+        "Skin_Reaction": {
             "lower": "less likely",
             "value": "skin reaction",
             "upper": "more likely",
