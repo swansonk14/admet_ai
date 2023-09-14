@@ -20,7 +20,7 @@ TODO
 Download the [TDC ADMET Benchmark Group](https://tdcommons.ai/benchmark/admet_group/overview/) data for evaluating models using scaffold splits in order to compare to the TDC leaderboard.
 
 ```bash
-python prepare_tdc_admet_group \
+python prepare_tdc_admet_group.py \
     --save_dir data/tdc_admet_group
 ```
 

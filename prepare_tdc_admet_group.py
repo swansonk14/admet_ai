@@ -19,6 +19,7 @@ def prepare_tdc_admet_group(
     data_names = utils.retrieve_benchmark_names('ADMET_Group')
 
     # Download/access the ADMET group
+    save_dir.mkdir(parents=True, exist_ok=True)
     group = admet_group(path=save_dir)
 
     # Prepare each dataset
