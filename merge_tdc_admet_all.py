@@ -51,6 +51,13 @@ def merge_tdc_admet_all(
         classification_data
     )
 
+    # Print stats
+    print(f'Regression dataset size = {len(regression_data):,}')
+    print(f'Number of regression tasks: {len(regression_data.columns) - 1}')
+    print()
+    print(f'Classification dataset size = {len(classification_data):,}')
+    print(f'Number of classification tasks: {len(classification_data.columns) - 1}')
+
     # Save datasets
     save_dir.mkdir(parents=True, exist_ok=True)
     regression_data.to_csv(save_dir / 'admet_regression.csv', index=False)
