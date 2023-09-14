@@ -32,9 +32,9 @@ python prepare_tdc_admet_all.py \
     --skip_datasets herg_central hERG_Karim ToxCast
 ```
 
-## Create multitask datasets for classification and regression
+## Create multitask datasets for regression and classification
 
-Create multitask datasets for classification and regression for all the TDC ADMET datasets.
+Create multitask datasets for regression and classification for all the TDC ADMET datasets.
 
 ```bash
 python merge_tdc_admet_all.py \
@@ -54,11 +54,11 @@ python rdkit_tdc_admet_group.py \
     --data_dir data/tdc_admet_group
 ```
 
-Compute RDKit features for all TDC ADMET datasets.
+Compute RDKit features for TDC ADMET multitask datasets.
 
 ```bash
 python rdkit_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all
+    --data_dir data/tdc_admet_all_multitask
 ```
 
 
@@ -82,19 +82,19 @@ python train_tdc_admet_group.py \
     --model_type chemprop_rdkit
 ```
 
-Train Chemprop ADMET predictors on all the TDC ADMET data.
+Train Chemprop ADMET predictors on the TDC ADMET multitask datasets.
 ```bash
 python train_tdc_admet_all.py \
     --data_dir data/tdc_admet_all \
-    --save_dir models/tdc_admet_all \
+    --save_dir models/tdc_admet_all_multitask \
     --model_type chemprop
 ```
 
-Train Chemprop-RDKit ADMET predictors on all the TDC ADMET data.
+Train Chemprop-RDKit ADMET predictors on the TDC ADMET multitask datasets.
 ```bash
 python train_tdc_admet_all.py \
     --data_dir data/tdc_admet_all \
-    --save_dir models/tdc_admet_all \
+    --save_dir models/tdc_admet_all_multitask \
     --model_type chemprop_rdkit
 ```
 
