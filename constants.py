@@ -33,7 +33,7 @@ TOX_DATASET_TO_TYPE = {
     "hERG_Karim": "classification",
     "AMES": "classification",
     "DILI": "classification",
-    "Skin_Reaction": "classification",
+    "Skin Reaction": "classification",
     "Carcinogens_Lagunin": "classification",
     "Tox21": "classification",
     "ToxCast": "classification",
@@ -62,8 +62,7 @@ ADMET_ALL_SMILES_COLUMN = "smiles"
 ADMET_GROUP_SMILES_COLUMN = "Drug"
 ADMET_GROUP_TARGET_COLUMN = "Y"
 ADMET_GROUPS = ["absorption", "distribution", "metabolism", "excretion", "toxicity"]
-# TODO: add the multi-task datasets (Tox21, ToxCast?)
-# TODO: redo herg_central as 1 micromolar regression?
+# TODO: add Tox21 below
 # TODO: add units for regression datasets
 # TODO: double check interpretation of values
 ADMET_PLOTTING_DETAILS = {
@@ -216,7 +215,7 @@ ADMET_PLOTTING_DETAILS = {
             "value": "drug induced liver injury",
             "upper": "more likely",
         },
-        "Skin_Reaction": {
+        "Skin Reaction": {
             "lower": "less likely",
             "value": "skin reaction",
             "upper": "more likely",

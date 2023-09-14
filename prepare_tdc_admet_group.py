@@ -8,7 +8,7 @@ from tqdm import tqdm
 from constants import ADMET_GROUP_SEEDS
 
 
-def tdc_admet_group_prepare(
+def prepare_tdc_admet_group(
         save_dir: Path
 ) -> None:
     """Download and prepare the Therapeutics Data Commons (TDC) ADMET Benchmark Group datasets.
@@ -56,4 +56,4 @@ def tdc_admet_group_prepare(
 if __name__ == '__main__':
     from tap import tapify
 
-    tapify(tdc_admet_group_prepare)
+    tapify(prepare_tdc_admet_group)

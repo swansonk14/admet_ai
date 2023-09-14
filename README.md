@@ -10,8 +10,6 @@ Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemp
 4. Install requirements: `pip install -r requirements.txt`
 
 
-TODO: random forest RDKit models
-
 ## TODO: pre-trained models
 
 TODO
@@ -22,16 +20,23 @@ TODO
 Download the [TDC ADMET Benchmark Group](https://tdcommons.ai/benchmark/admet_group/overview/) data for evaluating models using scaffold splits in order to compare to the TDC leaderboard.
 
 ```bash
-python tdc_admet_group_prepare.py \
+python prepare_tdc_admet_group \
     --save_dir data/tdc_admet_group
 ```
 
-Download all TDC [ADME](https://tdcommons.ai/single_pred_tasks/adme/) and [Tox](https://tdcommons.ai/single_pred_tasks/tox/) datasets for training models.
+Download all TDC [ADME](https://tdcommons.ai/single_pred_tasks/adme/) and [Tox](https://tdcommons.ai/single_pred_tasks/tox/) datasets for training models. Skip datasets that are redundant or not needed.
 
 ```bash
-python tdc_admet_all_prepare.py \
-    --save_dir data/tdc_admet_all
+python prepare_tdc_admet_all.py \
+    --save_dir data/tdc_admet_all \
+    --skip_datasets herg_central hERG_Karim ToxCast
 ```
+
+## Create multitask datasets for classification and regression
+
+Create multitask datasets for classification and regression for all the TDC ADMET datasets.
+
+TODO
 
 
 ## Compute RDKit features

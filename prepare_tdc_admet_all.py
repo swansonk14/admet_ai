@@ -15,12 +15,14 @@ from constants import (
 )
 
 
-def tdc_admet_all_prepare(
-        save_dir: Path
+def prepare_tdc_admet_all(
+        save_dir: Path,
+        skip_datasets: list[str] = None
 ) -> None:
     """Download and prepare all the Therapeutics Data Commons (TDC) ADMET datasets.
 
     :param save_dir: A directory where the TDC AMDET data will be saved.
+    :param skip_datasets: A list of dataset names to skip.
     """
     # Map dataset to dataset class
     dataset_to_class = {
@@ -31,24 +33,26 @@ def tdc_admet_all_prepare(
         for adme_dataset in ADME_DATASET_TO_TYPE
     }
 
+    # Skip datasets
+    if skip_datasets is not None:
+        dataset_to_class = {
+            dataset: data_class
+            for dataset, data_class in dataset_to_class.items()
+            if dataset not in skip_datasets
+        }
+
     # Create save directory
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load Tox data
+    # Download and prepare each dataset
     for data_name, data_class in tqdm(dataset_to_class.items(), desc='Datasets'):
         # Get names of labels for dataset (or None if only one label)
         label_names = DATASET_TO_LABEL_NAMES.get(data_name, [None])
         data = []
 
-        # Handle special case for Skin_Reaction dataset name
-        if data_name == 'Skin_Reaction':
-            tdc_data_name = 'Skin Reaction'
-        else:
-            tdc_data_name = data_name
-
         # Get data for each label
         for label_name in tqdm(label_names, desc='Labels'):
-            label_data = data_class(name=tdc_data_name, label_name=label_name, path=save_dir).get_data()
+            label_data = data_class(name=data_name, label_name=label_name, path=save_dir).get_data()
             data.append(dict(zip(label_data[ADMET_GROUP_SMILES_COLUMN].tolist(), label_data[ADMET_GROUP_TARGET_COLUMN].tolist())))
 
         # Get all SMILES
@@ -73,4 +77,4 @@ def tdc_admet_all_prepare(
 if __name__ == '__main__':
     from tap import tapify
 
-    tapify(tdc_admet_all_prepare)
+    tapify(prepare_tdc_admet_all)
