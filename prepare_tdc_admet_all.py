@@ -73,6 +73,9 @@ def prepare_tdc_admet_all(
         # Save data
         data.to_csv(save_dir / f'{data_name}.csv', index=False)
 
+        # Clean up TDC data
+        (save_dir / f'{data_name}.tab').unlink()
+
 
 if __name__ == '__main__':
     from tap import tapify

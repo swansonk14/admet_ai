@@ -1,4 +1,5 @@
 """Download and prepare the Therapeutics Data Commons (TDC) ADMET Benchmark Group datasets."""
+import shutil
 from pathlib import Path
 
 from tdc import utils
@@ -52,6 +53,10 @@ def prepare_tdc_admet_group(
             # Save train and val data
             train.to_csv(seed_dir / 'train.csv')
             valid.to_csv(seed_dir / 'val.csv')
+
+    # Cleanup of TDC files/directories
+    (save_dir / 'admet_group.zip').unlink()
+    shutil.rmtree(save_dir / 'admet_group')
 
 
 if __name__ == '__main__':
