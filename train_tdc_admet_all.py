@@ -16,7 +16,7 @@ def train_tdc_admet_all(
     data_dir: Path,
     save_dir: Path,
     model_type: Literal["chemprop", "chemprop_rdkit"],
-    num_folds: int = 10,
+    num_folds: int = 5,
 ) -> None:
     """Train Chemprop models on all the Therapeutics Data Commons (TDC) ADMET datasets.
 
@@ -44,8 +44,6 @@ def train_tdc_admet_all(
             *DATASET_TYPE_TO_METRICS_COMMAND_LINE[dataset_type],
             "--num_folds",
             str(num_folds),
-            "--split_type",
-            "cv",
             "--save_dir",
             save_dir / model_type / data_name,
             "--save_preds",
