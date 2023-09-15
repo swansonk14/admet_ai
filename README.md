@@ -22,6 +22,7 @@ Download the [TDC ADMET Benchmark Group](https://tdcommons.ai/benchmark/admet_gr
 
 ```bash
 python prepare_tdc_admet_group.py \
+    --raw_data_dir data/tdc_admet_group_raw \
     --save_dir data/tdc_admet_group
 ```
 
@@ -105,15 +106,15 @@ python train_tdc_admet_all.py \
 
 Evaluate Chemprop ADMET predictors trained on the TDC ADMET Benchmark Group data.
 ```bash
-python tdc_admet_group_evaluate.py \
-    --data_dir data/tdc_admet_group \
+python evaluate_tdc_admet_group.py \
+    --data_dir data/tdc_admet_group_raw \
     --preds_dir models/tdc_admet_group/chemprop
 ```
 
 Evaluate Chemprop-RDKit ADMET predictors trained on the TDC ADMET Benchmark Group data.
 ```bash
-python tdc_admet_group_evaluate.py \
-    --data_dir data/tdc_admet_group \
+python evaluate_tdc_admet_group.py \
+    --data_dir data/tdc_admet_group_raw \
     --preds_dir models/tdc_admet_group/chemprop_rdkit
 ```
 

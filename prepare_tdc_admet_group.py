@@ -9,17 +9,18 @@ from tqdm import tqdm
 from constants import ADMET_GROUP_SEEDS
 
 
-def prepare_tdc_admet_group(save_dir: Path) -> None:
+def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
     """Download and prepare the Therapeutics Data Commons (TDC) ADMET Benchmark Group datasets.
 
-    :param save_dir: A directory where the TDC AMDET Benchmark Group data will be saved.
+    :param raw_data_dir: A directory where the raw TDC ADMET Benchmark Group data will be saved.
+    :param save_dir: A directory where the formatted TDC AMDET Benchmark Group data will be saved.
     """
     # Get ADMET Benchmark Group dataset names from TDC
     data_names = utils.retrieve_benchmark_names("ADMET_Group")
 
     # Download/access the ADMET group
-    save_dir.mkdir(parents=True, exist_ok=True)
-    group = admet_group(path=save_dir)
+    raw_data_dir.mkdir(parents=True, exist_ok=True)
+    group = admet_group(path=raw_data_dir)
 
     # Prepare each dataset
     for data_name in tqdm(data_names):
@@ -53,10 +54,6 @@ def prepare_tdc_admet_group(save_dir: Path) -> None:
             # Save train and val data
             train.to_csv(seed_dir / "train.csv")
             valid.to_csv(seed_dir / "val.csv")
-
-    # Cleanup of TDC files/directories
-    (save_dir / "admet_group.zip").unlink()
-    shutil.rmtree(save_dir / "admet_group")
 
 
 if __name__ == "__main__":
