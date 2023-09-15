@@ -57,6 +57,14 @@ python compute_rdkit_features.py \
     --smiles_column smiles
 ```
 
+Compute RDKit features for all TDC ADMET datasets.
+
+```bash
+python compute_rdkit_features.py \
+    --data_dir data/tdc_admet_all \
+    --smiles_column Drug
+```
+
 Compute RDKit features for TDC ADMET multitask datasets.
 
 ```bash
@@ -83,6 +91,22 @@ Train Chemprop-RDKit ADMET predictors on the TDC ADMET Benchmark Group data.
 python train_tdc_admet_group.py \
     --data_dir data/tdc_admet_group \
     --save_dir models/tdc_admet_group \
+    --model_type chemprop_rdkit
+```
+
+Train Chemprop ADMET predictors on all TDC ADMET datasets.
+```bash
+python train_tdc_admet_all.py \
+    --data_dir data/tdc_admet_all \
+    --save_dir models/tdc_admet_all \
+    --model_type chemprop
+```
+
+Train Chemprop-RDKit ADMET predictors on all TDC ADMET datasets.
+```bash
+python train_tdc_admet_all.py \
+    --data_dir data/tdc_admet_all \
+    --save_dir models/tdc_admet_all \
     --model_type chemprop_rdkit
 ```
 
