@@ -10,6 +10,7 @@ from constants import (
     ADMET_GROUP_SMILES_COLUMN,
     ADMET_GROUP_TARGET_COLUMN,
     DATASET_TO_LABEL_NAMES,
+    DATASET_TO_TYPE,
     ADMET_ALL_SMILES_COLUMN,
     TOX_DATASET_TO_TYPE,
 )
@@ -36,6 +37,9 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
 
     # Create save directory
     save_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create list of dataset stats
+    dataset_stats = []
 
     # Download and prepare each dataset
     for data_name, data_class in tqdm(dataset_to_class.items(), desc="Datasets"):
@@ -81,8 +85,29 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
             }
         )
 
+        # Collect dataset stats
+        for label_name in label_names:
+            # Compute class balance
+            if DATASET_TO_TYPE[data_name] == 'classification':
+                class_balance = data[label_name].value_counts(normalize=True)[1]
+            else:
+                class_balance = None
+
+            dataset_stats.append({
+                'name': f'{data_name}-{label_name}',
+                'size': len(data),
+                'min': data[label_name].min(),
+                'max': data[label_name].max(),
+                'class_balance': class_balance
+            })
+
         # Save data
         data.to_csv(save_dir / f"{data_name}.csv", index=False)
+
+    # Print dataset stats
+    dataset_stats = pd.DataFrame(dataset_stats).set_index('name')
+    pd.set_option('display.max_rows', None)
+    print(dataset_stats)
 
     # Clean up TDC data files
     tdc_files = save_dir.glob("*.tab")

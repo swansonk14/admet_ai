@@ -1,12 +1,16 @@
 """Download and prepare the Therapeutics Data Commons (TDC) ADMET Benchmark Group datasets."""
-import shutil
 from pathlib import Path
 
+import pandas as pd
 from tdc import utils
 from tdc.benchmark_group import admet_group
 from tqdm import tqdm
 
-from constants import ADMET_GROUP_SEEDS
+from constants import (
+    ADMET_GROUP_SEEDS,
+    ADMET_GROUP_TARGET_COLUMN,
+    DATASET_TO_TYPE_LOWER
+)
 
 
 def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
@@ -22,10 +26,31 @@ def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
     raw_data_dir.mkdir(parents=True, exist_ok=True)
     group = admet_group(path=raw_data_dir)
 
+    # Create list of dataset stats
+    dataset_stats = []
+
     # Prepare each dataset
     for data_name in tqdm(data_names):
         # Load dataset
         benchmark = group.get(data_name)
+
+        # Create a single dataset for computing statistics
+        data = pd.concat((benchmark["train_val"], benchmark["test"]))
+
+        # Compute class balance
+        if DATASET_TO_TYPE_LOWER[data_name] == 'classification':
+            class_balance = data[ADMET_GROUP_TARGET_COLUMN].value_counts(normalize=True)[1]
+        else:
+            class_balance = None
+
+        # Collect dataset stats
+        dataset_stats.append({
+            'name': data_name,
+            'size': len(data),
+            'min': data[ADMET_GROUP_TARGET_COLUMN].min(),
+            'max': data[ADMET_GROUP_TARGET_COLUMN].max(),
+            'class_balance': class_balance
+        })
 
         # Get name
         name = benchmark["name"]
@@ -54,6 +79,11 @@ def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
             # Save train and val data
             train.to_csv(seed_dir / "train.csv")
             valid.to_csv(seed_dir / "val.csv")
+
+    # Print dataset stats
+    dataset_stats = pd.DataFrame(dataset_stats).set_index('name')
+    pd.set_option('display.max_rows', None)
+    print(dataset_stats)
 
 
 if __name__ == "__main__":
