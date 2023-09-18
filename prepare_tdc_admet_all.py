@@ -85,7 +85,7 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
         for label_name in label_names:
             # Get label data
             label_data = data[[ADMET_ALL_SMILES_COLUMN, label_name]]
-            label_data = data[label_data[label_name].notna()]
+            label_data = label_data[label_data[label_name].notna()]
 
             # Compute class balance
             if DATASET_TO_TYPE[label_name] == 'classification':
@@ -96,8 +96,8 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
             dataset_stats.append({
                 'name': label_name,
                 'size': len(label_data),
-                'min': data[label_name].min(),
-                'max': data[label_name].max(),
+                'min': label_data[label_name].min(),
+                'max': label_data[label_name].max(),
                 'class_balance': class_balance
             })
 
