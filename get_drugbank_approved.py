@@ -90,12 +90,12 @@ def get_approved_smiles_from_drugbank(data_path: Path, save_path: Path) -> None:
 
         # ATC codes list length validation
         if len(atcs_list) == 0:
-            continue
+            atc_codes = []
         elif len(atcs_list) > 1:
             raise ValueError("More than one ATC code list found")
-
-        # Get ATC codes
-        atc_codes = atcs_list[0].findall("db:atc-code", DRUGBANK_NAMESPACES)
+        else:
+            # Get ATC codes
+            atc_codes = atcs_list[0].findall("db:atc-code", DRUGBANK_NAMESPACES)
 
         # Get unique ATC codes
         unique_atc_codes = set()
