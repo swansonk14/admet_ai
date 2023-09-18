@@ -54,7 +54,7 @@ Compute RDKit features for the TDC ADMET Benchmark Group data.
 ```bash
 python compute_rdkit_features.py \
     --data_dir data/tdc_admet_group \
-    --smiles_column smiles
+    --smiles_column Drug
 ```
 
 Compute RDKit features for all TDC ADMET datasets.
@@ -62,7 +62,7 @@ Compute RDKit features for all TDC ADMET datasets.
 ```bash
 python compute_rdkit_features.py \
     --data_dir data/tdc_admet_all \
-    --smiles_column Drug
+    --smiles_column smiles
 ```
 
 Compute RDKit features for TDC ADMET multitask datasets.
@@ -70,7 +70,7 @@ Compute RDKit features for TDC ADMET multitask datasets.
 ```bash
 python compute_rdkit_features.py \
     --data_dir data/tdc_admet_all_multitask \
-    --smiles_column Drug
+    --smiles_column smiles
 ```
 
 
