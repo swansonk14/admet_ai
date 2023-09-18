@@ -85,24 +85,28 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
             }
         )
 
-        # Collect dataset stats
+        # Process each label as a separate dataset
         for label_name in label_names:
+            # Get label data
+            label_data = data[[ADMET_ALL_SMILES_COLUMN, label_name]]
+            label_data = data[label_data[label_name].notna()]
+
             # Compute class balance
             if DATASET_TO_TYPE[data_name] == 'classification':
-                class_balance = data[label_name].value_counts(normalize=True)[1]
+                class_balance = label_data[label_name].value_counts(normalize=True)[1]
             else:
                 class_balance = None
 
             dataset_stats.append({
-                'name': f'{data_name}-{label_name}',
-                'size': len(data),
+                'name': label_name,
+                'size': len(label_data),
                 'min': data[label_name].min(),
                 'max': data[label_name].max(),
                 'class_balance': class_balance
             })
 
-        # Save data
-        data.to_csv(save_dir / f"{data_name}.csv", index=False)
+            # Save data
+            label_data.to_csv(save_dir / f"{label_name}.csv", index=False)
 
     # Print dataset stats
     dataset_stats = pd.DataFrame(dataset_stats).set_index('name')
