@@ -2,17 +2,15 @@
 from pathlib import Path
 
 import pandas as pd
-from tdc.single_pred import ADME, Tox
 from tqdm import tqdm
 
 from constants import (
-    ADME_DATASET_TO_TYPE,
+    ADMET_ALL_SMILES_COLUMN,
     ADMET_GROUP_SMILES_COLUMN,
     ADMET_GROUP_TARGET_COLUMN,
     DATASET_TO_LABEL_NAMES,
     DATASET_TO_TYPE,
-    ADMET_ALL_SMILES_COLUMN,
-    TOX_DATASET_TO_TYPE,
+    TDC_DATASET_TO_CLASS
 )
 
 
@@ -23,9 +21,7 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
     :param skip_datasets: A list of dataset names to skip.
     """
     # Map dataset to dataset class
-    dataset_to_class = {tox_dataset: Tox for tox_dataset in TOX_DATASET_TO_TYPE} | {
-        adme_dataset: ADME for adme_dataset in ADME_DATASET_TO_TYPE
-    }
+    dataset_to_class = TDC_DATASET_TO_CLASS
 
     # Skip datasets
     if skip_datasets is not None:
@@ -92,7 +88,7 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
             label_data = data[label_data[label_name].notna()]
 
             # Compute class balance
-            if DATASET_TO_TYPE[data_name] == 'classification':
+            if DATASET_TO_TYPE[label_name] == 'classification':
                 class_balance = label_data[label_name].value_counts(normalize=True)[1]
             else:
                 class_balance = None

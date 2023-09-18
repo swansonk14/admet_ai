@@ -1,8 +1,44 @@
 """Contains constants used throughout the project."""
+from tdc.single_pred import ADME, Tox
 from tdc.utils import retrieve_label_name_list
 
 
-ADME_DATASET_TO_TYPE = {
+TDC_DATASET_TO_CLASS = {
+    "Caco2_Wang": ADME,
+    "PAMPA_NCATS": ADME,
+    "HIA_Hou": ADME,
+    "Pgp_Broccatelli": ADME,
+    "Bioavailability_Ma": ADME,
+    "Lipophilicity_AstraZeneca": ADME,
+    "Solubility_AqSolDB": ADME,
+    "HydrationFreeEnergy_FreeSolv": ADME,
+    "BBB_Martins": ADME,
+    "PPBR_AZ": ADME,
+    "VDss_Lombardo": ADME,
+    "CYP2C19_Veith": ADME,
+    "CYP2D6_Veith": ADME,
+    "CYP3A4_Veith": ADME,
+    "CYP1A2_Veith": ADME,
+    "CYP2C9_Veith": ADME,
+    "CYP2C9_Substrate_CarbonMangels": ADME,
+    "CYP2D6_Substrate_CarbonMangels": ADME,
+    "CYP3A4_Substrate_CarbonMangels": ADME,
+    "Half_Life_Obach": ADME,
+    "Clearance_Hepatocyte_AZ": ADME,
+    "Clearance_Microsome_AZ": ADME,
+    "LD50_Zhu": Tox,
+    "hERG": Tox,
+    "herg_central": Tox,
+    "hERG_Karim": Tox,
+    "AMES": Tox,
+    "DILI": Tox,
+    "Skin_Reaction": Tox,
+    "Carcinogens_Lagunin": Tox,
+    "Tox21": Tox,
+    "ToxCast": Tox,
+    "ClinTox": Tox,
+}
+DATASET_TO_TYPE = {
     "Caco2_Wang": "regression",
     "PAMPA_NCATS": "classification",
     "HIA_Hou": "classification",
@@ -25,8 +61,6 @@ ADME_DATASET_TO_TYPE = {
     "Half_Life_Obach": "regression",
     "Clearance_Hepatocyte_AZ": "regression",
     "Clearance_Microsome_AZ": "regression",
-}
-TOX_DATASET_TO_TYPE = {
     "LD50_Zhu": "regression",
     "hERG": "classification",
     "herg_central": "classification",
@@ -36,17 +70,23 @@ TOX_DATASET_TO_TYPE = {
     "Skin_Reaction": "classification",
     "Carcinogens_Lagunin": "classification",
     "Tox21": "classification",
+    "NR-AR": "classification",
+    "NR-AR-LBD": "classification",
+    "NR-AhR": "classification",
+    "NR-Aromatase": "classification",
+    "NR-ER": "classification",
+    "NR-ER-LBD": "classification",
+    "NR-PPAR-gamma": "classification",
+    "SR-ARE": "classification",
+    "SR-ATAD5": "classification",
+    "SR-HSE": "classification",
+    "SR-MMP": "classification",
+    "SR-p53": "classification",
     "ToxCast": "classification",
     "ClinTox": "classification",
+    "admet_regression": "regression",
+    "admet_classification": "classification",
 }
-DATASET_TO_TYPE = (
-    ADME_DATASET_TO_TYPE
-    | TOX_DATASET_TO_TYPE
-    | {
-        "admet_regression": "regression",
-        "admet_classification": "classification",
-    }
-)
 DATASET_TO_TYPE_LOWER = {
     dataset.lower(): dataset_type for dataset, dataset_type in DATASET_TO_TYPE.items()
 }
