@@ -51,7 +51,7 @@ DATASET_TO_TYPE_LOWER = {
     dataset.lower(): dataset_type for dataset, dataset_type in DATASET_TO_TYPE.items()
 }
 DATASET_TYPE_TO_METRICS_COMMAND_LINE = {
-    "classification": ["--metric", "prc-auc", "--extra_metrics", "auc"],
+    "classification": ["--metric", "auc", "--extra_metrics", "prc-auc"],
     "regression": ["--metric", "mae", "--extra_metrics", "r2"],
 }
 DATASET_TO_LABEL_NAMES = {

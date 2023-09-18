@@ -3,4 +3,5 @@ chemprop==1.6.1
 numpy==1.25.2
 pandas==2.1.0
 PyTDC==0.4.1
+rdkit==2023.03.3
 tqdm==4.66.1
