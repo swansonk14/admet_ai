@@ -76,7 +76,7 @@ python compute_rdkit_features.py \
 
 ## Train Chemprop ADMET predictors
 
-Train Chemprop and Chemprop-RDKit predictors on the ADMET data.
+Train Chemprop and Chemprop-RDKit predictors on the ADMET data. Note: A GPU is used by default if available.
 
 Train Chemprop-RDKit ADMET predictors on the TDC ADMET Benchmark Group data.
 
@@ -118,20 +118,7 @@ python evaluate_tdc_admet_group.py \
 
 ## Make predictions with Chemprop ADMET predictors
 
-The instructions below illustrate how to make predictions with trained Chemprop ADMET predictors. The instructions assume that you have a file called `data.csv` which contains SMILES strings in a column called `smiles`.
-
-Make predictions with Chemprop-RDKit ADMET predictors trained on the TDC ADMET Benchmark Group data.
-
-```bash
-python predict_tdc_admet.py \
-    --data_path data.csv \
-    --save_path preds.csv \
-    --model_dir models/tdc_admet_group/chemprop_rdkit \
-    --model_type chemprop_rdkit \
-    --smiles_column smiles
-```
-
-Make predictions with Chemprop-RDKit ADMET predictors trained on all the TDC ADMET data.
+The instructions below illustrate how to make predictions with trained Chemprop-RDKit multitask ADMET predictors. The instructions assume that you have a file called `data.csv` which contains SMILES strings in a column called `smiles`. Note: A GPU is used by default if available.
 
 ```bash
 python predict_tdc_admet.py \
@@ -141,7 +128,6 @@ python predict_tdc_admet.py \
     --model_type chemprop_rdkit \
     --smiles_column smiles
 ```
-
 
 ## Get approved drugs from DrugBank
 

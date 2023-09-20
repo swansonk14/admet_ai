@@ -24,8 +24,7 @@ def predict_tdc_admet(
     model_type: Literal["chemprop", "chemprop_rdkit"],
     save_path: Path | None = None,
     smiles_column: str = "smiles",
-    num_workers: int = 0,
-    use_gpu: bool = False,
+    num_workers: int = 8,
     no_cache: bool = False,
 ) -> None:
     """Make predictions on a dataset using Chemprop models trained on TDC ADMET data (all or Benchmark Data group).
@@ -37,8 +36,8 @@ def predict_tdc_admet(
     :param model_type: The type of model to use (Chemprop or Chemprop-RDKit).
     :param save_path: Path to a CSV file where predictions will be saved. If None, defaults to data_path.
     :param smiles_column: Name of the column containing SMILES strings.
-    :param num_workers: Number of workers for the data loader.
-    :param use_gpu: Whether to use GPU.
+    :param num_workers: Number of workers for the data loader. Zero workers (i.e., sequential data loading)
+                        may be faster if not using a GPU.
     :param no_cache: Whether to disable caching. This is suggested when making predictions on large datasets.
     """
     # Disable Chemprop caching for prediction to avoid memory issues with large datasets
@@ -58,7 +57,7 @@ def predict_tdc_admet(
     )
 
     # Set device
-    device = torch.device("cuda") if use_gpu else torch.device("cpu")
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
     # Set up fingerprints
     if fingerprints is None:
