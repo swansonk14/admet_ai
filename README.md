@@ -135,6 +135,6 @@ Get approved drugs from DrugBank to create a comparison set for Chemprop ADMET p
 
 ```bash
 python get_drugbank_approved.py \
-    --data_path data/drugbank.xml \
-    --save_path data/drugbank_approved.csv
+    --data_path data/drugbank/drugbank.xml \
+    --save_path data/drugbank/drugbank_approved.csv
 ```
