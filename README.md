@@ -1,13 +1,34 @@
-# Chemprop ADMET
+# ADMET-AI
 
 Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemprop) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)).
 
 ## Installation
 
-1. Install [conda](https://docs.conda.io/en/latest/miniconda.html) if you don't already have it.
-2. Create a conda environment: `conda create -y -n chemprop_admet python=3.10`
-3. Activate the conda environment: `conda activate chemprop_admet`
-4. Install requirements: `pip install -r requirements.txt`
+ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment).
+
+Optionally, create a conda environment.
+```bash
+conda create -y -n admet_ai python=3.10
+conda activate admet_ai
+```
+
+Install ADMET-AI via pip.
+```bash
+pip install admet_ai
+```
+
+Alternatively, clone the repo and install ADMET-AI locally.
+```bash
+git clone https://github.com/swansonk14/SyntheMol.git
+cd SyntheMol
+pip install -e .
+```
+
+If there are version issues with the required packages, create a conda environment with specific working versions of the packages as follows.
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
 
 Note: If you get the issue `ImportError: libXrender.so.1: cannot open shared object file: No such file or directory`, run `conda install -c conda-forge xorg-libxrender`.
 

@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 from tdc.benchmark_group import admet_group
 
-from constants import ADMET_GROUP_SEEDS, ADMET_GROUP_TARGET_COLUMN
+from admet_ai.constants import ADMET_GROUP_SEEDS, ADMET_GROUP_TARGET_COLUMN
 
 
 def tdc_admet_group_evaluate(data_dir: Path, preds_dir: Path) -> None:

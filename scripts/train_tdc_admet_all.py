@@ -5,7 +5,7 @@ from typing import Literal
 
 from tqdm import tqdm
 
-from constants import (
+from admet_ai.constants import (
     DATASET_TO_TYPE,
     DATASET_TYPE_TO_METRICS_COMMAND_LINE,
     ADMET_ALL_SMILES_COLUMN,

@@ -5,7 +5,7 @@ from typing import Literal
 
 from tqdm import tqdm
 
-from constants import (
+from admet_ai.constants import (
     ADMET_GROUP_SEEDS,
     ADMET_GROUP_SMILES_COLUMN,
     ADMET_GROUP_TARGET_COLUMN,
