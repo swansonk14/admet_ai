@@ -2,6 +2,10 @@
 
 Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemprop) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)).
 
+TODO: table of contents
+
+TODO: black reformat everything
+
 ## Installation
 
 ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment).
@@ -157,4 +161,22 @@ Get approved drugs from DrugBank to create a comparison set for Chemprop ADMET p
 python get_drugbank_approved.py \
     --data_path data/drugbank/drugbank.xml \
     --save_path data/drugbank/drugbank_approved.csv
+```
+
+## Plot results
+
+Plot TDC ADMET results. First, download the results from [here](https://docs.google.com/spreadsheets/d/1bh9FEHqhbfHKF-Nxjad0Cpy2p5ztH__p0pijB43yc94/edit?usp=sharing) and save them to `results/TDC ADMET Results.xlsx`. Then run the following command.
+
+```bash
+python scripts/plot_tdc_results.py \
+    --results_path results/TDC\ ADMET\ Results.xlsx \
+    --save_dir plots/tdc_results
+```
+
+Plot DrugBank statistics.
+
+```bash
+python scripts/plot_drugbank_approved.py \
+    --data_path data/drugbank/drugbank_approved.csv \
+    --save_dir plots/drugbank_approved
 ```

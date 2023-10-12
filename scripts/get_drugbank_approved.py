@@ -6,6 +6,13 @@ import pandas as pd
 from rdkit import Chem
 from tqdm import tqdm
 
+from admet_ai.constants import (
+    DRUGBANK_ATC_DELIMITER,
+    DRUGBANK_ATC_PREFIX,
+    DRUGBANK_NAME_COLUMN,
+    DRUGBANK_SMILES_COLUMN
+)
+
 DRUGBANK_NAMESPACES = {"db": "http://www.drugbank.ca"}
 
 
@@ -115,19 +122,19 @@ def get_approved_smiles_from_drugbank(data_path: Path, save_path: Path) -> None:
     # Create dataset of approved drugs, drop duplicates, and sort
     data = pd.DataFrame(
         {
-            "name": approved_names,
-            "smiles": approved_smiles,
+            DRUGBANK_NAME_COLUMN: approved_names,
+            DRUGBANK_SMILES_COLUMN: approved_smiles,
             **{
-                f"atc_{i + 1}": [
-                    ";".join(atc_code[i] for atc_code in atc_codes)
+                f"{DRUGBANK_ATC_PREFIX}_{i + 1}": [
+                    DRUGBANK_ATC_DELIMITER.join(atc_code[i] for atc_code in atc_codes)
                     for atc_codes in approved_atcs
                 ]
                 for i in range(4)
             },
         }
     )
-    data.drop_duplicates("smiles", inplace=True)
-    data.sort_values("name", inplace=True)
+    data.drop_duplicates(DRUGBANK_SMILES_COLUMN, inplace=True)
+    data.sort_values(DRUGBANK_NAME_COLUMN, inplace=True)
 
     # Convert to RDKit SMILES and remove invalid molecules
     mols = data.smiles.apply(lambda x: Chem.MolFromSmiles(x))

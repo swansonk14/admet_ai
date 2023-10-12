@@ -36,7 +36,7 @@ def split_axes(axes: list[plt.Axes]) -> None:
     axes[1].plot([0, 1], [1, 1], transform=axes[1].transAxes, **kwargs)
 
 
-def plot_leaderboard_ranks(
+def plot_tdc_leaderboard_ranks(
     model_to_ranks: dict[str, list[int]],
     all_dataset_models: list[str],
     datasets: list[str],
@@ -73,9 +73,10 @@ def plot_leaderboard_ranks(
     ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
     plt.tight_layout()
     plt.savefig(save_dir / "leaderboard_model_ranks.pdf", bbox_inches="tight")
+    plt.close()
 
 
-def plot_group_results(
+def plot_tdc_group_results(
     results: pd.ExcelFile,
     group_results: pd.DataFrame,
     all_dataset_models: list[str],
@@ -178,9 +179,10 @@ def plot_group_results(
             fig.subplots_adjust(left=0.15)
 
         plt.savefig(save_dir / f"leaderboard_{metric.lower()}.pdf", bbox_inches="tight")
+        plt.close()
 
 
-def plot_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
+def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
     """Plot results from TDC ADMET All.
 
     :param results: Excel file containing results.
@@ -275,9 +277,10 @@ def plot_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
             fig.subplots_adjust(left=0.1)
 
         plt.savefig(save_dir / f"all_{metric.lower()}.pdf", bbox_inches="tight")
+        plt.close()
 
 
-def plot_results(results_path: Path, save_dir: Path) -> None:
+def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
     """Plot results from TDC ADMET Group and TDC ADMET All.
 
     :param results_path: Path to an Excel file containing results.
@@ -314,7 +317,7 @@ def plot_results(results_path: Path, save_dir: Path) -> None:
     print(f"Number of models evaluated on all datasets: {len(all_dataset_models):,}")
 
     # Plot TDC ADMET Group leaderboard ranks
-    plot_leaderboard_ranks(
+    plot_tdc_leaderboard_ranks(
         model_to_ranks=model_to_ranks,
         all_dataset_models=all_dataset_models,
         datasets=datasets,
@@ -322,7 +325,7 @@ def plot_results(results_path: Path, save_dir: Path) -> None:
     )
 
     # Plot TDC ADMET Group results
-    plot_group_results(
+    plot_tdc_group_results(
         results=results,
         group_results=group_results,
         all_dataset_models=all_dataset_models,
@@ -330,10 +333,10 @@ def plot_results(results_path: Path, save_dir: Path) -> None:
     )
 
     # Plot TDC ADMET All results
-    plot_all_results(results=results, save_dir=save_dir)
+    plot_tdc_all_results(results=results, save_dir=save_dir)
 
 
 if __name__ == "__main__":
     from tap import tapify
 
-    tapify(plot_results)
+    tapify(plot_tdc_results)

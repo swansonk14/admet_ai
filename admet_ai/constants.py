@@ -109,6 +109,7 @@ ADMET_ALL_SMILES_COLUMN = "smiles"
 ADMET_GROUP_SMILES_COLUMN = "Drug"
 ADMET_GROUP_TARGET_COLUMN = "Y"
 ADMET_GROUPS = ["absorption", "distribution", "metabolism", "excretion", "toxicity"]
+
 # TODO: add Tox21 below
 # TODO: add units for regression datasets
 # TODO: double check interpretation of values
@@ -279,3 +280,12 @@ ADMET_PLOTTING_DETAILS = {
         },
     },
 }
+
+DRUGBANK_NAME_COLUMN = "name"
+DRUGBANK_SMILES_COLUMN = "smiles"
+DRUGBANK_ATC_PREFIX = "atc"
+DRUGBANK_ATC_DELIMITER = ";"
+DRUGBANK_ATC_COLUMNS = [
+    f"{DRUGBANK_ATC_PREFIX}_{level}"
+    for level in range(1, 5)
+]
