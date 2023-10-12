@@ -1,13 +1,14 @@
-"""Make predictions on a dataset using Chemprop models trained on TDC ADMET data (all or Benchmark Data group)."""
+"""Make predictions on a dataset using Chemprop-RDKit models trained on TDC ADMET data."""
 from pathlib import Path
-from typing import Literal
 
 import pandas as pd
+from tap import tapify
 
 from admet_ai import ADMETModel
 
 
-def predict_tdc_admet(
+# TODO: test this script
+def admet_predict(
     data_path: Path,
     model_dir: Path,
     save_path: Path | None = None,
@@ -15,9 +16,7 @@ def predict_tdc_admet(
     num_workers: int = 8,
     cache_molecules: bool = True,
 ) -> None:
-    """Make predictions on a dataset using Chemprop models trained on TDC ADMET data (all or Benchmark Data group).
-
-    Note: If using a Chemprop-RDKit model, this script first computes RDKit features.
+    """Make predictions on a dataset using Chemprop-RDKit models trained on TDC ADMET data.
 
     :param data_path: Path to a CSV file containing a dataset of molecules.
     :param model_dir: Path to a directory containing Chemprop or Chemprop-RDKit models.
@@ -52,7 +51,6 @@ def predict_tdc_admet(
     data_with_preds.to_csv(save_path, index=False)
 
 
-if __name__ == "__main__":
-    from tap import tapify
-
-    tapify(predict_tdc_admet)
+def admet_predict_command_line() -> None:
+    """Run admet_predict from the command line."""
+    tapify(admet_predict)

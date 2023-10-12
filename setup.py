@@ -27,7 +27,7 @@ setup(
     package_data={'admet_ai': ['py.typed']},
     entry_points={
         'console_scripts': [
-            'admet_ai=admet_aid.predict:predict'
+            'admet_predict=admet_ai.predict:admet_predict_command_line'
         ]
     },
     install_requires=[

@@ -142,11 +142,10 @@ python evaluate_tdc_admet_group.py \
 The instructions below illustrate how to make predictions with trained Chemprop-RDKit multitask ADMET predictors. The instructions assume that you have a file called `data.csv` which contains SMILES strings in a column called `smiles`. Note: A GPU is used by default if available.
 
 ```bash
-python predict_tdc_admet.py \
+admet_predict \
     --data_path data.csv \
     --save_path preds.csv \
     --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
-    --model_type chemprop_rdkit \
     --smiles_column smiles
 ```
 
