@@ -90,12 +90,16 @@ class ADMETModel:
         """Get the number of ensembles."""
         return len(self.model_lists)
 
-    def predict(self, smiles: list[str]) -> pd.DataFrame:
+    def predict(self, smiles: str | list[str]) -> pd.DataFrame:
         """Make predictions on a list of SMILES strings.
 
-        :param smiles: List of SMILES strings.
+        :param smiles: A SMILES string or a list of SMILES strings.
         :return: A DataFrame containing the predictions with SMILES strings as the index.
         """
+        # Convert SMILES to list if needed
+        if isinstance(smiles, str):
+            smiles = [smiles]
+
         # Compute fingerprints if needed
         if self.use_features:
             fingerprints = compute_fingerprints(smiles, fingerprint_type="rdkit")
