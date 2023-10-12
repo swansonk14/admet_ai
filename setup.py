@@ -31,15 +31,15 @@ setup(
         ]
     },
     install_requires=[
-        'chemfunc',
-        'chemprop',
+        'chemfunc>=1.0.4',
+        'chemprop>=1.6.1',
         'numpy',
         'openpyxl',
-        'panda',
-        'PyTDC',
-        'rdkit',
-        'tqdm'
-        'typed-argument-parser',
+        'pandas',
+        'PyTDC>=0.4.1',
+        'rdkit>=2023.03.3',
+        'tqdm',
+        'typed-argument-parser>=1.8.1'
     ],
     python_requires='>=3.10',
     classifiers=[

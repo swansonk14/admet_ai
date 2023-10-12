@@ -26,7 +26,7 @@ class ADMETModel:
     # TODO: set defaults for model paths in constants and include model files in git repo
     def __init__(
             self,
-            model_dirs: list[Path],
+            model_dirs: list[Path | str],
             num_workers: int = 8,
             cache_molecules: bool = True
     ) -> None:
@@ -49,17 +49,24 @@ class ADMETModel:
 
         # Load each ensemble of models
         self.task_lists: list[list[str]] = []
+        self.use_features_list: list[bool] = []
         self.model_lists: list[list[MoleculeModel]] = []
         self.scaler_lists: list[list[StandardScaler | None]] = []
 
         for model_dir in model_dirs:
             # Get model paths for the ensemble in the directory
-            model_paths = sorted(model_dir.glob("**/*.pt"))
+            model_paths = sorted(Path(model_dir).glob("**/*.pt"))
+
+            # Load args for this ensemble
+            train_args = load_args(str(model_paths[0]))
 
             # Get task names for this ensemble
-            train_args = load_args(model_paths[0])
             task_names = train_args.task_names
             self.task_lists.append(task_names)
+
+            # Get whether to use features for this ensemble
+            use_features = train_args.use_input_features
+            self.use_features_list.append(use_features)
 
             # Load models in the ensemble
             models = [
@@ -72,6 +79,12 @@ class ADMETModel:
             scalers = [load_scalers(path=str(model_path))[0] for model_path in model_paths]
             self.scaler_lists.append(scalers)
 
+        # Ensure all models do or do not use features
+        if not len(set(self.use_features_list)) == 1:
+            raise ValueError("All models must either use or not use features.")
+
+        self.use_features = self.use_features_list[0]
+
     @property
     def num_ensembles(self) -> int:
         """Get the number of ensembles."""
@@ -83,8 +96,11 @@ class ADMETModel:
         :param smiles: List of SMILES strings.
         :return: A DataFrame containing the predictions with SMILES strings as the index.
         """
-        # Compute fingerprints
-        fingerprints = compute_fingerprints(smiles, fingerprint_type="rdkit")
+        # Compute fingerprints if needed
+        if self.use_features:
+            fingerprints = compute_fingerprints(smiles, fingerprint_type="rdkit")
+        else:
+            fingerprints = [None] * len(smiles)
 
         # Build data loader
         data_loader = MoleculeDataLoader(
@@ -105,8 +121,9 @@ class ADMETModel:
         task_to_preds = {}
 
         # Loop through each ensemble and make predictions
-        for tasks, models, scalers in tqdm(zip(self.task_lists, self.model_lists, self.scaler_lists),
-                                           total=self.num_ensembles, desc="model ensembles"):
+        for tasks, use_features, models, scalers in tqdm(
+                zip(self.task_lists, self.use_features_list, self.model_lists, self.scaler_lists),
+                total=self.num_ensembles, desc="model ensembles"):
             # Make predictions
             preds = [
                 predict(model=model, data_loader=data_loader)
