@@ -31,7 +31,7 @@ def admet_predict(
 
     # Remove missing SMILES
     original_num_molecules = len(data)
-    data.dropna(subset=[smiles_column], inplace=True)
+    data.dropna(subset=[smiles_column], inplace=True, ignore_index=True)
 
     # Warn if molecules were removed
     if len(data) < original_num_molecules:
@@ -39,9 +39,6 @@ def admet_predict(
             f"Warning: {original_num_molecules - len(data):,} molecules were removed "
             f"from the dataset because they were missing SMILES."
         )
-
-    # Get SMILES
-    smiles = list(data[smiles_column])
 
     # Build ADMETModel
     model = ADMETModel(
@@ -51,7 +48,7 @@ def admet_predict(
     )
 
     # Make predictions
-    preds = model.predict(smiles)
+    preds = model.predict(smiles=list(data[smiles_column]))
 
     # Merge data and preds
     data_with_preds = pd.concat((data, preds), axis=1)
