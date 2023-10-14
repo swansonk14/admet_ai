@@ -40,6 +40,9 @@ def admet_predict(
             f"from the dataset because they were missing SMILES."
         )
 
+    # Set SMILES as index
+    data.set_index(smiles_column, inplace=True)
+
     # Build ADMETModel
     model = ADMETModel(
         model_dirs=sorted(path for path in model_dir.iterdir() if path.is_dir()),
@@ -48,7 +51,7 @@ def admet_predict(
     )
 
     # Make predictions
-    preds = model.predict(smiles=list(data[smiles_column]))
+    preds = model.predict(smiles=list(data.index))
 
     # Merge data and preds
     data_with_preds = pd.concat((data, preds), axis=1)
