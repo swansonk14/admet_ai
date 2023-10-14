@@ -32,7 +32,7 @@ def admet_predict(
 
     # Build ADMETModel
     model = ADMETModel(
-        model_dirs=sorted(model_dir.iterdir()),
+        model_dirs=sorted(path for path in model_dir.iterdir() if path.is_dir()),
         num_workers=num_workers,
         cache_molecules=cache_molecules
     )
