@@ -1,5 +1,4 @@
 """ADMET-AI class to contain ADMET model and prediction function."""
-from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
@@ -106,14 +105,7 @@ class ADMETModel:
             smiles = [smiles]
 
         # Convert SMILES to RDKit molecules
-        with Pool() as pool:
-            mols = list(
-                tqdm(
-                    pool.imap(Chem.MolFromSmiles, smiles),
-                    total=len(smiles),
-                    desc="Smiles to Mol",
-                )
-            )
+        mols = [Chem.MolFromSmiles(smile) for smile in tqdm(smiles, desc="SMILES to Mol")]
 
         # Remove invalid molecules
         invalid_mols = [mol is None for mol in mols]
