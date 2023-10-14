@@ -61,7 +61,7 @@ def admet_predict(
         save_path = data_path
 
     save_path.parent.mkdir(parents=True, exist_ok=True)
-    data_with_preds.to_csv(save_path)
+    data_with_preds.to_csv(save_path, index_label=smiles_column)
 
 
 def admet_predict_command_line() -> None:
