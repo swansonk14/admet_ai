@@ -1,4 +1,5 @@
 """ADMET-AI class to contain ADMET model and prediction function."""
+from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
@@ -15,20 +16,20 @@ from chemprop.data import (
 from chemprop.models import MoleculeModel
 from chemprop.train import predict
 from chemprop.utils import load_args, load_checkpoint, load_scalers
+from rdkit import Chem
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
 
-# TODO: use ADMETModel in scripts/predict_tdc_admet.py
 class ADMETModel:
     """ADMET-AI model class."""
 
     # TODO: set defaults for model paths in constants and include model files in git repo
     def __init__(
-            self,
-            model_dirs: list[Path | str],
-            num_workers: int = 8,
-            cache_molecules: bool = True
+        self,
+        model_dirs: list[Path | str],
+        num_workers: int = 8,
+        cache_molecules: bool = True,
     ) -> None:
         """Initialize the ADMET-AI model.
 
@@ -45,7 +46,9 @@ class ADMETModel:
         set_cache_mol(cache_molecules)
 
         # Set device based on GPU availability
-        self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        self.device = (
+            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        )
 
         # Load each ensemble of models
         self.task_lists: list[list[str]] = []
@@ -76,7 +79,9 @@ class ADMETModel:
             self.model_lists.append(models)
 
             # Load scalers for each model
-            scalers = [load_scalers(path=str(model_path))[0] for model_path in model_paths]
+            scalers = [
+                load_scalers(path=str(model_path))[0] for model_path in model_paths
+            ]
             self.scaler_lists.append(scalers)
 
         # Ensure all models do or do not use features
@@ -100,9 +105,30 @@ class ADMETModel:
         if isinstance(smiles, str):
             smiles = [smiles]
 
+        # Convert SMILES to RDKit molecules
+        with Pool() as pool:
+            mols = list(
+                tqdm(
+                    pool.imap(Chem.MolFromSmiles, smiles),
+                    total=len(smiles),
+                    desc="Smiles to Mol",
+                )
+            )
+
+        # Remove invalid molecules
+        invalid_mols = [mol is None for mol in mols]
+
+        if any(invalid_mols):
+            print(f"Warning: {sum(invalid_mols):,} invalid molecules will be removed")
+
+            mols = [mol for mol in mols if mol is not None]
+            smiles = [
+                smile for smile, invalid in zip(smiles, invalid_mols) if not invalid
+            ]
+
         # Compute fingerprints if needed
         if self.use_features:
-            fingerprints = compute_fingerprints(smiles, fingerprint_type="rdkit")
+            fingerprints = compute_fingerprints(mols, fingerprint_type="rdkit")
         else:
             fingerprints = [None] * len(smiles)
 
@@ -110,10 +136,7 @@ class ADMETModel:
         data_loader = MoleculeDataLoader(
             dataset=MoleculeDataset(
                 [
-                    MoleculeDatapoint(
-                        smiles=[smile],
-                        features=fingerprint,
-                    )
+                    MoleculeDatapoint(smiles=[smile], features=fingerprint,)
                     for smile, fingerprint in zip(smiles, fingerprints)
                 ]
             ),
@@ -126,8 +149,15 @@ class ADMETModel:
 
         # Loop through each ensemble and make predictions
         for tasks, use_features, models, scalers in tqdm(
-                zip(self.task_lists, self.use_features_list, self.model_lists, self.scaler_lists),
-                total=self.num_ensembles, desc="model ensembles"):
+            zip(
+                self.task_lists,
+                self.use_features_list,
+                self.model_lists,
+                self.scaler_lists,
+            ),
+            total=self.num_ensembles,
+            desc="model ensembles",
+        ):
             # Make predictions
             preds = [
                 predict(model=model, data_loader=data_loader)
