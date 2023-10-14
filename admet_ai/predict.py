@@ -28,6 +28,19 @@ def admet_predict(
     """
     # Load data
     data = pd.read_csv(data_path)
+
+    # Remove missing SMILES
+    original_num_molecules = len(data)
+    data.dropna(subset=[smiles_column], inplace=True)
+
+    # Warn if molecules were removed
+    if len(data) < original_num_molecules:
+        print(
+            f"Warning: {original_num_molecules - len(data):,} molecules were removed "
+            f"from the dataset because they were missing SMILES."
+        )
+
+    # Get SMILES
     smiles = list(data[smiles_column])
 
     # Build ADMETModel
