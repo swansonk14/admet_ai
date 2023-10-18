@@ -23,8 +23,8 @@ pip install admet_ai
 
 Alternatively, clone the repo and install ADMET-AI locally.
 ```bash
-git clone https://github.com/swansonk14/SyntheMol.git
-cd SyntheMol
+git clone https://github.com/swansonk14/admet_ai.git
+cd admet_ai
 pip install -e .
 ```
 
@@ -46,7 +46,7 @@ TODO
 Download the [TDC ADMET Benchmark Group](https://tdcommons.ai/benchmark/admet_group/overview/) data for evaluating models using scaffold splits in order to compare to the TDC leaderboard.
 
 ```bash
-python prepare_tdc_admet_group.py \
+python scripts/prepare_tdc_admet_group.py \
     --raw_data_dir data/tdc_admet_group_raw \
     --save_dir data/tdc_admet_group
 ```
@@ -54,7 +54,7 @@ python prepare_tdc_admet_group.py \
 Download all TDC [ADME](https://tdcommons.ai/single_pred_tasks/adme/) and [Tox](https://tdcommons.ai/single_pred_tasks/tox/) datasets for training models. Skip datasets that are redundant or not needed.
 
 ```bash
-python prepare_tdc_admet_all.py \
+python scripts/prepare_tdc_admet_all.py \
     --save_dir data/tdc_admet_all \
     --skip_datasets herg_central hERG_Karim ToxCast
 ```
@@ -64,9 +64,19 @@ python prepare_tdc_admet_all.py \
 Create multitask datasets for regression and classification for all the TDC ADMET datasets.
 
 ```bash
-python merge_tdc_admet_all.py \
+python scripts/merge_tdc_admet_multitask.py \
     --data_dir data/tdc_admet_all \
     --save_dir data/tdc_admet_all_multitask
+```
+
+## Create a single dataset with all TDC ADMET data
+
+Create a single dataset with all TDC ADMET data, primarily for the purpose of searching across the TDC data.
+
+```bash
+python scripts/merge_tdc_admet_all.py \
+    --data_dir data/tdc_admet_all \
+    --save_path data/tdc_admet_all.csv
 ```
 
 
@@ -77,7 +87,7 @@ Compute RDKit features in order to train Chemprop-RDKit models (i.e., Chemprop m
 Compute RDKit features for the TDC ADMET Benchmark Group data.
 
 ```bash
-python compute_rdkit_features.py \
+python scripts/compute_rdkit_features.py \
     --data_dir data/tdc_admet_group \
     --smiles_column Drug
 ```
@@ -85,7 +95,7 @@ python compute_rdkit_features.py \
 Compute RDKit features for all TDC ADMET datasets.
 
 ```bash
-python compute_rdkit_features.py \
+python scripts/compute_rdkit_features.py \
     --data_dir data/tdc_admet_all \
     --smiles_column smiles
 ```
@@ -93,7 +103,7 @@ python compute_rdkit_features.py \
 Compute RDKit features for TDC ADMET multitask datasets.
 
 ```bash
-python compute_rdkit_features.py \
+python scripts/compute_rdkit_features.py \
     --data_dir data/tdc_admet_all_multitask \
     --smiles_column smiles
 ```
@@ -106,7 +116,7 @@ Train Chemprop and Chemprop-RDKit predictors on the ADMET data. Note: A GPU is u
 Train Chemprop-RDKit ADMET predictors on the TDC ADMET Benchmark Group data.
 
 ```bash
-python train_tdc_admet_group.py \
+python scripts/train_tdc_admet_group.py \
     --data_dir data/tdc_admet_group \
     --save_dir models/tdc_admet_group \
     --model_type chemprop_rdkit
@@ -115,7 +125,7 @@ python train_tdc_admet_group.py \
 Train Chemprop-RDKit ADMET predictors on all TDC ADMET datasets.
 
 ```bash
-python train_tdc_admet_all.py \
+python scripts/train_tdc_admet_all.py \
     --data_dir data/tdc_admet_all \
     --save_dir models/tdc_admet_all \
     --model_type chemprop_rdkit
@@ -124,7 +134,7 @@ python train_tdc_admet_all.py \
 Train Chemprop-RDKit ADMET predictors on the TDC ADMET multitask datasets.
 
 ```bash
-python train_tdc_admet_all.py \
+python scripts/train_tdc_admet_all.py \
     --data_dir data/tdc_admet_all_multitask \
     --save_dir models/tdc_admet_all_multitask \
     --model_type chemprop_rdkit
@@ -135,7 +145,7 @@ python train_tdc_admet_all.py \
 Evaluate Chemprop-RDKit ADMET predictors trained on the TDC ADMET Benchmark Group data.
 
 ```bash
-python evaluate_tdc_admet_group.py \
+python scripts/evaluate_tdc_admet_group.py \
     --data_dir data/tdc_admet_group_raw \
     --preds_dir models/tdc_admet_group/chemprop_rdkit
 ```
@@ -158,7 +168,7 @@ admet_predict \
 Get approved drugs from DrugBank to create a comparison set for Chemprop ADMET predictors.
 
 ```bash
-python get_drugbank_approved.py \
+python scripts/get_drugbank_approved.py \
     --data_path data/drugbank/drugbank.xml \
     --save_path data/drugbank/drugbank_approved.csv
 ```
