@@ -36,7 +36,10 @@ pip install -e .
 
 Note: If you get the issue `ImportError: libXrender.so.1: cannot open shared object file: No such file or directory`, run `conda install -c conda-forge xorg-libxrender`.
 
-## TODO: Downlading and applying trained models
+TODO: Need to resolve the rdkit-pypi and rdkit conflict and the `Boost.Python` multiprocessing issue. Seems to be an issue with installing PyTDC. Maybe worth creating two versions of installation, one for prediction and one for reproducing results.
+
+
+## TODO: Downloading and applying trained models
 
 TODO
 

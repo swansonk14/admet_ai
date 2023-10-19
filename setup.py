@@ -37,7 +37,7 @@ setup(
         'openpyxl',
         'pandas',
         'PyTDC>=0.4.1',
-        'rdkit>=2023.03.3',
+        'rdkit>=2023.3.3',
         'tqdm',
         'typed-argument-parser>=1.8.1'
     ],
