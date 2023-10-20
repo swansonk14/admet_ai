@@ -7,24 +7,25 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+FIGSIZE = (10, 8)
+
 
 def split_axes(axes: list[plt.Axes]) -> None:
-    """Split axes into two disjoint plots.
+    """Split axes (two columns) into two disjoint plots.
 
-    :param axes: List of two axes to split.
+    :param axes: List of two axes (two columns) to split.
     """
     for ax in axes:
         ax.set_xlabel("")
         ax.set_ylabel("")
 
-    axes[0].spines.bottom.set_visible(False)
-    axes[1].spines.top.set_visible(False)
-    axes[0].tick_params(axis="x", which="both", bottom=False, top=False)
-    axes[1].xaxis.tick_bottom()
+    axes[0].spines.right.set_visible(False)
+    axes[1].spines.left.set_visible(False)
+    axes[1].tick_params(axis="y", which="both", left=False, right=False)
 
     d = 0.5  # proportion of vertical to horizontal extent of the slanted line
     kwargs = dict(
-        marker=[(-1, -d), (1, d)],
+        marker=[(-d, -1), (d, 1)],
         markersize=12,
         linestyle="none",
         color="k",
@@ -32,8 +33,8 @@ def split_axes(axes: list[plt.Axes]) -> None:
         mew=1,
         clip_on=False,
     )
-    axes[0].plot([0, 1], [0, 0], transform=axes[0].transAxes, **kwargs)
-    axes[1].plot([0, 1], [1, 1], transform=axes[1].transAxes, **kwargs)
+    axes[0].plot([1, 1], [0, 1], transform=axes[0].transAxes, **kwargs)
+    axes[1].plot([0, 0], [0, 1], transform=axes[1].transAxes, **kwargs)
 
 
 def plot_tdc_leaderboard_ranks(
@@ -67,10 +68,11 @@ def plot_tdc_leaderboard_ranks(
     model_ranks = dataset_model_ranks.melt(var_name="Model", value_name="Rank")
 
     # Plot the ranks for each model that is evaluated on all datasets
-    fig, ax = plt.subplots(figsize=(6, 8))
-    sns.barplot(x="Model", y="Rank", data=model_ranks, ax=ax, errorbar="se")
-    ax.set_xlabel("")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
+    fig, ax = plt.subplots(figsize=FIGSIZE)
+    sns.barplot(
+        x="Rank", y="Model", data=model_ranks, hue="Model", ax=ax, errorbar="se"
+    )
+    ax.set_ylabel("")
     plt.tight_layout()
     plt.savefig(save_dir / "leaderboard_model_ranks.pdf", bbox_inches="tight")
     plt.close()
@@ -93,7 +95,7 @@ def plot_tdc_group_results(
     save_dir.mkdir(parents=True, exist_ok=True)
 
     # Plot TDC ADMET Group results
-    for i, (metric, y_min, y_max) in enumerate(
+    for i, (metric, val_min, val_max) in enumerate(
         [
             ("AUROC", 0.5, 1.0),
             ("AUPRC", 0.0, 1.0),
@@ -102,10 +104,10 @@ def plot_tdc_group_results(
         ]
     ):
         if metric == "MAE":
-            fig, axes = plt.subplots(2, 1, sharex=True, figsize=(6, 8))
-            fig.subplots_adjust(hspace=0.05)
+            fig, axes = plt.subplots(1, 2, sharey=True, figsize=FIGSIZE)
+            fig.subplots_adjust(wspace=0.05)
         else:
-            fig, ax = plt.subplots(figsize=(6, 8))
+            fig, ax = plt.subplots(figsize=FIGSIZE)
             axes = [ax]
 
         metric_dataset_names = group_results[
@@ -130,53 +132,55 @@ def plot_tdc_group_results(
 
             for k, ax in enumerate(axes):
                 sns.scatterplot(
-                    x="Dataset",
-                    y=metric,
+                    x=metric,
+                    y="Dataset",
                     data=leaderboard_partial_data,
                     ax=ax,
                     color=sns.color_palette()[0],
                     s=60,
-                    label="Leaderboard (partial)" if j == 0 and k == 0 else None,
+                    label="Leaderboard (partial)"
+                    if j == 0 and k == len(axes) - 1
+                    else None,
                     marker="x",
                 )
                 sns.scatterplot(
-                    x="Dataset",
-                    y=metric,
+                    x=metric,
+                    y="Dataset",
                     data=leaderboard_all_data,
                     ax=ax,
                     color=sns.color_palette()[0],
                     s=60,
-                    label="Leaderboard (all)" if j == 0 and k == 0 else None,
+                    label="Leaderboard (all)"
+                    if j == 0 and k == len(axes) - 1
+                    else None,
                     marker="o",
                 )
                 sns.scatterplot(
-                    x="Dataset",
-                    y=metric,
+                    x=metric,
+                    y="Dataset",
                     data=chemprop_rdkit_data,
                     ax=ax,
                     color=sns.color_palette()[3],
                     s=300,
-                    label="Chemprop-RDKit" if j == 0 and k == 0 else None,
+                    label="Chemprop-RDKit" if j == 0 and k == len(axes) - 1 else None,
                     marker="*",
                 )
 
         if metric == "MAE":
             split_axes(axes)
 
-            axes[0].set_ylim(6.5, 13.5)
-            axes[1].set_ylim(0.0, 1.5)
+            axes[0].set_xlim(0.0, 1.5)
+            axes[1].set_xlim(6.5, 13.5)
 
-            fig.text(0.04, 0.6, metric, va="center", rotation="vertical", fontsize=12)
+            fig.text(0.6, 0.05, metric, ha="center", fontsize=10)
         else:
-            axes[0].set_ylim(y_min, y_max)
-            axes[0].set_xlabel("")
-
-        axes[-1].set_xticklabels(axes[-1].get_xticklabels(), rotation=90)
+            axes[0].set_xlim(val_min, val_max)
+            axes[0].set_ylabel("")
 
         plt.tight_layout()
 
         if metric == "MAE":
-            fig.subplots_adjust(left=0.15)
+            fig.subplots_adjust(bottom=0.1)
 
         plt.savefig(save_dir / f"leaderboard_{metric.lower()}.pdf", bbox_inches="tight")
         plt.close()
@@ -218,17 +222,32 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
             value_name=f"{metric} Standard Deviation",
         )
 
+        # Rename task type column to remove metric
+        task_type_mapping = {
+            f"Single Task {metric} Mean": "Single Task",
+            f"Multitask {metric} Mean": "Multi Task",
+            f"Single Task {metric} Standard Deviation": "Single Task",
+            f"Multitask {metric} Standard Deviation": "Multi Task",
+        }
+
+        results_all_mean_single_vs_multi["Task Type"] = results_all_mean_single_vs_multi[
+            "Task Type"
+        ].apply(lambda task_type: task_type_mapping[task_type])
+        results_all_std_single_vs_multi["Task Type"] = results_all_std_single_vs_multi[
+            "Task Type"
+        ].apply(lambda task_type: task_type_mapping[task_type])
+
         if metric == "MAE":
-            fig, axes = plt.subplots(2, 1, sharex=True, figsize=(12, 8))
-            fig.subplots_adjust(hspace=0.05)
+            fig, axes = plt.subplots(1, 2, sharey=True, figsize=FIGSIZE)
+            fig.subplots_adjust(wspace=0.05)
         else:
-            fig, ax = plt.subplots(figsize=(12, 8))
+            fig, ax = plt.subplots(figsize=FIGSIZE)
             axes = [ax]
 
         for ax in axes:
             sns.barplot(
-                x="Dataset",
-                y=f"{metric} Mean",
+                x=f"{metric} Mean",
+                y="Dataset",
                 hue="Task Type",
                 data=results_all_mean_single_vs_multi,
                 ax=ax,
@@ -236,45 +255,42 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
 
             for i, dataset in enumerate(results_all["Dataset"]):
                 ax.errorbar(
-                    x=[i - 0.2, i + 0.2],
-                    y=results_all_mean_single_vs_multi.loc[
+                    x=results_all_mean_single_vs_multi.loc[
                         (results_all_mean_single_vs_multi["Dataset"] == dataset),
                         f"{metric} Mean",
                     ].values,
-                    yerr=results_all_std_single_vs_multi.loc[
+                    y=[i - 0.2, i + 0.2],
+                    xerr=results_all_std_single_vs_multi.loc[
                         (results_all_std_single_vs_multi["Dataset"] == dataset),
                         f"{metric} Standard Deviation",
                     ].values,
                     fmt="none",
                     c="black",
-                    capsize=5,
+                    capsize=3,
                 )
 
         if metric == "MAE":
-            axes[0].set_ylim(3.0, 40.0)
-            axes[1].set_ylim(0.0, 1.0)
+            axes[0].set_xlim(0.0, 1.0)
+            axes[1].set_xlim(3.0, 40.0)
 
-            axes[1].legend().remove()
+            axes[0].legend().remove()
 
             split_axes(axes)
 
             fig.text(
-                0.04,
-                0.6,
-                f"{metric} Mean",
-                va="center",
-                rotation="vertical",
-                fontsize=12,
+                0.6, 0.05, f"{metric} Mean", ha="center", fontsize=10,
             )
         else:
-            axes[0].set_xlabel("")
+            axes[0].set_ylabel("")
 
-        axes[-1].set_xticklabels(axes[-1].get_xticklabels(), rotation=90)
+        # Change R^2 metric to $R^2$ for plotting
+        if metric == "R^2":
+            axes[0].set_xlabel(r"$R^2$ Mean")
 
         plt.tight_layout()
 
         if metric == "MAE":
-            fig.subplots_adjust(left=0.1)
+            fig.subplots_adjust(bottom=0.1)
 
         plt.savefig(save_dir / f"all_{metric.lower()}.pdf", bbox_inches="tight")
         plt.close()
