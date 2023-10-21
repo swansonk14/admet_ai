@@ -2,12 +2,15 @@
 from collections import defaultdict
 from pathlib import Path
 
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
-FIGSIZE = (10, 8)
+FIGSIZE = (14, 10)
+matplotlib.rcParams["font.size"] = 16
+SCATTER_SIZE = 150
 
 
 def split_axes(axes: list[plt.Axes]) -> None:
@@ -137,7 +140,7 @@ def plot_tdc_group_results(
                     data=leaderboard_partial_data,
                     ax=ax,
                     color=sns.color_palette()[0],
-                    s=60,
+                    s=SCATTER_SIZE,
                     label="Leaderboard (partial)"
                     if j == 0 and k == len(axes) - 1
                     else None,
@@ -149,7 +152,7 @@ def plot_tdc_group_results(
                     data=leaderboard_all_data,
                     ax=ax,
                     color=sns.color_palette()[0],
-                    s=60,
+                    s=SCATTER_SIZE,
                     label="Leaderboard (all)"
                     if j == 0 and k == len(axes) - 1
                     else None,
@@ -161,7 +164,7 @@ def plot_tdc_group_results(
                     data=chemprop_rdkit_data,
                     ax=ax,
                     color=sns.color_palette()[3],
-                    s=300,
+                    s=4 * SCATTER_SIZE,
                     label="Chemprop-RDKit" if j == 0 and k == len(axes) - 1 else None,
                     marker="*",
                 )
@@ -172,7 +175,7 @@ def plot_tdc_group_results(
             axes[0].set_xlim(0.0, 1.5)
             axes[1].set_xlim(6.5, 13.5)
 
-            fig.text(0.6, 0.05, metric, ha="center", fontsize=10)
+            fig.text(0.6, 0.05, metric, ha="center")
         else:
             axes[0].set_xlim(val_min, val_max)
             axes[0].set_ylabel("")
@@ -230,9 +233,11 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
             f"Multitask {metric} Standard Deviation": "Multi Task",
         }
 
-        results_all_mean_single_vs_multi["Task Type"] = results_all_mean_single_vs_multi[
+        results_all_mean_single_vs_multi[
             "Task Type"
-        ].apply(lambda task_type: task_type_mapping[task_type])
+        ] = results_all_mean_single_vs_multi["Task Type"].apply(
+            lambda task_type: task_type_mapping[task_type]
+        )
         results_all_std_single_vs_multi["Task Type"] = results_all_std_single_vs_multi[
             "Task Type"
         ].apply(lambda task_type: task_type_mapping[task_type])
@@ -278,7 +283,7 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
             split_axes(axes)
 
             fig.text(
-                0.6, 0.05, f"{metric} Mean", ha="center", fontsize=10,
+                0.6, 0.05, f"{metric} Mean", ha="center",
             )
         else:
             axes[0].set_ylabel("")
