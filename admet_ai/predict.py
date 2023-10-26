@@ -47,7 +47,7 @@ def admet_predict(
     model = ADMETModel(
         model_dirs=sorted(path for path in model_dir.iterdir() if path.is_dir()),
         num_workers=num_workers,
-        cache_molecules=cache_molecules
+        cache_molecules=cache_molecules,
     )
 
     # Make predictions

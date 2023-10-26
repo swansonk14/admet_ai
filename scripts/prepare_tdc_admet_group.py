@@ -9,7 +9,7 @@ from tqdm import tqdm
 from admet_ai.constants import (
     ADMET_GROUP_SEEDS,
     ADMET_GROUP_TARGET_COLUMN,
-    DATASET_TO_TYPE_LOWER
+    DATASET_TO_TYPE_LOWER,
 )
 
 
@@ -38,19 +38,23 @@ def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
         data = pd.concat((benchmark["train_val"], benchmark["test"]))
 
         # Compute class balance
-        if DATASET_TO_TYPE_LOWER[data_name] == 'classification':
-            class_balance = data[ADMET_GROUP_TARGET_COLUMN].value_counts(normalize=True)[1]
+        if DATASET_TO_TYPE_LOWER[data_name] == "classification":
+            class_balance = data[ADMET_GROUP_TARGET_COLUMN].value_counts(
+                normalize=True
+            )[1]
         else:
             class_balance = None
 
         # Collect dataset stats
-        dataset_stats.append({
-            'name': data_name,
-            'size': len(data),
-            'min': data[ADMET_GROUP_TARGET_COLUMN].min(),
-            'max': data[ADMET_GROUP_TARGET_COLUMN].max(),
-            'class_balance': class_balance
-        })
+        dataset_stats.append(
+            {
+                "name": data_name,
+                "size": len(data),
+                "min": data[ADMET_GROUP_TARGET_COLUMN].min(),
+                "max": data[ADMET_GROUP_TARGET_COLUMN].max(),
+                "class_balance": class_balance,
+            }
+        )
 
         # Get name
         name = benchmark["name"]
@@ -81,8 +85,8 @@ def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
             valid.to_csv(seed_dir / "val.csv")
 
     # Print dataset stats
-    dataset_stats = pd.DataFrame(dataset_stats).set_index('name')
-    pd.set_option('display.max_rows', None)
+    dataset_stats = pd.DataFrame(dataset_stats).set_index("name")
+    pd.set_option("display.max_rows", None)
     print(dataset_stats)
 
 

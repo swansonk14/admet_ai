@@ -285,7 +285,4 @@ DRUGBANK_NAME_COLUMN = "name"
 DRUGBANK_SMILES_COLUMN = "smiles"
 DRUGBANK_ATC_PREFIX = "atc"
 DRUGBANK_ATC_DELIMITER = ";"
-DRUGBANK_ATC_COLUMNS = [
-    f"{DRUGBANK_ATC_PREFIX}_{level}"
-    for level in range(1, 5)
-]
+DRUGBANK_ATC_COLUMNS = [f"{DRUGBANK_ATC_PREFIX}_{level}" for level in range(1, 5)]

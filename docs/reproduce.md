@@ -1,6 +1,6 @@
 # Reproducing TDC ADMET Results
 
-This file contains instructions for reproducing the ADMET-AI data, models, and results.
+This file contains instructions for reproducing the ADMET-AI data, models, and results. Note: Running the below commands requires the additional TDC dependencies (i.e., `pip install admet_ai[tdc]`).
 
 - [Download TDC ADMET data](#download-tdc-admet-data)
 - [Create multitask datasets for regression and classification](#create-multitask-datasets-for-regression-and-classification)

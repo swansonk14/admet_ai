@@ -105,7 +105,9 @@ class ADMETModel:
             smiles = [smiles]
 
         # Convert SMILES to RDKit molecules
-        mols = [Chem.MolFromSmiles(smile) for smile in tqdm(smiles, desc="SMILES to Mol")]
+        mols = [
+            Chem.MolFromSmiles(smile) for smile in tqdm(smiles, desc="SMILES to Mol")
+        ]
 
         # Remove invalid molecules
         invalid_mols = [mol is None for mol in mols]

@@ -10,7 +10,7 @@ from admet_ai.constants import (
     DRUGBANK_ATC_DELIMITER,
     DRUGBANK_ATC_PREFIX,
     DRUGBANK_NAME_COLUMN,
-    DRUGBANK_SMILES_COLUMN
+    DRUGBANK_SMILES_COLUMN,
 )
 
 DRUGBANK_NAMESPACES = {"db": "http://www.drugbank.ca"}

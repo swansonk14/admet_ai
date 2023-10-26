@@ -18,10 +18,7 @@ def merge_tdc_admet_all(data_dir: Path, save_path: Path) -> None:
     data_paths = sorted(data_dir.glob("*.csv"))
 
     # Load all dataset
-    data = [
-        pd.read_csv(data_path)
-        for data_path in tqdm(data_paths)
-    ]
+    data = [pd.read_csv(data_path) for data_path in tqdm(data_paths)]
 
     # Merge datasets
     data = reduce(

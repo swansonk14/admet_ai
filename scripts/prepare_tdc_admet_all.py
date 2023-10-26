@@ -10,7 +10,7 @@ from admet_ai.constants import (
     ADMET_GROUP_TARGET_COLUMN,
     DATASET_TO_LABEL_NAMES,
     DATASET_TO_TYPE,
-    TDC_DATASET_TO_CLASS
+    TDC_DATASET_TO_CLASS,
 )
 
 
@@ -88,25 +88,27 @@ def prepare_tdc_admet_all(save_dir: Path, skip_datasets: list[str] = None) -> No
             label_data = label_data[label_data[label_name].notna()]
 
             # Compute class balance
-            if DATASET_TO_TYPE[label_name] == 'classification':
+            if DATASET_TO_TYPE[label_name] == "classification":
                 class_balance = label_data[label_name].value_counts(normalize=True)[1]
             else:
                 class_balance = None
 
-            dataset_stats.append({
-                'name': label_name,
-                'size': len(label_data),
-                'min': label_data[label_name].min(),
-                'max': label_data[label_name].max(),
-                'class_balance': class_balance
-            })
+            dataset_stats.append(
+                {
+                    "name": label_name,
+                    "size": len(label_data),
+                    "min": label_data[label_name].min(),
+                    "max": label_data[label_name].max(),
+                    "class_balance": class_balance,
+                }
+            )
 
             # Save data
             label_data.to_csv(save_dir / f"{label_name}.csv", index=False)
 
     # Print dataset stats
-    dataset_stats = pd.DataFrame(dataset_stats).set_index('name')
-    pd.set_option('display.max_rows', None)
+    dataset_stats = pd.DataFrame(dataset_stats).set_index("name")
+    pd.set_option("display.max_rows", None)
     print(dataset_stats)
 
     # Clean up TDC data files
