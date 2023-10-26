@@ -1,34 +1,46 @@
 # ADMET-AI
 
-Training and prediction scripts for [Chemprop](https://github.com/chemprop/chemprop) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)).
-
-TODO: table of contents
+This git repo contains the code for ADMET-AI, an ADMET prediction platform that uses [Chemprop-RDKit]((https://github.com/chemprop/chemprop)) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET predictions on new molecules via the command line, via the Python API, or via a web server. A live web server hosting ADMET-AI is at [admet.ai.greenstonebio.com](https://admet.ai.greenstonebio.com)
 
 TODO: black reformat everything
+
+TODO: cite paper
+
+- [Installation](#installation)
+- [Predicting ADMET properties](#predicting-admet-properties)
+  * [Command line tool](#command-line-tool)
+  * [Python module](#python-module)
+  * [Web server](#web-server)
 
 ## Installation
 
 ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment).
 
 Optionally, create a conda environment.
+
 ```bash
 conda create -y -n admet_ai python=3.10
 conda activate admet_ai
 ```
 
 Install ADMET-AI via pip.
+
 ```bash
 pip install admet_ai
 ```
 
 Alternatively, clone the repo and install ADMET-AI locally.
+
 ```bash
 git clone https://github.com/swansonk14/admet_ai.git
 cd admet_ai
 pip install -e .
 ```
 
+By default, the pip installation only includes dependencies required for making ADMET predictions, either via the command line or via the Python API. To install dependencies required for processing TDC data or plotting TDC results, run `pip install admet_ai[tdc]`. To install dependencies required for hosting the ADMET-AI web server, run `pip install admet_ai[web]`.
+
 If there are version issues with the required packages, create a conda environment with specific working versions of the packages as follows.
+
 ```bash
 pip install -r requirements.txt
 pip install -e .
@@ -36,160 +48,46 @@ pip install -e .
 
 Note: If you get the issue `ImportError: libXrender.so.1: cannot open shared object file: No such file or directory`, run `conda install -c conda-forge xorg-libxrender`.
 
-TODO: Need to resolve the rdkit-pypi and rdkit conflict and the `Boost.Python` multiprocessing issue. Seems to be an issue with installing PyTDC. Maybe worth creating two versions of installation, one for prediction and one for reproducing results. Also, need to add matplotlib and seaborn but only for plotting results.
+## Predicting ADMET properties
 
+ADMET-AI can be used to make ADMET predictions in three ways: (1) as a command line tool, (2) as a Python module, or (3) as a web server.
 
-## TODO: Downloading and applying trained models
+### Command line tool
 
-TODO
-
-
-## Download TDC ADMET data
-
-Download the [TDC ADMET Benchmark Group](https://tdcommons.ai/benchmark/admet_group/overview/) data for evaluating models using scaffold splits in order to compare to the TDC leaderboard.
-
-```bash
-python scripts/prepare_tdc_admet_group.py \
-    --raw_data_dir data/tdc_admet_group_raw \
-    --save_dir data/tdc_admet_group
-```
-
-Download all TDC [ADME](https://tdcommons.ai/single_pred_tasks/adme/) and [Tox](https://tdcommons.ai/single_pred_tasks/tox/) datasets for training models. Skip datasets that are redundant or not needed.
-
-```bash
-python scripts/prepare_tdc_admet_all.py \
-    --save_dir data/tdc_admet_all \
-    --skip_datasets herg_central hERG_Karim ToxCast
-```
-
-## Create multitask datasets for regression and classification
-
-Create multitask datasets for regression and classification for all the TDC ADMET datasets.
-
-```bash
-python scripts/merge_tdc_admet_multitask.py \
-    --data_dir data/tdc_admet_all \
-    --save_dir data/tdc_admet_all_multitask
-```
-
-## Create a single dataset with all TDC ADMET data
-
-Create a single dataset with all TDC ADMET data, primarily for the purpose of searching across the TDC data.
-
-```bash
-python scripts/merge_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all \
-    --save_path data/tdc_admet_all.csv
-```
-
-
-## Compute RDKit features
-
-Compute RDKit features in order to train Chemprop-RDKit models (i.e., Chemprop models augmented with 200 molecular features from RDKit).
-
-Compute RDKit features for the TDC ADMET Benchmark Group data.
-
-```bash
-python scripts/compute_rdkit_features.py \
-    --data_dir data/tdc_admet_group \
-    --smiles_column Drug
-```
-
-Compute RDKit features for all TDC ADMET datasets.
-
-```bash
-python scripts/compute_rdkit_features.py \
-    --data_dir data/tdc_admet_all \
-    --smiles_column smiles
-```
-
-Compute RDKit features for TDC ADMET multitask datasets.
-
-```bash
-python scripts/compute_rdkit_features.py \
-    --data_dir data/tdc_admet_all_multitask \
-    --smiles_column smiles
-```
-
-
-## Train Chemprop ADMET predictors
-
-Train Chemprop and Chemprop-RDKit predictors on the ADMET data. Note: A GPU is used by default if available.
-
-Train Chemprop-RDKit ADMET predictors on the TDC ADMET Benchmark Group data.
-
-```bash
-python scripts/train_tdc_admet_group.py \
-    --data_dir data/tdc_admet_group \
-    --save_dir models/tdc_admet_group \
-    --model_type chemprop_rdkit
-```
-
-Train Chemprop-RDKit ADMET predictors on all TDC ADMET datasets.
-
-```bash
-python scripts/train_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all \
-    --save_dir models/tdc_admet_all \
-    --model_type chemprop_rdkit
-```
-
-Train Chemprop-RDKit ADMET predictors on the TDC ADMET multitask datasets.
-
-```bash
-python scripts/train_tdc_admet_all.py \
-    --data_dir data/tdc_admet_all_multitask \
-    --save_dir models/tdc_admet_all_multitask \
-    --model_type chemprop_rdkit
-```
-
-## Evaluate TDC ADMET Benchmark Group models
-
-Evaluate Chemprop-RDKit ADMET predictors trained on the TDC ADMET Benchmark Group data.
-
-```bash
-python scripts/evaluate_tdc_admet_group.py \
-    --data_dir data/tdc_admet_group_raw \
-    --preds_dir models/tdc_admet_group/chemprop_rdkit
-```
-
-
-## Make predictions with Chemprop ADMET predictors
-
-The instructions below illustrate how to make predictions with trained Chemprop-RDKit multitask ADMET predictors. The instructions assume that you have a file called `data.csv` which contains SMILES strings in a column called `smiles`. Note: A GPU is used by default if available.
+ADMET predictions can be made on the command line with the `admet_predict` command, as illustrated below. Note: A GPU is used by default if available.
 
 ```bash
 admet_predict \
     --data_path data.csv \
     --save_path preds.csv \
-    --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --smiles_column smiles
 ```
 
-## Get approved drugs from DrugBank
+This command assumes that there exists a file called `data.csv` with SMILES strings in the column `smiles`. The predictions will be saved to a file called `preds.csv`.
 
-Get approved drugs from DrugBank to create a comparison set for Chemprop ADMET predictors.
+### Python module
 
-```bash
-python scripts/get_drugbank_approved.py \
-    --data_path data/drugbank/drugbank.xml \
-    --save_path data/drugbank/drugbank_approved.csv
+ADMET predictions can be made using the `predict` function in the `admet_ai` Python module, as illustrated below. Note: A GPU is used by default if available.
+
+```python
+from admet_ai import ADMETModel
+
+model = ADMETModel()
+preds = model.predict(smiles="O(c1ccc(cc1)CCOC)CC(O)CNC(C)C")
 ```
 
-## Plot results
+If a SMILES string is provided, then `preds` is a dictionary mapping property names to values. If a list of SMILES strings is provided, then `preds` is a Pandas DataFrame where the index is the SMILES and the columns are the properties.
 
-Plot TDC ADMET results. First, download the results from [here](https://docs.google.com/spreadsheets/d/1bh9FEHqhbfHKF-Nxjad0Cpy2p5ztH__p0pijB43yc94/edit?usp=sharing) and save them to `results/TDC ADMET Results.xlsx`. Then run the following command.
+### Web server
 
-```bash
-python scripts/plot_tdc_results.py \
-    --results_path results/TDC\ ADMET\ Results.xlsx \
-    --save_dir plots/tdc_results
-```
+TODO: check if a GPU is used here
 
-Plot DrugBank statistics.
+TODO: additional options and gunicorn
+
+ADMET predictions can be made using the ADMET-AI web server, as illustrated below. Note: A GPU is used by default if available.
 
 ```bash
-python scripts/plot_drugbank_approved.py \
-    --data_path data/drugbank/drugbank_approved.csv \
-    --save_dir plots/drugbank_approved
+admet_ai_web
 ```
+
+Then navigate to http://127.0.0.1:5000 to view the website.
