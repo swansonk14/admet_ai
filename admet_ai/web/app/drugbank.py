@@ -1,5 +1,4 @@
 """Defines functions for the DrugBank approved reference set."""
-import re
 from collections import defaultdict
 from functools import lru_cache
 from io import BytesIO
@@ -12,6 +11,7 @@ import seaborn as sns
 from scipy.stats import percentileofscore
 
 from admet_ai.web.app import app
+from admet_ai.web.app.utils import replace_svg_dimensions
 
 matplotlib.use("Agg")
 
@@ -105,23 +105,6 @@ def get_drugbank_tasks() -> list[str]:
     task_columns = set(DRUGBANK_DF.columns) - set(non_task_columns)
 
     return sorted(task_columns)
-
-
-def replace_svg_dimensions(svg_content: str) -> str:
-    """Replace the SVG width and height with 100%.
-
-    :param svg_content: The SVG content.
-    :return: The SVG content with the width and height replaced with 100%.
-    """
-    # Regular expressions to match width and height attributes
-    width_pattern = re.compile(r'width="\d+(\.\d+)?pt"')
-    height_pattern = re.compile(r'height="\d+(\.\d+)?pt"')
-
-    # Replacing the width and height with 100%
-    svg_content = width_pattern.sub('width="100%"', svg_content)
-    svg_content = height_pattern.sub('height="100%"', svg_content)
-
-    return svg_content
 
 
 def plot_drugbank_reference(

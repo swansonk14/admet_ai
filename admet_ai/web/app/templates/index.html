@@ -224,14 +224,13 @@
                         aria-controls="collapseInfo{{ smiles_index }}" style="display: flex; align-items: center;">
                     <strong style="font-size: x-large; text-wrap: wrap;">Molecule {{ smiles_index + 1 }}: {{
                         smiles }} </strong>
-                    <div id="molecule-image{{ smiles_index }}" class="mol-image" style="margin-left: auto"></div>
+                    <div id="molecule-image{{ smiles_index }}" class="mol-image" style="margin-left: auto">
+                        {{ mol_svgs[smiles_index]|safe }}
+                    </div>
                 </button>
             </div>
 
             <div id="collapseInfo{{ smiles_index }}" class="collapse">
-                <div id="pubchem-link{{ smiles_index }}"></div>
-                <br>
-
                 <div style="display: flex; flex-wrap: wrap;">
                     {% for category in ["Absorption", "Distribution", "Metabolism", "Excretion", "Toxicity"] %}
                     <div style="flex: 1; width: 100%;">
@@ -305,31 +304,6 @@
                 </div>
             </div>
             <br>
-
-            <script>
-                <!--TODO: move this into javascript file-->
-                $(document).ready(function () {
-                    // Fetch SMILES string
-                    var smiles = "{{ smiles }}";
-
-                    // PUG-REST API URL
-                    var pubChemUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/${smiles}/cids/JSON`;
-
-                    // Fetch PubChem link
-                    $.getJSON(pubChemUrl, function (data) {
-                        if (data && data.IdentifierList && data.IdentifierList.CID.length > 0) {
-                            var cid = data.IdentifierList.CID[0];
-                            var pubChemLink = `<a href="https://pubchem.ncbi.nlm.nih.gov/compound/${cid}" target="_blank">View on PubChem</a>`;
-                            $("#pubchem-link{{ smiles_index }}").html(pubChemLink);
-                            var nameUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/common_name/JSON`;
-                        }
-                        var imageDiv = document.getElementById("molecule-image{{ smiles_index }}");
-                        var imageUrl = `https://pubchem.ncbi.nlm.nih.gov/image/imagefly.cgi?cid=${cid}&width=300&height=300`;
-                        var imageElement = `<img src="${imageUrl}" alt="Molecule Image" width="150" height="150">`;
-                        imageDiv.innerHTML = imageElement;
-                    });
-                });
-            </script>
         </li>
         {% endfor %}
     </ul>

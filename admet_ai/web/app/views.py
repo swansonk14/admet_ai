@@ -24,7 +24,7 @@ from admet_ai.web.app.drugbank import (
 )
 from admet_ai.web.app.models import predict_all_models
 from admet_ai.web.app.physchem import compute_physicochemical_properties
-from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols
+from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols, smiles_to_svg
 
 
 USER_TO_PREDS: dict[str, pd.DataFrame] = {}
@@ -81,6 +81,7 @@ def index():
 
     # Remove invalid molecules
     all_smiles = [smile for smile, mol in zip(all_smiles, mols) if mol is not None]
+    mols = [mol for mol in mols if mol is not None]
 
     # Error if no valid molecules
     if len(all_smiles) == 0:
@@ -144,13 +145,21 @@ def index():
         atc_code=session.get("atc_code"),
     )
 
+    # Set number of display molecules
+    num_display_smiles = min(10, len(all_smiles))
+    show_more = max(0, len(all_smiles) - 10)
+
+    # Create molecule SVG images
+    mol_svgs = [smiles_to_svg(mol) for mol in mols[:num_display_smiles]]
+
     # TODO: better handle the show more case
     return render(
         predicted=True,
         all_smiles=all_smiles,
         smiles_to_preds=smiles_to_preds,
-        num_display_smiles=min(10, len(all_smiles)),
-        show_more=max(0, len(all_smiles) - 10),
+        mol_svgs=mol_svgs,
+        num_display_smiles=num_display_smiles,
+        show_more=show_more,
         task_names=task_names,
         num_tasks=num_tasks,
         drugbank_plot=drugbank_plot_svg,
