@@ -38,6 +38,7 @@ def render(**kwargs) -> str:
         drugbank_atc_codes=["all"] + get_drugbank_unique_atc_codes(),
         drugbank_tasks=get_drugbank_task_names(),
         max_molecules=app.config["MAX_MOLECULES"],
+        low_performance_threshold=app.config["LOW_PERFORMANCE_THRESHOLD"],
         **kwargs,
     )
 

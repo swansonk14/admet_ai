@@ -272,7 +272,7 @@
                                             Dataset Size: {{ '{:,}'.format(row['size']) }}<br>
                                             TDC Leaderboard Rank: {{ row['rank'] }}">
                                                                 </span>
-                                    {% if row["performance"] < 0.6 %}
+                                    {% if row["performance"] < low_performance_threshold %}
                                     <span
                                             class="glyphicon glyphicon-warning-sign"
                                             style="font-size:15px" data-toggle="tooltip"
