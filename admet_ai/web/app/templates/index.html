@@ -99,10 +99,6 @@
 
 <body>
 <div class="container" id="content">
-    {% if max_molecules %}
-    <p>Note: Predictions can be made for at most {{ max_molecules }} molecules at a time.</p>
-    {% endif %}
-
     <form enctype="multipart/form-data" method="POST">
         <!--SMILES upload type selector-->
         <div class="btn-group" id="inputSelect" data-toggle="buttons">
@@ -120,7 +116,9 @@
             </label>
         </div>
 
-        <br>
+        {% if max_molecules %}
+        <h5><b>Note:</b> Predictions can be made for at most {{ "{:,}".format(max_molecules) }} molecules at a time.</h5>
+        {% endif %}
 
         <!--SMILES input-->
         <div id="textInputForm">
@@ -145,6 +143,7 @@
         <button type="submit" class="btn btn-primary btn-md">Predict</button>
     </form>
 
+    {% if drugbank_plot %}
     <br>
     <br>
 
@@ -154,7 +153,6 @@
         </div>
     </div>
 
-    {% if drugbank_plot %}
     <br>
 
     <div id="drugbank-plot-controls" style="text-align: center">
@@ -188,18 +186,8 @@
         </div>
         {% endfor %}
     </div>
-    {% endif %}
-
     <br>
-
-    {% if predicted %}
-    <hr>
-
-    <a href="{{ url_for('download_predictions') }}">
-        <button class="btn btn-default btn-md">Download Results</button>
-    </a>
-
-    <br><br>
+    {% endif %}
 
     {% if warnings %}
     {% for warning in warnings %}
@@ -213,6 +201,15 @@
     {% endfor %}
     {% endif %}
 
+    {% if predicted %}
+    <hr>
+
+    <a href="{{ url_for('download_predictions') }}">
+        <button class="btn btn-default btn-md">Download Results</button>
+    </a>
+
+    <br><br>
+
     <ul id="list">
         {% for smiles_index in range(num_display_smiles) %}
         {% set smiles = all_smiles[smiles_index] %}
@@ -222,7 +219,8 @@
                 <button id="collapseButton{{ smiles_index }}" class="btn btn-link2" type="button" data-toggle="collapse"
                         data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
                         aria-controls="collapseInfo{{ smiles_index }}" style="display: flex; align-items: center;">
-                    <strong style="font-size: x-large; text-wrap: wrap;">Molecule {{ smiles_index + 1 }}: {{
+                    <strong style="font-size: x-large; text-wrap: wrap; overflow: hidden; text-overflow: ellipsis;">Molecule
+                        {{ smiles_index + 1 }}: {{
                         smiles }} </strong>
                     <div id="molecule-image{{ smiles_index }}" class="mol-image" style="margin-left: auto">
                         {{ mol_svgs[smiles_index]|safe }}
