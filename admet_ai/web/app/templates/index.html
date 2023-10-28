@@ -22,11 +22,11 @@
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
+    <div class="container-fluid" style="margin-top: 20px; margin-bottom: 20px">
         <div class="navbar-header">
             <a href="https://admet.ai.greenstonebio.com"><img src="../static/images/ADMET.jpg" alt="ADMET AI Logo"
                                                               style="width:70px;height:70px;"/></a>
-            <h3>ADMET AI</h3>
+            <h3 style="display: inline">ADMET AI</h3>
         </div>
     </div>
 </nav>
@@ -34,54 +34,59 @@
 <div class="container" id="description">
     <h1>ADMET-AI Prediction</h1>
     <h4>Background</h4>
-    <p>
-        The evaluation of pharmacokinetics and toxicity is crucial for the design of new therapeutic candidates.
-        In silico virtual screens and generative AI approaches output a vast number of molecules that must be
-        filtered to a tractable number for synthesis and experimental validation. An effective primary filter
-        is needed for the evaluation of the candidate compounds for their <b>A</b>bsorption, <b>D</b>istribution,
-        <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) profiles.
-    </p>
-    <p><b>ADMET-AI</b> provides a simple, fast, and accurate web interface to enable users to make ADMET predictions.
+    <!--    <p>-->
+    <!--        The evaluation of pharmacokinetics and toxicity is crucial for the design of new therapeutic candidates.-->
+    <!--        In silico virtual screens and generative AI approaches output a vast number of molecules that must be-->
+    <!--        filtered to a tractable number for synthesis and experimental validation. An effective primary filter-->
+    <!--        is needed for the evaluation of the candidate compounds for their <b>A</b>bsorption, <b>D</b>istribution,-->
+    <!--        <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) profiles.-->
+    <!--    </p>-->
+    <p><b>ADMET-AI</b> provides a simple, fast, and accurate web interface to enable users to predict the <b>A</b>bsorption,
+        <b>D</b>istribution,
+        <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) properties of molecules.
         ADMET-AI uses a graph neural network called Chemprop-RDKit, which was trained on 41 ADMET datasets from
         the <a href="https://tdcommons.ai/">Therapeutics Data Commons</a> (TDC). ADMET-AI’s Chemprop-RDKit model has the
         highest average rank on the
         TDC ADMET Benchmark Group <a href="https://tdcommons.ai/benchmark/admet_group/overview/">Leaderboard</a> and it
         is also currently the fastest web-based ADMET predictor.</p>
-    <p>
-        The details regarding the training and evaluation of the model are described in an article titled: A novel
-        machine
-        learning ADMET platform for evaluation of large-scale chemical libraries.
-    </p>
-    <p>
-        The predictor has been applied to evaluate cardiovascular drugs and drugs with cardiovascular effects in an
-        article
-        titled: ADMET profiles of known cardiovascular drugs accurately predicted using a novel machine learned
-        Predictor.
-    </p>
+    <!--    <p>-->
+    <!--        The details regarding the training and evaluation of the model are described in an article titled: A novel-->
+    <!--        machine-->
+    <!--        learning ADMET platform for evaluation of large-scale chemical libraries.-->
+    <!--    </p>-->
+    <!--    <p>-->
+    <!--        The predictor has been applied to evaluate cardiovascular drugs and drugs with cardiovascular effects in an-->
+    <!--        article-->
+    <!--        titled: ADMET profiles of known cardiovascular drugs accurately predicted using a novel machine learned-->
+    <!--        Predictor.-->
+    <!--    </p>-->
 
     <br>
 
     <h4>Use</h4>
     <p>
-        ADMET predictions can be made for up to TODO molecules at a time by either (1)
+        ADMET-AI can make predictions for up to 1,000 molecules at a time by either (1)
         providing SMILES (one per line) in the text box, (2) uploading a CSV file with SMILES in the
         first column, or (3) drawing a molecule using the interactive tool and converting it to a SMILES.
-        Making predictions takes roughly TODO seconds per molecule.
+        ADMET-AI can make predictions for roughly 10 molecules per second.
     </p>
     <p>
         For regression ADMET properties, the property value is directly predicted with the units shown. For
         classification ADMET properties, the prediction value is the probability of the molecule having that
-        property (e.g., probability of blood-brain barrier penetration). For context, the ADMET predictions are
+        property (e.g., probability of blood-brain barrier penetration).
+    </p>
+    <p>
+        For context, the ADMET predictions are
         compared to a set of 2,579 molecules from the DrugBank that have received regulatory approval, and the
         percentile of each prediction is shown with respect to this set of DrugBank molecules. This reference set
         can be filtered to a specific category of drugs for a more relevant comparison by selecting an <a
             href="https://www.whocc.no/atc_ddd_index/">Anatomical
         Therapeutic Chemical</a> (ATC) code from the dropdown menu below.
     </p>
-    <p>
-        Note: ADMET-AI does NOT store any molecules uploaded to the website. All molecules are deleted after predictions
-        are made.
-    </p>
+    <!--    <p>-->
+    <!--        Note: ADMET-AI does NOT store any molecules uploaded to the website. All molecules are deleted after predictions-->
+    <!--        are made.-->
+    <!--    </p>-->
 
     <br>
 
@@ -143,8 +148,10 @@
     <br>
     <br>
 
-    <div id="drugbank-plot" style="flex: 1; width: 100%; text-align: center;">
-        {{ drugbank_plot|safe }}
+    <div id="drugbank-plot" style="flex: 1; text-align: center;">
+        <div style="width: 70%; display: inline-block;">
+            {{ drugbank_plot|safe }}
+        </div>
     </div>
 
     {% if drugbank_plot %}
@@ -253,7 +260,7 @@
 
                             <tr>
                                 <td><strong>
-                                    <a href={{ row["url"] }} class="data_link">
+                                    <a href={{ row["url"] }} target="_blank" class="data_link">
                                     {{ row["name"] }}
                                     </a>
                                     <span
@@ -338,8 +345,8 @@
     <div class="container-fluid">
         <p class="navbar-text pull-left"><a href="https://admet.ai.greenstonebio.com">ADMET-AI</a> is a collaboration
             between <a href="https://greenstonebio.com/">Greenstone Biosciences</a> and <a
-                    href="https://www.james-zou.com/">Prof. James Zou's lab</a> at Stanford University. <a
-                    href="https://github.com/swansonk14/admet_ai">Source Code</a> © 2023.</p>
+                    href="https://www.james-zou.com/">Prof. James Zou's lab</a> at Stanford University © 2023. <a
+                    href="https://github.com/swansonk14/admet_ai">Source Code</a>.</p>
     </div>
 </nav>
 </body>

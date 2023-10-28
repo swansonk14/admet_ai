@@ -1,6 +1,6 @@
 body {
-    padding-top: 65px;
-    padding-bottom: 65px;
+    padding-top: 100px;
+    padding-bottom: 100px;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -19,8 +19,11 @@ body {
     background-color: white;
 }
 
+.container {
+    width: 70%;
+}
+
 #content {
-    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: white;
