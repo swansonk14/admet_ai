@@ -1,12 +1,11 @@
-{% macro warning_message(message) %}
-{% if message %}
-<div class="alert alert-warning alert-dismissible show" role="alert">
-    Warning: {{ message }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-{% endif %}
+{% macro chemdraw() %}
+<div id="jsme_container"></div>
+<script type="text/javascript" src="/static/jsme/jsme/jsme.nocache.js"></script>
+<script>
+    function jsmeOnLoad() {
+        jsmeApplet = new JSApplet.JSME("jsme_container", "565px", "400px");
+    }
+</script>
 {% endmacro %}
 
 {% macro error_message(message) %}
@@ -20,12 +19,13 @@
 {% endif %}
 {% endmacro %}
 
-{% macro chemdraw() %}
-<div id="jsme_container"></div>
-<script type="text/javascript" src="/static/jsme/jsme/jsme.nocache.js"></script>
-<script>
-    function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "565px", "400px");
-    }
-</script>
+{% macro warning_message(message) %}
+{% if message %}
+<div class="alert alert-warning alert-dismissible show" role="alert">
+    Warning: {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
 {% endmacro %}

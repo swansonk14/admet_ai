@@ -28,7 +28,7 @@ setup(
     entry_points={
         "console_scripts": [
             "admet_predict=admet_ai.predict:admet_predict_command_line",
-            "admet_web=admet_ai.web.run:admet_web"
+            "admet_web=admet_ai.web.run:admet_web",
         ]
     },
     install_requires=[
@@ -40,7 +40,10 @@ setup(
         "tqdm",
         "typed-argument-parser>=1.8.1",
     ],
-    extras_require={"tdc": ["openpyxl", "PyTDC>=0.4.1"], "web": ["flask", "gunicorn"]},
+    extras_require={
+        "tdc": ["openpyxl", "PyTDC>=0.4.1", "seaborn"],
+        "web": ["flask", "gunicorn", "seaborn"],
+    },
     python_requires=">=3.10",
     classifiers=[
         "Programming Language :: Python :: 3",

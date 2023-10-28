@@ -1,9 +1,12 @@
 """Defines functions for ADMET-AI models."""
 from typing import Any
 
+import numpy as np
+from chemfunc.molecular_fingerprints import compute_fingerprints
 from chemprop.data import MoleculeDataLoader, MoleculeDatapoint, MoleculeDataset
 from chemprop.train import predict as chemprop_predict
 from chemprop.utils import load_args, load_checkpoint, load_scalers, load_task_names
+from tqdm import tqdm
 
 from admet_ai.web.app import app
 
@@ -24,7 +27,6 @@ def load_models() -> None:
         train_args = load_args(model_paths[0])
 
         # Add task names, models, and scalers to MODELS
-        breakpoint()
         MODELS.append(
             {
                 "task_names": load_task_names(model_paths[0]),
