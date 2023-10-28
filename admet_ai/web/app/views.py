@@ -1,11 +1,9 @@
 """Defines the routes of the ADMET-AI Flask app."""
 from uuid import uuid4
-from pathlib import Path
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+from tempfile import NamedTemporaryFile
 
 import numpy as np
 import pandas as pd
-from chemprop.data import get_header, get_smiles
 from flask import (
     after_this_request,
     jsonify,
@@ -15,8 +13,6 @@ from flask import (
     send_file,
     session,
 )
-from rdkit import Chem
-from werkzeug.utils import secure_filename
 
 from admet_ai.web.app import app
 from admet_ai.web.app.drugbank import (
@@ -27,9 +23,10 @@ from admet_ai.web.app.drugbank import (
 )
 from admet_ai.web.app.models import predict_all_models
 from admet_ai.web.app.physchem import compute_physicochemical_properties
+from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols
 
 
-USER_TO_PREDS = {}
+USER_TO_PREDS: dict[str, pd.DataFrame] = {}
 
 
 def render(**kwargs) -> str:
@@ -46,6 +43,9 @@ def render(**kwargs) -> str:
 @app.route("/", methods=["GET", "POST"])
 def index():
     """Renders the page and makes predictions if the method is POST."""
+    # Set up warnings
+    warnings = []
+
     # Assign user ID to session
     if "user_id" not in session:
         session["user_id"] = uuid4().hex
@@ -55,31 +55,7 @@ def index():
         return render()
 
     # Get the SMILES from the request
-    if request.form["textSmiles"] != "":
-        smiles = request.form["textSmiles"].split()
-    elif request.form["drawSmiles"] != "":
-        smiles = [request.form["drawSmiles"]]
-    else:
-        # Upload data file with SMILES
-        data = request.files["data"]
-        data_name = secure_filename(data.filename)
-
-        with TemporaryDirectory() as temp_dir:
-            data_path = str(Path(temp_dir) / data_name)
-            data.save(data_path)
-
-            # Check if header is smiles
-            possible_smiles = get_header(data_path)[0]
-
-            # TODO: if we're already computing RDKit molecules, try to make use of them later
-            smiles = (
-                [possible_smiles]
-                if Chem.MolFromSmiles(possible_smiles) is not None
-                else []
-            )
-
-            # Get remaining smiles
-            smiles.extend(get_smiles(data_path))
+    smiles = get_smiles_from_request()
 
     # Error if too many molecules
     if (
@@ -88,18 +64,31 @@ def index():
     ):
         return render(
             errors=[
-                f"Received too many molecules. "
-                f"Maximum number of molecules is {app.config['MAX_MOLECULES']:,}."
+                f"Received too many molecules. Maximum number of molecules is {app.config['MAX_MOLECULES']:,}."
             ]
         )
 
-    # TODO: validate that SMILES are valid, remove invalid ones, and put a warning if there are invalid ones
+    # Convert SMILES to RDKit molecules
+    mols = smiles_to_mols(smiles)
+
+    # Warn if any molecules are invalid
+    num_invalid_mols = sum(mol is None for mol in mols)
+    if num_invalid_mols > 0:
+        warnings.append(f"List contains {num_invalid_mols:,} invalid SMILES strings.")
+
+    # Remove invalid molecules
+    smiles = [smile for smile, mol in zip(smiles, mols) if mol is not None]
+
+    # Error if no valid molecules
+    if len(smiles) == 0:
+        return render(errors=["No valid SMILES strings given."])
 
     # Make predictions
     task_names, preds = predict_all_models(smiles=smiles)
     num_tasks = len(task_names)
 
     # TODO: Display physicochemical properties (and compare to DrugBank)
+    # Compute physicochemical properties
     physchem_names, physchem_preds = compute_physicochemical_properties(smiles=smiles)
 
     # Compute DrugBank percentiles
@@ -131,20 +120,9 @@ def index():
     # Convert predictions to DataFrame
     preds_df = pd.DataFrame(preds_dicts)
 
-    # Store predictions in memory
     # TODO: figure out how to remove predictions from memory once no longer needed (i.e., once session ends)
+    # Store predictions in memory
     USER_TO_PREDS[session["user_id"]] = preds_df
-
-    # Handle invalid SMILES
-    if all(p is None for p in preds):
-        return render(errors=["All SMILES are invalid"])
-
-    # Replace invalid smiles with message
-    invalid_smiles_warning = "Invalid SMILES String"
-    preds = [
-        pred if pred is not None else [invalid_smiles_warning] * num_tasks
-        for pred in preds
-    ]
 
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
@@ -161,6 +139,7 @@ def index():
     excretion_data = pd.read_csv(app.config["ADMET_DIR"] / "excretion_data.csv")
     toxicity_data = pd.read_csv(app.config["ADMET_DIR"] / "toxicity_data.csv")
 
+    # TODO: better handle the show more case
     return render(
         predicted=True,
         smiles=smiles,
@@ -176,8 +155,7 @@ def index():
         preds=preds,
         drugbank_percentiles=drugbank_percentiles,
         drugbank_plot=drugbank_plot_svg,
-        warnings=["List contains invalid SMILES strings"] if None in preds else None,
-        errors=["No SMILES strings given"] if len(preds) == 0 else None,
+        warnings=warnings
     )
 
 

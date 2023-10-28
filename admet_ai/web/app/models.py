@@ -9,6 +9,7 @@ from chemprop.utils import load_args, load_checkpoint, load_scalers, load_task_n
 from tqdm import tqdm
 
 from admet_ai.web.app import app
+from admet_ai.web.app.utils import smiles_to_mols
 
 
 MODELS: list[dict[str, Any]] = []
@@ -56,9 +57,6 @@ def predict_all_models(
 ) -> tuple[list[str], list[list[float]]]:
     """Make prediction with all the loaded models.
 
-    TODO: Support GPU prediction.
-    TODO: Handle invalid SMILES.
-
     :param smiles: A list of SMILES.
     :param num_workers: The number of workers for parallel data loading.
     :return: A tuple containing a list of task names and a list of predictions (num_molecules, num_tasks).
@@ -86,7 +84,8 @@ def predict_all_models(
     # Build dataloader with fingerprints
     if any_fingerprints_use:
         # TODO: Remove assumption of RDKit fingerprints
-        fingerprints = compute_fingerprints(smiles, fingerprint_type="rdkit")
+        mols = smiles_to_mols(smiles)
+        fingerprints = compute_fingerprints(mols, fingerprint_type="rdkit")
 
         data_loader_with_fingerprints = MoleculeDataLoader(
             dataset=MoleculeDataset(

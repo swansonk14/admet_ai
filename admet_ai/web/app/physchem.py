@@ -10,6 +10,8 @@ from rdkit.Chem.rdMolDescriptors import (
     CalcTPSA,
 )
 
+from admet_ai.web.app.utils import smiles_to_mols
+
 
 def lipinski_rule_of_five(mol: Chem.Mol) -> float:
     """Determines how many of the Lipinski rules are satisfied by the molecule.
@@ -38,9 +40,7 @@ def compute_physicochemical_properties(
     :return: A tuple containing a list of property names and a list of properties (num_molecules, num_properties).
     """
     # Compute RDKit molecules
-    # TODO: avoid recomputing the RDKit molecules if they have to be computed for Chemprop anyway
-    # TODO: handle invalid molecules
-    mols = [Chem.MolFromSmiles(smile) for smile in smiles]
+    mols = smiles_to_mols(smiles)
 
     # Set up physicochemical property functions
     property_functions = {
