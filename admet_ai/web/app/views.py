@@ -74,7 +74,8 @@ def index():
     # Warn if any molecules are invalid
     num_invalid_mols = sum(mol is None for mol in mols)
     if num_invalid_mols > 0:
-        warnings.append(f"List contains {num_invalid_mols:,} invalid SMILES strings.")
+        ending = "s" if num_invalid_mols > 1 else ""
+        warnings.append(f"Input contains {num_invalid_mols:,} invalid SMILES string{ending}.")
 
     # Remove invalid molecules
     smiles = [smile for smile, mol in zip(smiles, mols) if mol is not None]
