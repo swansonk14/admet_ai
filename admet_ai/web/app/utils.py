@@ -3,7 +3,8 @@ import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from chemprop.data import get_header, get_smiles, cache_mol
+import pandas as pd
+from chemprop.data import cache_mol
 from chemprop.data.data import SMILES_TO_MOL
 from flask import request
 from rdkit import Chem
@@ -15,7 +16,8 @@ SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
 SVG_HEIGHT_PATTERN = re.compile(r"height=['\"]\d+(\.\d+)?[a-z]+['\"]")
 
 
-def get_smiles_from_request() -> list[str]:
+# TODO: provide option for selecting SMILES column
+def get_smiles_from_request(smiles_column: str = "smiles") -> list[str]:
     """Gets SMILES from a request."""
     if request.form["textSmiles"] != "":
         smiles = request.form["textSmiles"].split()
@@ -29,19 +31,7 @@ def get_smiles_from_request() -> list[str]:
         with TemporaryDirectory() as temp_dir:
             data_path = str(Path(temp_dir) / data_name)
             data.save(data_path)
-
-            # Check if header is smiles
-            possible_smiles = get_header(data_path)[0]
-
-            # TODO: standardize format (i.e., header or no header)
-            smiles = (
-                [possible_smiles]
-                if Chem.MolFromSmiles(possible_smiles) is not None
-                else []
-            )
-
-            # Get remaining smiles
-            smiles.extend(get_smiles(data_path))
+            smiles = pd.read_csv(data_path)[smiles_column].tolist()
 
     return smiles
 

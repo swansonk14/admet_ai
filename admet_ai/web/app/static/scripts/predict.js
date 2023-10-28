@@ -65,7 +65,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.svg) {
-                    document.getElementById("drugbank-plot").innerHTML = response.svg;
+                    document.getElementById("drugbank-plot-inner").innerHTML = response.svg;
                 }
             },
             error: function (error) {
@@ -88,7 +88,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.svg) {
-                    document.getElementById("drugbank-plot").innerHTML = response.svg;
+                    document.getElementById("drugbank-plot-inner").innerHTML = response.svg;
                 }
             },
             error: function (error) {
