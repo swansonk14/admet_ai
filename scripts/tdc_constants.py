@@ -1,4 +1,4 @@
-"""Contains constants used throughout the project."""
+"""Contains constants used for the Therapeutics Data Commons Data."""
 from tdc.single_pred import ADME, Tox
 from tdc.utils import retrieve_label_name_list
 

@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-from admet_ai.constants import DATASET_TO_TYPE, ADMET_ALL_SMILES_COLUMN
+from tdc_constants import DATASET_TO_TYPE, ADMET_ALL_SMILES_COLUMN
 
 
 def merge_tdc_admet_all(data_dir: Path, save_path: Path) -> None:

@@ -8,7 +8,7 @@ import scipy.stats as stats
 import seaborn as sns
 from tqdm import tqdm
 
-from admet_ai.constants import (
+from tdc_constants import (
     ADMET_GROUPS,
     ADMET_PLOTTING_DETAILS,
     LABEL_NAME_TO_TYPE,

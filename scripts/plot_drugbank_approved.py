@@ -7,7 +7,7 @@ import pandas as pd
 import seaborn as sns
 from tqdm import trange
 
-from admet_ai.constants import DRUGBANK_ATC_DELIMITER, DRUGBANK_ATC_PREFIX
+from tdc_constants import DRUGBANK_ATC_DELIMITER, DRUGBANK_ATC_PREFIX
 
 
 def plot_drugbank_approved(

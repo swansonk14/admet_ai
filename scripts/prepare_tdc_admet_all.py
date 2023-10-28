@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-from admet_ai.constants import (
+from tdc_constants import (
     ADMET_ALL_SMILES_COLUMN,
     ADMET_GROUP_SMILES_COLUMN,
     ADMET_GROUP_TARGET_COLUMN,

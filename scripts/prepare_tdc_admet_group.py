@@ -6,7 +6,7 @@ from tdc import utils
 from tdc.benchmark_group import admet_group
 from tqdm import tqdm
 
-from admet_ai.constants import (
+from tdc_constants import (
     ADMET_GROUP_SEEDS,
     ADMET_GROUP_TARGET_COLUMN,
     DATASET_TO_TYPE_LOWER,

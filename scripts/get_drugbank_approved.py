@@ -6,7 +6,7 @@ import pandas as pd
 from rdkit import Chem
 from tqdm import tqdm
 
-from admet_ai.constants import (
+from tdc_constants import (
     DRUGBANK_ATC_DELIMITER,
     DRUGBANK_ATC_PREFIX,
     DRUGBANK_NAME_COLUMN,

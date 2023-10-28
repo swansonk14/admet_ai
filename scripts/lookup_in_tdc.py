@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 from rdkit import Chem
 
-from admet_ai.constants import ADMET_ALL_SMILES_COLUMN
+from tdc_constants import ADMET_ALL_SMILES_COLUMN
 
 
 def preprocess_data(data: pd.DataFrame, smiles_column: str) -> pd.DataFrame:
