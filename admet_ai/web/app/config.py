@@ -3,7 +3,6 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
-ADMET_DIR = DATA_DIR / "admet"
-MODEL_DIR = DATA_DIR / "models"
-DRUGBANK_DIR = DATA_DIR / "drugbank"
-DRUGBANK_PATH = DRUGBANK_DIR / "drugbank_approved.csv"
+MODEL_DIR = ROOT_DIR / "models"
+ADMET_PATH = DATA_DIR / "admet.csv"
+DRUGBANK_PATH = DATA_DIR / "drugbank_approved.csv"

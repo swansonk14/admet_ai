@@ -147,8 +147,8 @@ def plot_drugbank_reference(
     # Scatter plot of new molecules
     if len(preds_df) > 0:
         sns.scatterplot(
-            x=preds_df[x_task],
-            y=preds_df[y_task],
+            x=preds_df[f"{x_task}_prediction"],
+            y=preds_df[f"{y_task}_prediction"],
             color="red",
             marker="*",
             s=200,

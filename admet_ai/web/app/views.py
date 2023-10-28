@@ -15,6 +15,7 @@ from flask import (
 )
 
 from admet_ai.web.app import app
+from admet_ai.web.app.data import get_admet_info
 from admet_ai.web.app.drugbank import (
     compute_drugbank_percentile,
     get_drugbank_tasks,
@@ -33,6 +34,7 @@ def render(**kwargs) -> str:
     """Renders the page with specified kwargs"""
     return render_template(
         "index.html",
+        admet_info=get_admet_info(),
         drugbank_atc_codes=["all"] + get_drugbank_unique_atc_codes(),
         drugbank_tasks=get_drugbank_tasks(),
         max_molecules=app.config["MAX_MOLECULES"],
@@ -55,12 +57,12 @@ def index():
         return render()
 
     # Get the SMILES from the request
-    smiles = get_smiles_from_request()
+    all_smiles = get_smiles_from_request()
 
     # Error if too many molecules
     if (
         app.config["MAX_MOLECULES"] is not None
-        and len(smiles) > app.config["MAX_MOLECULES"]
+        and len(all_smiles) > app.config["MAX_MOLECULES"]
     ):
         return render(
             errors=[
@@ -69,7 +71,7 @@ def index():
         )
 
     # Convert SMILES to RDKit molecules
-    mols = smiles_to_mols(smiles)
+    mols = smiles_to_mols(all_smiles)
 
     # Warn if any molecules are invalid
     num_invalid_mols = sum(mol is None for mol in mols)
@@ -78,19 +80,19 @@ def index():
         warnings.append(f"Input contains {num_invalid_mols:,} invalid SMILES string{ending}.")
 
     # Remove invalid molecules
-    smiles = [smile for smile, mol in zip(smiles, mols) if mol is not None]
+    all_smiles = [smile for smile, mol in zip(all_smiles, mols) if mol is not None]
 
     # Error if no valid molecules
-    if len(smiles) == 0:
+    if len(all_smiles) == 0:
         return render(errors=["No valid SMILES strings given."])
 
     # Make predictions
-    task_names, preds = predict_all_models(smiles=smiles)
+    task_names, preds = predict_all_models(smiles=all_smiles)
     num_tasks = len(task_names)
 
     # TODO: Display physicochemical properties (and compare to DrugBank)
     # Compute physicochemical properties
-    physchem_names, physchem_preds = compute_physicochemical_properties(smiles=smiles)
+    physchem_names, physchem_preds = compute_physicochemical_properties(smiles=all_smiles)
 
     # Compute DrugBank percentiles
     preds_numpy = np.array(preds).transpose()  # (num_tasks, num_molecules)
@@ -105,21 +107,30 @@ def index():
         ]
     ).transpose()  # (num_molecules, num_tasks)
 
-    # Convert predictions to list of dicts
-    preds_dicts = []
-    for smiles_index, smile in enumerate(smiles):
-        preds_dict = {"smiles": smile}
-
-        for task_index, task_name in enumerate(task_names):
-            preds_dict[task_name] = preds[smiles_index][task_index]
-            preds_dict[
-                f"{task_name}_drugbank_approved_percentile"
-            ] = drugbank_percentiles[smiles_index][task_index]
-
-        preds_dicts.append(preds_dict)
+    # Convert predictions to a dictionary mapping SMILES to preds
+    smiles_to_preds: dict[str, dict[str, dict[str, float]]] = {
+        smiles: {
+            task_name: {
+                "prediction": preds[smiles_index][task_index],
+                "drugbank_approved_percentile": drugbank_percentiles[smiles_index][task_index]
+            }
+            for task_index, task_name in enumerate(task_names)
+        }
+        for smiles_index, smiles in enumerate(all_smiles)
+    }
 
     # Convert predictions to DataFrame
-    preds_df = pd.DataFrame(preds_dicts)
+    preds_df = pd.DataFrame([
+        {
+            "smiles": smiles,
+            **{
+                f"{task_name}_{pred_type}": pred
+                for task_name, pred_type_to_pred in smiles_to_preds[smiles].items()
+                for pred_type, pred in pred_type_to_pred.items()
+            }
+        }
+        for smiles in all_smiles
+    ])
 
     # TODO: figure out how to remove predictions from memory once no longer needed (i.e., once session ends)
     # Store predictions in memory
@@ -133,28 +144,15 @@ def index():
         atc_code=session.get("atc_code"),
     )
 
-    # TODO: refactor this and move this logic and data loader elsewhere and store in memory
-    absorption_data = pd.read_csv(app.config["ADMET_DIR"] / "absorption_data.csv")
-    distribution_data = pd.read_csv(app.config["ADMET_DIR"] / "distribution_data.csv")
-    metabolism_data = pd.read_csv(app.config["ADMET_DIR"] / "metabolism_data.csv")
-    excretion_data = pd.read_csv(app.config["ADMET_DIR"] / "excretion_data.csv")
-    toxicity_data = pd.read_csv(app.config["ADMET_DIR"] / "toxicity_data.csv")
-
     # TODO: better handle the show more case
     return render(
         predicted=True,
-        smiles=smiles,
-        num_smiles=min(10, len(smiles)),
-        show_more=max(0, len(smiles) - 10),
+        all_smiles=all_smiles,
+        smiles_to_preds=smiles_to_preds,
+        num_display_smiles=min(10, len(all_smiles)),
+        show_more=max(0, len(all_smiles) - 10),
         task_names=task_names,
         num_tasks=num_tasks,
-        cat=absorption_data,
-        dist=distribution_data,
-        meta=metabolism_data,
-        excr=excretion_data,
-        tox=toxicity_data,
-        preds=preds,
-        drugbank_percentiles=drugbank_percentiles,
         drugbank_plot=drugbank_plot_svg,
         warnings=warnings
     )
