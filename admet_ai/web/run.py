@@ -3,7 +3,7 @@ from chemprop.data import set_cache_graph, set_cache_mol
 from tap import Tap
 
 from admet_ai.web.app import app
-from admet_ai.web.app.data import load_admet_info
+from admet_ai.web.app.admet_info import load_admet_info
 from admet_ai.web.app.drugbank import load_drugbank
 from admet_ai.web.app.models import load_models
 

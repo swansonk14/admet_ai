@@ -15,10 +15,10 @@ from flask import (
 )
 
 from admet_ai.web.app import app
-from admet_ai.web.app.data import get_admet_info
+from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
     compute_drugbank_percentile,
-    get_drugbank_tasks,
+    get_drugbank_task_names,
     get_drugbank_unique_atc_codes,
     plot_drugbank_reference,
 )
@@ -36,7 +36,7 @@ def render(**kwargs) -> str:
         "index.html",
         admet_info=get_admet_info(),
         drugbank_atc_codes=["all"] + get_drugbank_unique_atc_codes(),
-        drugbank_tasks=get_drugbank_tasks(),
+        drugbank_tasks=get_drugbank_task_names(),
         max_molecules=app.config["MAX_MOLECULES"],
         **kwargs,
     )
@@ -140,8 +140,8 @@ def index():
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
         preds_df=USER_TO_PREDS[session["user_id"]],
-        x_task=session.get("drugbank_x_task"),
-        y_task=session.get("drugbank_y_task"),
+        x_task_name=session.get("drugbank_x_task_name"),
+        y_task_name=session.get("drugbank_y_task_name"),
         atc_code=session.get("atc_code"),
     )
 
@@ -175,18 +175,18 @@ def drugbank_plot():
     )
 
     # Get requested X and Y axes
-    session["drugbank_x_task"] = request.args.get(
-        "x_task", default=session.get("drugbank_x_task"), type=str
+    session["drugbank_x_task_name"] = request.args.get(
+        "x_task", default=session.get("drugbank_x_task_name"), type=str
     )
-    session["drugbank_y_task"] = request.args.get(
-        "y_task", default=session.get("drugbank_y_task"), type=str
+    session["drugbank_y_task_name"] = request.args.get(
+        "y_task", default=session.get("drugbank_y_task_name"), type=str
     )
 
     # Create DrugBank reference plot with ATC code
     drugbank_plot_svg = plot_drugbank_reference(
         preds_df=USER_TO_PREDS.get(session["user_id"], pd.DataFrame()),
-        x_task=session["drugbank_x_task"],
-        y_task=session["drugbank_y_task"],
+        x_task_name=session["drugbank_x_task_name"],
+        y_task_name=session["drugbank_y_task_name"],
         atc_code=session["atc_code"],
     )
 
