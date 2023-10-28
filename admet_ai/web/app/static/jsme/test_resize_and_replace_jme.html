@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <script type="text/javascript" language="javascript"
+            src="jsme/jsme.nocache.js"></script>
+
+    <script>
+        function testReplaceAllAppletsByJSME() {
+            var p = document.getElementById("demo");
+            var jme2Div = document.getElementById("jme2");
+            jme2Div.setAttribute("code", "JME.class");
+            var n = JSApplet.JSME.replaceAllAppletsByJSME(function (n) {
+            });
+            console.log(n);
+
+            //Add a click handler to the Jsapplet in depict mode
+            document.jmeDepict.addClickHandler(function (jsmeInstance, event) {
+                alert("My smiles is: " + jsmeInstance.smiles());
+                alert(event);
+            });
+
+            //Add a mouseOver handler to the Japplet in depict mode
+            document.jmeDepict.addMouseOverHandler(function (jsmeInstance, event) {
+                    console.log("My smiles is: " + jsmeInstance.smiles());
+                    console.log("x: " + event.clientX);
+                }
+            );
+
+            //neutralize my self
+            testReplaceAllAppletsByJSME = function () {
+            };
+
+        }
+
+    </script>
+
+
+    <title>Test dynamic resizing and replaceAllAppletsByJSME</title>
+</head>
+<body>
+<h1>Test dynamic resizing and replaceAllAppletsByJSME</h1>
+Resize window and the applet width will change (was set at 100%)
+
+<div name="jmeDepict" code="JME.class" archive="JME.jar" width="100%"
+     height=120>
+    <param name="options" value="depict">
+    <param name="jme"
+           value="22 23 O 2.80 -9.04 O 4.02 -6.94 O 4.02 -11.14 C 7.65 -10.44 C 11.29 -6.94 C 12.50 -9.04 C 6.44 -11.14 C 12.50 -6.24 C 13.71 -8.34 C 6.44 -8.34 N 10.08 -9.04 N 8.86 -8.34 C 4.02 -8.34 C 11.29 -8.34 C 7.65 -9.04 C 5.23 -10.44 C 13.71 -6.94 C 5.23 -9.04 O 14.93 -6.24 C 14.93 -9.04 O 14.93 -10.44 O 16.14 -8.34 1 13 2 2 13 1 3 16 1 4 7 2 4 15 1 5 8 2 5 14 1 6 9 1 6 14 2 7 16 1 8 17 1 9 17 2 10 15 2 10 18 1 11 12 2 11 14 1 12 15 1 13 18 1 16 18 2 17 19 1 9 20 1 20 21 1 20 22 2">
+</div>
+<div name="jme1" code="JME.class" archive="JME.jar" width="100%"
+     height=380>
+    <param name="options" value="oldlook">
+    <param name="jme"
+           value="22 23 O 2.80 -9.04 O 4.02 -6.94 O 4.02 -11.14 C 7.65 -10.44 C 11.29 -6.94 C 12.50 -9.04 C 6.44 -11.14 C 12.50 -6.24 C 13.71 -8.34 C 6.44 -8.34 N 10.08 -9.04 N 8.86 -8.34 C 4.02 -8.34 C 11.29 -8.34 C 7.65 -9.04 C 5.23 -10.44 C 13.71 -6.94 C 5.23 -9.04 O 14.93 -6.24 C 14.93 -9.04 O 14.93 -10.44 O 16.14 -8.34 1 13 2 2 13 1 3 16 1 4 7 2 4 15 1 5 8 2 5 14 1 6 9 1 6 14 2 7 16 1 8 17 1 9 17 2 10 15 2 10 18 1 11 12 2 11 14 1 12 15 1 13 18 1 16 18 2 17 19 1 9 20 1 20 21 1 20 22 2">
+</div>
+
+<div id="jme2" name="jme2" code="" archive="JME.jar" width="100%"
+     height=400>
+    <param name="options" value="newdlook">
+    <param name="jme"
+           value="22 23 O 2.80 -9.04 O 4.02 -6.94 O 4.02 -11.14 C 7.65 -10.44 C 11.29 -6.94 C 12.50 -9.04 C 6.44 -11.14 C 12.50 -6.24 C 13.71 -8.34 C 6.44 -8.34 N 10.08 -9.04 N 8.86 -8.34 C 4.02 -8.34 C 11.29 -8.34 C 7.65 -9.04 C 5.23 -10.44 C 13.71 -6.94 C 5.23 -9.04 O 14.93 -6.24 C 14.93 -9.04 O 14.93 -10.44 O 16.14 -8.34 1 13 2 2 13 1 3 16 1 4 7 2 4 15 1 5 8 2 5 14 1 6 9 1 6 14 2 7 16 1 8 17 1 9 17 2 10 15 2 10 18 1 11 12 2 11 14 1 12 15 1 13 18 1 16 18 2 17 19 1 9 20 1 20 21 1 20 22 2">
+    Applet placeholder
+
+</div>
+
+
+<p id="demo">This is a paragraph.</p>
+<button type="button" onclick="testReplaceAllAppletsByJSME()">call testReplaceAllAppletsByJSME</button>
+<button type="button" onclick='document.jmeDepict.setSize("100%", "200px")'>Resize first applet</button>
+<button type="button" onclick='document.jmeDepict.setSize("100%", "100%")'>Resize first applet to 100% width</button>
+<button type="button" onclick='alert(document.jmeDepict.getOffsetSize())'>getOffsetSize</button>
+<button type="button" onclick='alert(document.jmeDepict.isVisible())'>isVisible</button>
+
+</body>
+</html>

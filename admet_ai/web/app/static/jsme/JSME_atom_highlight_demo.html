@@ -1,0 +1,179 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!--                                           -->
+
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+
+    <script>
+        function atomHighLight(jmeEvent) {
+
+            //index must start at 1
+            console.log(jmeEvent);
+            document.getElementById("atomHighLightTextAreaOut").innerHTML = jmeEvent.atomE;
+        }
+
+        function bondHighLight(jmeEvent) {
+
+            //index must start at 1
+            console.log(jmeEvent);
+            document.getElementById("bondHighLightTextAreaOut").innerHTML = jmeEvent.atomsE[0].toString() + "," + jmeEvent.atomsE[1].toString();
+        }
+
+        //this function will be called after the JavaScriptApplet code has been loaded.
+
+        function jsmeOnLoad() {
+            var startingStructure = "13 14 C 11.31 -8.45 C 11.31 -7.05 C 10.09 -6.35 C 8.88 -7.05 C 8.88 -8.45 C 10.09 -9.15 C 12.71 -8.45 C 12.71 -7.05 O 13.70 -6.06 C 13.70 -9.44 C 13.33 -10.79 C 15.05 -9.07 N 16.40 -8.71 1 2 1 2 3 -1 3 4 1 4 5 1 5 6 1 1 6 -1 7 8 1 2 8 1 1 7 1 8 9 2 7 10 -1 10 11 2 10 12 1 12 13 3";
+
+
+            //Instantiate a new JSME:
+            //arguments: HTML id, width, height (must be string not number!)
+
+            jsmeApplet = new JSApplet.JSME("appletContainer", "600px", "440px", {
+                //optional parameters
+                //"options": "depict,marker",
+                "options": "nodepict,marker,markermenu,",
+                "jme": startingStructure,
+            });
+
+
+            jsmeApplet.setCallBack("AtomHighlight", atomHighLight);
+            jsmeApplet.setCallBack("BondHighlight", bondHighLight);
+
+
+        }
+
+    </script>
+
+</head>
+
+
+<body>
+
+<h1>JSME atom highlight</h1>
+
+<table align="center">
+    <tr>
+        <td id="appletContainer"></td>
+    </tr>
+</table>
+
+
+<table align="center">
+    <tr>
+        <td>
+            <input id="atomHighLightTextArea" value="8"></input>
+            <button type="button"
+                    onclick='var index = document.getElementById("atomHighLightTextArea").value; jsmeApplet.setAtomToHighLight(1, Number(index));'>
+                Highlight atom
+            </button>
+            <input id="bondHighLightTextArea" value="4"></input>
+            <button type="button"
+                    onclick='var index = document.getElementById("bondHighLightTextArea").value; jsmeApplet.setBondToHighLight(1, Number(index));'>
+                Highlight bond
+            </button>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Atom highlighted by mouse over: <span id="atomHighLightTextAreaOut"></span>
+            <br>
+            Bond highlighted by mouse over: <span id="bondHighLightTextAreaOut"></span>
+        </td>
+
+    </tr>
+    </tr>
+
+
+    </tr>
+    <td>
+        Atom colors: <textarea id="atomHighLightTextArea2" rows="1" cols="35">1,3,2,3,3,3,4,3,5,3,6,3,1,5,2,5,7,5,8,5,9,5,10,5,11,5,12,5,13,5</textarea>
+        <button type="button"
+                onclick='var atColorCsv = document.getElementById("atomHighLightTextArea2").value; jsmeApplet.setAtomBackgroundColors(0, atColorCsv);'>
+            Set atom background color
+        </button>
+        <button type="button" onclick='jsmeApplet.resetAtomColors(0);'>Reset atom colors</button>
+        <button type="button" onclick='jsmeApplet.resetAtomMarks(0);'>Reset atom marks</button>
+        <button type="button" onclick='jsmeApplet.resetBondMarks(0);'>Reset bond marks</button>
+
+    </td>
+
+    </tr>
+    </tr>
+    <td>
+        Bond colors: <textarea id="bondHighLightTextArea2" rows="1" cols="35">1,1,2,2,3,3,4,4,5,5,6,6,7,7</textarea>
+        <button type="button"
+                onclick='var atColorCsv = document.getElementById("bondHighLightTextArea2").value; jsmeApplet.setBondBackgroundColors(0, atColorCsv);'>
+            Set bond background color
+        </button>
+        <button type="button" onclick='jsmeApplet.resetBondColors(0);'>Reset bond colors</button>
+    </td>
+
+    </tr>
+    </tr>
+    <td>
+        Palette colors: <textarea id="getBackgroundPaletteTextArea" rows="1" cols="35"></textarea>
+        <button type="button"
+                onclick='var palette = JSON.stringify(jsmeApplet.getBackGroundColorPalette());document.getElementById("getBackgroundPaletteTextArea").value = palette;'>
+            Get all available background colors
+        </button>
+        <button type="button"
+                onclick='var palette = JSON.parse(document.getElementById("getBackgroundPaletteTextArea").value);jsmeApplet.setBackGroundColorPalette(palette);'>
+            Set all available background colors
+        </button>
+    </td>
+
+    </tr>
+</table>
+
+
+<H3>Atom background color</H3>
+There are 6 predefined pastel colors available: numbered 1 to 6. The color specification is character string containing
+a comma separated list of atom number and color index.<BR>
+Example: 1,2 : color atom #1 with color # 2<BR>
+Example: 1,2,10,4 : color atom #1 with color # 2 and color atom #10 with color #4<BR>
+
+If the first argument, the molecule index is set to 0, then the provided atom indices are matched to the molecules
+contained in the editor as a single ensemble.
+
+If an atom has more than one color, then the colors are averaged. In the example above, atom #1 has mixed color.
+
+<H3>Bond background color</H3>
+See atom background coloring. The results are the same.
+
+
+<H2>API</H2>
+<p>
+    Note: All atom, bond and  molecule indices start at 1.
+</p>
+
+<p>
+    <b>public void setAtomToHighLight(int molIndex, int atomIndex)</b><br>
+    The hightlight is temporary.
+</p>
+
+<p>
+    <b>public void setCallBack(String callbackName, JavaScriptObject callbackFunction)</b><br>
+
+    Generic call back. The callback function is a JavaScript function that receives an instance of JSMEevent.
+    See {@link #getAlldefinedCallBackNames()} for all predefined callback names.
+    @param callbackName
+    @param callbackFunction.
+</p>
+
+
+<p>
+    <b>public void setAtomBackgroundColors(int molIndex, String atomAndColorCSV) </b><br>
+    atomAndColorCSV must be an integer between 0 and 6. 0 means no background color. molIndex can be 0.
+</p>
+
+<p>
+    <b>public void resetAtomColors(int molIndex) </b>
+</p>
+
+
+</body>
+</html>

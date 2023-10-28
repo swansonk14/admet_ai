@@ -1,0 +1,45 @@
+<html>
+<head>
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <title>JME API testing</title>
+
+
+    <script type="text/javascript" language="javascript">
+        function jsmeOnLoad() {
+            var startingStructure = "13 14 C 15.94 -11.45 C 15.94 -10.05 C 14.72 -9.35 C 13.51 -10.05 C 13.51 -11.45 C 14.72 -12.15 C 17.34 -11.45 C 17.34 -10.05 O 18.33 -9.06 C 18.33 -12.44 C 17.96 -13.79 C 19.68 -12.07 N 21.03 -11.71 1 2 1 2 3 -1 3 4 1 4 5 1 5 6 1 1 6 -1 7 8 1 2 8 1 1 7 1 8 9 2 7 10 -1 10 11 2 10 12 1 12 13 3";
+
+
+            //Instantiate a new JSME:
+            //arguments: HTML id, width, height (must be string not number!)
+
+            jsmeApplet = new JSApplet.JSME("jsme1", "380px", "340px", {
+                //optional parameters
+                "options": "query,hydrogens",
+                "jme": startingStructure
+            });
+        }
+
+
+        function createApplet2() {
+            var jme2Div = document.getElementById("jsme2");
+            jme2Div.setAttribute("code", "JME.class");
+            var n = JSApplet.JSME.replaceAllAppletsByJSME(function (eachJsme) {
+                console.log("eachJsme.getCreationIndex(): ", eachJsme.getCreationIndex());
+            });
+
+            console.log("number of applets created: ", n);
+
+        }
+
+    </script>
+</head>
+
+<body>
+<div id="jsme1"></div>
+<div id="jsme2"></div>
+<button type="button" onclick="alert(jsmeApplet.getParentContainer().id);">test getParentContainer().id</button>
+<button type="button" onclick="createApplet2();">createApplet2</button>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<html>
+
+<head>
+<script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+
+</head>
+
+<body bgcolor="#E6E6FA">
+<H1>JSME applet is hidden and in an iframe</H1>
+<h2>Hide / Show  after</h2>
+
+<button onclick='toggle()'>Toggle</button>
+
+
+<table>
+    <tr>
+        <td>
+            <iframe src='JSME_minimal.html' style='display: none' id="toHide" width=600 height=360></iframe>
+        </td>
+    </tr>
+</table>
+
+
+
+<script>
+    var hidden=true;
+    function toggle() {
+        var iframe=document.getElementById('toHide');
+        if (hidden) {
+            console.log('show');
+            iframe.style='display: block;';
+	
+        } else {
+            console.log('hide');
+            iframe.style='display: none;';
+        }
+        hidden=!hidden;
+        console.log(hidden);
+    }
+</script>
+
+Another iframe
+<div style="display: block; width: auto; min-height: 0px; max-height: none; height: 451px;">
+<iframe src="JSME_test.html" title="Editor Modal" width="100%" height="100%" style="min-width: 95%;height:100%;" scrolling="auto"></iframe>
+</div>
+
+
+
+</body>
+</html>
+

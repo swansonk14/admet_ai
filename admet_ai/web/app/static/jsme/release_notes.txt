@@ -1,0 +1,701 @@
+2023-07-31
+	- Query box: labels are not truncated anymore
+
+2023-05-07
+	- if the chain tool is selected, bonds can also be highlighted by mouse over
+	- resetAtomMarks() (fix for issue #31) resetBondMarrks(), resetAtomMaps()
+	- bug fix: issue #33:  JSME set atom events not triggered when using keyboard to set atom type
+	- improve rotation of molecule (shift drag)
+	- IE6/IE7 supports removed from permutations (GWT user-agents)
+	- bug fix: show chain length in info during chain build
+	- bug fix: bond centers are now recomputed after atom move action (mouse over -> no bond highlight)
+
+2022-09-26
+    - Renaming of "star" option to "circle" or "marker" in the example HTML files
+
+2022-09-03
+	- https fix for the JSME_chemical_resolver_demo.html
+    - bug fix: noShowdragandDropIconindepictmode (github issue # 24)
+    - bug fix: deprecation warnings in Firefox (github issue # 23)
+    - bug fix: Delete molecule using Delete key caused error (github issue #25)
+    - bug fix bondhighlight (github issue #27)
+    - new atom inspector function: set atomic charge
+
+2022-02-26
+    - background color palette changed: yellow color more saturated, additional light green color
+    - new option: disable gui zoom (github issue #17)
+    - bug fix: AfterPaste event was not working (github issue #22)
+    - bug fix: marked atom in template (github issue #20)
+
+
+2021-07-13
+    - improved example file JSME_test.html
+    - sulfonylmethanediamine SMILES generation bug fix
+    - improved JavaDoc
+
+2021-06-10
+	
+	- Undo stack stores the state of the editor during editor initialization 
+	- Possibility to set default format for copy/cut and D&D
+	- Chiral flag status shown in the info bar
+	- Avoid browser window automatic scroll when the mouse pointer moves on the editor
+	- bug fix: setTemplate()
+	
+	
+2021-05-10
+	- sub and superscript text style for the number of hydrogens and charges
+	
+2021-04-05
+
+	- bug fix: JME output for fragments, no more coordinate overlap
+	- bug fix: recompute 2D coordinates: problem with explicit hydrogens
+	- new option: guiAtomColor (customization of JSME look)
+	- the depict example page has been extended
+	- new example JSME_access_internal_data.html
+	- new example JSME_alternative_look.html
+	- new methods: getAtom(), getBond() and getMolecule()
+	- replaced all setAfterStructureModifiedCallback() from the examples because of deprecation
+	- setBondAdditionalData bug fix (wrong event name reported)
+	- improved readability of atom labels when a background colored circle is shown (additional text stroke)
+	- custom background coloring is now independent from atom numbering and atom marker
+	
+2021-01-31
+	- new option showAtomMapNumberWithBackgroundColor
+2020-12-26
+	- migration of help.html file to https://jsme-editor.github.io/help.html
+	
+2020-12-20
+	- bug fix: deletion of an unwanted <span> used to compute a WindowPanel size (mosaic library bug)
+	- new example page: JSME_inchi_direct_interactive.html
+	- JSME event "seAtom": atom number removed from the event.action field
+
+JSME-2020-11-22"
+	- atom inspector  (number option on, right mouse click on atom) set atom map bug fix
+	- atom numbering:: typing 0 allows to reset next clicked atom (bug fix)
+
+JSME-2020-09-24:
+	- new option: markNothing
+
+JSME-2020-09-05
+	- improved examples pages JSME_atom_highlight_demo.html
+	
+JSME-2020-06-30:
+	- setBackGroundColorPalette bug fix
+
+JSME-2020-06-26
+	- new option: markerMenu
+	- new method: setMarkerMenuBackGroundColorPalette
+	- bug fix: toggle depict to edit, centering of molecule was needed
+	- R group number input bug fix
+	
+JSME-2020-06-14
+	- internal bond scaling bug fixed
+	- new test page: JSME_Rgroups.html
+	- R group R9 bug fix
+	- numeric keypad numbers bug fixed
+
+JSME-2020-06-11
+    - new mouse over information for some JSME functions
+	- MOLfile input with aromatic bond type 4, conversion to single and double bond
+	- import RXN and SMIRKS works (see test_depict_patent_reactions_smirks.html)
+	- RXN input: bug fix: detection of agents was not working
+	- improved detection of reaction role
+	- in marker mode, the color index can be set with the keyboard like atom maps
+	- methods setStarColor and setMarkerColor have been replaced by activateMarkerColor
+	- documentation update: <b>hydrogens, nohydrogens</b> - display / hide implicit hydrogens on heteroatom labels (default is hydrogens). Implicit hydrogens are calculated only if the valence state option is switched on<br>
+	- R group works again
+	
+JSME-2020-05-3
+	- jsmeEvent: additional variable atomBackgroundColorIndex
+	- colored background atom labels have rounded corners
+	- bug fix: SMILES output of atom with color marking had no atom map
+	- new active marker system: accept MOL and JME input with atom map as input
+	- the default color palette has been changed
+	- JME output format available in I/O menu
+	- atom highlight is not disabled anymore if bond stereo action is selected
+	- carbon chain bug fix: wrong charge on closing atom
+	- carbon chain event does not trigger addBond event for each bond addition anymore
+	- do not split fragments in depict mode (cross atom issue)
+	- HTML examples cleanup
+	- Additional HTML example and test pages
+	
+JSME-2020-04-19	
+	- new active marker system - preliminary
+	- generic input fires an event for MOL, RXN and JSME inputs
+	
+JSME-2020-04-13
+	- bug fix: hydrogen handling options have no effect
+	- bug fix: nocanonize was not working 
+	- reaction arrow can be moved
+	- molecule popup menu: compute 2D coordinates of the selected molecule
+	
+JSME-2020-04-08
+	- new method: setMenuXShortcuts()
+	- 3 bug fixes related to valence sate during template addition
+	- improved chemical format detector (SMARTS, CSRML)
+	- compute 2D coordinates if input molecule has none or is 3D
+	- improvement and HTML code reformatting of the example files
+	- JME string parser bug fix: handling of charges
+	- improved atom map display (smaller font, better placement)
+	- new options: 
+	     markerIconColor, markAtomOnly, markBondOnly, pseudoMark
+	- setMarkerColor() method replaces setStarColor()
+	- background color highlighting new functionalities: getNumberOfColorsForBackGroundPalette, getBackGroundColorPalette, setBackGroundColorPalette
+	- bond colored background shape is rectangular
+	- new API method: getMultiSDFstack
+	- new JSME event: readMultiSDF
+	- new methods: g(s)etAtomAdditionalData, g(s)etBondAdditionalData
+	- new methods: hasMarkedAtom(), hasMolecule()
+	- new test pages:
+		 - JSME_template_cysteine_lesson.html
+		 - JSME_custom_x_shortcuts.html
+		 
+TODO: provide in the dev doc the list of all events
+
+JSME-2019-05-11
+    - bug fix for option valenceState
+
+JSME-2019-05-05
+    - new atom shortcut: *,g
+    
+JSME-2019-04-22
+    - new option: valenceState
+    
+JSME-2019-01-30
+    - doc.html cleanup
+    - setUserInterfaceBackgroundColor() bug fix
+    
+JSME-2019-01-19
+    - new initialization parameter: guicolor
+    - new method: setUserInterfaceBackgroundColor()
+
+JSME-2018-11-18
+    - new copy option: Copy as raw SVG
+
+JSME-2018-11-10
+    - new option: star1
+    - bond highlight is disabled if an atom only action is selected (e.g. set atomic charge)
+    - atom highlight is disabled if a bond only action is selected (e.g. set bond stereo)
+    
+
+JSME 2018-10-28
+    - improved documentation: new parameter section
+    - two new parameter: atombgsize and bondbgsize
+
+JSME 2018-10-21
+    - bug fix: when importing or pasting a structure with atom map number, the numbers are not displayed if the editor is in star mode, instead the atom with an atom map are displayed with a blue background color
+    - bug fix: when two atoms are very close, it was impossible to select the bond between the two atoms
+
+
+JSME 2018-10-15
+    - delete method to disable the functional group menu enableFGMenu()
+    - new option: fgmenu / nofgmenu
+    - bug fix: atom marking using the star option
+    - pasting a SMILES with one or more leading or trailing blank will be accepted and corrected
+
+JSME 2018-10-07
+    - new method to disable the functional group menu enableFGMenu()
+    - new method: setBondBackgroundColors()
+    - additional HTML example page that shows an alternative way to use templates (see JSME_template_aminoacids.html)
+    - change default background color for GUI elements
+        
+        
+JSME 2018-06-03
+    - atom and bond highlight mouse leave events are fired before  mouse enter events
+
+JSME 2018-06-01
+    - improved atom background highlight with mutliple color mixing (see JSME_atom_highlight_demo.html)
+    - JSMEevent includes atoms of selected bonds and atom and bond indices of the molecular fragments
+    - additional HTML example page that shows how to use the built in InChi computation (see JSME_inchi_direct.html)
+        
+JSME 2017-11-15
+	- default string width and font height are provided when the font size computation fails
+
+JSME 2017-11-14
+	- improved font cache - invalid values are not stored in the cache anymore, fix a display bug when the applet is hidden in a iframe
+	- new API method: clearFontCache
+	- API method repaint() always repaint the whole applet, even the parts that has not been changed
+
+JSME 2017-08-23
+	- changed showInfo() method - the custom message is not erased by a menu click
+	- improved full screen function
+	- direction of mouse wheel zoom reversed (use same convention as other web applications)
+	
+JSME 2017-08-08
+	- SMILES generation stereo bug fix
+	- Chemical format detector accepts invalid "M END" with only one space
+
+JSME 2017-07-09
+	- Copy&paste windows: clicking outside the window closes it
+	- Popup windows have the maximum Z index
+	- Full screen functionality and icon
+
+JSME 2017-06-18
+	- improved visual feedback for group deletion
+	- improved visual feedback for atom moving (bond highlight not shown anymore)
+	- copy/paste windows can be closed by pressing the ESC key
+	- RXN export agents (non standard format)
+	- RXN export format new option: merge reaction component
+	- when a reaction role is changed, an event is generated
+	- setting atom maps for reactions is easier with mouse clicks
+	- bug fix: applet resize will keep the reaction components around the reaction arrow
+	- bug fix: paste a reaction when the molecular area scale is different than 1
+	- bug fix: if the molecular area scale is different than 1, the reaction role of the reaction components were not correctly reported
+	- bug fix: error message for a non supported input file format showed the enum number instead of the enum name
+	- preliminary implementation of full screen icon (still disabled by default)
+	- java code refactoring
+	
+JSME-2017-05-22
+	- context menu can be disabled (new option)
+	- SMILES export: No more EZ stereo for double bonds in ring size <= 7
+	- Hydrogen count is exported for some metals for MOL (v2000+v3000) and JME formats, and imported for MOL (V2000) and JME formats
+
+JSME-2017-05-07
+	- Coordination bond shown in SMILES as ~ (canonization is disabled)
+
+JSME-2017-04-01
+	- First support for coordination bonds
+
+JSME-2017-03-21
+	- new system clipboard handling
+	- support for wiggle and crossed stereo bonds
+
+JSME-2017-02-26
+	- improved URL for searching InChI Key (google verbatim search)
+	- bug fix: popup menu positions when the GUI is scaled
+	- bug fix: getMolecularAreaScale() generated an infinite loop
+	- bug fix: no error were reported when the V3000 parser fails
+	- bug fix: setAtomMolecularAreaFontSize() was not working
+	- bug fix: set or unset antialising did not update the drawings
+	- improved template example page
+
+JSME-2017-02-20
+	- bug fix: chiral flag was not saved in the undo state
+	- bug fix: ChemicalFormatDetector trimmed MOL first line if it is empty
+	- improved template example page
+
+JSME-2017-02-08
+	- bug fix: SDF buffer navigation messages were not shown
+	- HOME and END keys can be used to navigate the SDF buffer in addition to page up and page down keys
+
+JSME-2017-02-06
+	- bug fix: structure change event recorded after setting the chiral flag
+	- bug fix: NEW button shown as disabled after structure change
+	- new feature: when NEW button is on, the pasted or dropped structure is added to the molecular drawing area
+
+JSME-2017-01-22
+	- bug fix:  in depict mode, DnD arrow size does not vary with zoom level
+	- DnD arrow in depict mode is smaller
+	- new event types for reading  SMILES, SMIRKS, RXN, JME string
+	- new event field: origin (GUI, INIT, DROP, or API)
+	- new API method:readGenericMolecularInput()
+	- import MOL in V3000 format accepted (extended stereo collections are ignored)
+	- exported SVG contains an embedded MOL in V3000 format, this SVG can be pasted/imported back in JSME
+	- bug fix: depict mode automatic scaling and resizing
+	- bug fix: zooming in and out for reactions
+	- new internal class: ChemicalFormatDetector
+	- JME internal code cleanup
+
+JSME-2016-12-06
+	- new API methods: getMolecularAreaScale(), setMolecularAreaScale(), getMenuScale(), setMenuScale()
+	- depict mode: structure can be moved around
+	- multiple button after setting R option : GUI bug fixed
+	
+JSME-2016-11-13
+	- improved documentation (options useoclidcode, toggle, InchiResult)
+	- Search InChIKey can be customized by using a custom base URL or a custom callback function
+	- Search InChIKey menu entry renamed
+	- Inchi export disabled for IE < 9
+	
+JSME-2016-11-05
+	- option parser code rewrite
+	- bug fix Export SVG for IE < 9
+
+JSME-2016-11-01
+	- Export SVG for molecules using the OpenChemLib SVG depictor
+
+JSME-2016-10-30
+	- bug fix: parsing of chemical input for IE
+	- bug fix: stereo cumulenes smiles generation
+	- bug fix: EZ stereo bond in rings enabled (smiles generation)
+	- Export InChI, InChiKey and auxinfo
+	- Search google with InChiKey
+
+JSME-2016-10-19
+	- bug fix: getMolecularAreaGraphicsString
+	- bug fix: slow down of FireFox SVG display
+
+JSME-2016-10-17
+	- bug fix: Cursor does not become a text edit cursor over SVG text
+	- the right border uses a separate graphics, which fixes several bugs
+	- bug fix: readMolfile sends JS event after repaint() of the applet
+
+JSME-2016-10-09
+	- useOclIDCode new option: preliminary implementation
+
+JSME-2016-10-06
+	- delete hydrogens popup  menu entry
+	- bug fix: removehs fixed
+	- bug fix: infinite loop when setAfterStructureModifiedCallback uses getMolecularAreaGraphicsString()
+
+JSME-2016-10-02
+	- clipboard window improved for long lines text
+
+JSME-2016-09-25
+	- display sp carbon in cumulene bond
+
+JSME-2016-09-18
+	- bug fix: H+, H-
+	- undo shows empty state
+	- depict bug fix
+	- internal change for event reporting
+	
+JSME-2016-09-11
+	- bug fix: cumulene and autoez option
+	- getMolecularAreaGraphicsString function refreshes the drawing before yielding the SVG. Also, it does not show the touched atom or bond.
+
+JSME-2016-09-05
+	- small bug fixesm reading mutipart mol
+	- readMolfile sends JS event after repaint() of the applet
+
+JSME-2016-09-04
+	- small bug fixes
+
+JSME-2016-08-21
+	- R number can be changed by selecting the R atom and typing a number on the keyboard
+	- the */- button allows changing charge of metals with only two major oxidation states
+	- X atom charge parsing bug fix for Ca2+
+	- New keyboard shortcut for changing atomic charge '+' (works only for the Java applet)
+	
+JSME-2016-08-01
+	- bug fix add new part was not working correctly if the pasted structure is multipart
+    - autoez bug fix , autoez is on by default
+    
+JSME-2016-06-19
+	- new options: showdraganddropsymbolindepictmode and noshowdraganddropsymbolindepictmode
+	- new options: addnewpart and noaddnewpart
+	- bug fix add new part was not supported for JME string input
+	- split and merge new behavior
+	- mutipart option is on by default
+
+JSME-2016-05-16
+	- bug fix: depict was not scaled anymore
+	- MDL chiral flag reading was generating an exception if no digit character were present
+	- New JSME initialization: <param name="smiles" value="c1ncncn1">
+
+
+JSME-2016-04-27
+	- disable SVG text selection with global CSS
+	- Bug fix: bond addition with keyboard on selected atom
+	- atom mapping option in the context popup menu is shown only in reaction or number or autonumber mode
+
+JSME-2016-04-19
+	- atom mapping option in the context popup menu is shown only in reaction mode
+	- bug fix
+	- Setting the chiral flag shows a message in the info area
+
+JSME-2016-04-17
+   - dialog box to set atom map available with the context menu
+   - autonumbering of atom maps of a molecule using the context menu
+   - read and write chiral flag for both V2000 and V3000
+   - set MDL chiral flag with the context menu
+   - in multipart, activate closest fragment by a mouse click
+   - in multipart, move the fragment that is the closest to the mouse pointer coordinates 
+   - in multipart paste, keep the original coordinates of the fragments
+   - mouse wheel for zooming in and out (does not work correctly for reactions)
+   - allow zooming option (zoom, nozoom)
+   - openchemlib for SMILES input
+   - SMIRKS input using openchemlib for SMILES input
+   - use openchemlib option
+   - highlight in red molecule to be deleted
+   - highlight in blue molecule to be copied (in reaction mode)
+   - various bug fixes
+   - refactoring of bond code
+
+JSME-2016-02-16
+    - Bug fix for multipart copy
+    - Reaction copy and  structure delete highlight (still buggy)
+    - NCI website demo: example: http->https
+
+    
+JSME-2016-02-01
+    - Bug fix for multipart and reaction (delete, add , undo stack)
+
+
+JSME-2015-12-06
+    - Bug fix bond rubberbanding
+
+JSME-2015-11-22
+    - Refactoring of JME code: bond creation bug fix
+    
+JSME-2015-11-15
+    - Refactoring of JME code
+    
+JSME-2015-11-04
+    - Tool chain bug fix
+    - Applet resizes automatically when the browser window resizes
+    
+JSME-2015-11-01
+    - Empty mol return a valid MOL with 0 atoms and bonds
+    - After importing a reaction with atom mapping, the numbering atom tool will use the largest atom map + 1
+    - Refactoring of JME code
+
+JSME-2015-10-04:
+   - Bug fix: clicking on NEW and 123 does not generate structure change events
+   - Disable logging of null events
+   - Changing atom type using the keyboard while the cursor is over an atom does not change the atom type menu selection
+   - Using the ring keyboard shortcuts while the cursor is over an atom or a bond does not change the menu
+   
+JSME-2015-06-25
+   - depictAction bug fix
+    
+JSME-2015-06-20
+   - new generic callback
+   - atom clicked and bond clicked callback
+
+JSME-2015-06-14
+    - New button for I/O
+    - Updated smaller icon for drag and drop
+JSME-2015-05-28
+    - fixed broken links in doc.html
+JSME-2015-05-14
+    - bug fix: read JSME string with more than 10 marked atoms
+    - replaced the star by a circle
+    - jsa,css bug fix
+
+JSME-2015-05-07
+    - depict mode:leave 16 px for the DnD icon to avoid overlap
+JSME 2015-05-03
+    - bug fix: autonumber was not working anymore after array optimization (123)
+    - remove linker name (e.g xsiframe) from the name of the distribution
+    - Microsoft Edge compatibility test performed: Window clipboard is not supported anymore
+JSME 2015-03-19
+    - Fixed many bugs in the depict mode in order to allow to switch back and forth between depict and edit mode 
+    - new methods isDepictMode(), addMouseOutHandler()
+JSME 2015-03-01
+    - Enable touch events on a ChromeBook
+    - JavaScript Bootstrap library compatibility fix (computation of character height)
+    - R4 to R9 smiles generation fix
+JSME 2015-02-25
+    - R4 to R9
+
+JSME 2015-02-09
+    - bug fix for SMILES generation of pyrrole [nH], H was missing
+JSME 2015-01-28
+    - Ctr V shortcut fixed
+JSME 2015-01-22
+   - file out browse button
+   - V3000 export
+
+- bug fix: missing event record for closing a bond on an atom
+JSME 2014-12-24
+    - bug fix: missing event record for paste
+JSME 2014-12-20
+    - reenable older event callback
+JSME 2014-12-07
+    - missing event record for more keyboard events, improve undo/redo record event
+JSME 2014-12-04
+    - missing event record for set atom type with keyboard
+
+JSME_2014-11-19:
+   - BUG: copy SDF of a multipart: invalid ISO
+   - array JavaScript optimization
+   - Record an event during add chain for each bond
+
+JSME_2014-10-16
+   - template bug fix
+JSME_2014-10-13
+   - Bug fix: JSME in a hidden DIV would not be visible
+JSME_2014-09-21
+   - Drag and Drop enabled on IE6 to IE9 (does not work with files)
+   - Template 1st implementation
+   - Missing new lines in doc.html
+
+JSME_2014-08-26
+   - incorrect atom mapping read from RXN when numbering option is set - fixed
+   - export SMIRKS with "a" did not works with atom mapping - fixed
+
+JSME_2014-07-14
+    - Paste behavior changed: if current status is multipart or reaction, then the new structure will be added and will be the selected structure
+    - new linker (xsiframe) for CDT testing
+
+JSME_2014-06-28
+    - Paste behavior changed: if current status is multipart or reaction, then the new structure will be added
+    - remove H bug fix
+    - bug fix: structure underneath the menu region: highlight must dissapear
+JSME_2014-05-20
+    - new resize method
+JSME_2014-03-30
+    - bond marking allowed
+    - bug fix: paste of a multipart structure with isotopic atom
+JSME_2014-03-12
+    - setAction, depictaction
+JSME_2014-02-20
+    - Font size can be changed with setAtomMolecularAreaFontSize
+JSME_2014-02-03
+    - bug fix: date in exported MOL
+    - new callback setAfterStructureModifiedCallback
+JSME_2014-01-27
+     - isotopic atoms implementation
+     - star marker: the MOL generation now set the atom map for each marked atom
+
+JSME_2014-01-05
+     - smaller initial download size by about 25 %
+     - scaling picture: further improved for very small depiction
+     - high precision 2D coordinates
+
+JSME_2013-11-06
+     - removehsc new 
+     - scaling picture: improved for very small depiction
+
+JSME_2013-10-27:
+     - initialization error will not open an alert but write a message to the console instead
+     
+JSME_2013-10-13:
+     - small refactoring inside the JME code
+     - bug fix in doc.html
+
+JSME_2013-10-09:
+     - callback function setNotifyStructuralChangeJSfunction does not need the nocanonize function anymore
+JSME_2013-10-03:
+     - bug fix:D&D icon disappears after resizing JSME
+     - bug fix: resizing JSME, avoid multiple SVG/VML generation after each resize
+     - improved setNotifyAtomHighLightChangeJSfunction
+     - two more example pages about JSME resize
+     - depict mode takes the callback function notifyAtomHighLightJSfunction
+     - after clearing the canvas, the undo stack is not deleted anymore
+     
+JSME_2013-09-29:
+     - bug fix in index.html
+     
+JSME_2013-09-28:
+     - More simple installation examples
+     - index.html file
+     - improved doc.html file
+     - star option documented
+     
+
+JSME_2013-09-19:
+    - New methods: addClickHandler(), addMouseOverHandler()
+
+JSME_2013-09-17:
+    - New methods:  getOffsetSize(), getOffsetWidth(), getOffsetHeight(), setWidth(), setHeight(),  isVisible(), setVisible()
+    - improved javadoc API
+    
+JSME_2013-09-15:
+    - new utility function: Utils.runAfterBrowserEventLoopReturns
+    - setSize() method
+    - call back function argument for replaceAllAppletsByJSME
+    - JME: cache font and font metrics for the drawing area useful for many depictions
+    - scaling picture bug fix: the 2px padding around the atom labels was not scaled
+
+JSME_2013-09-08:
+    - Easy migration JME->JSME
+    - new documentation file: doc.html - still incomplete
+    - new option: paste/nopaste to disable pasting MOL into the applet
+    - query mode disabled by default
+    - aromaticity SMARTS query bug fix
+
+JSME_2013-08-04:
+    -xbutton, noxbutton options work
+    
+JSME_2013-06-29:
+    - For IE11, the clipboard management had to be adapted because of the unconventional user agent in IE11 (=Firefox)
+    - Android and iPad do not show the drag out button because dragging out does not work on these systems
+    - bug fix: undo & redo was not working for atom atom mapping
+    - Note: the number of GWT permutations has increased to 30
+
+
+JSME_2013-06-09:
+    - atom move atom button is optional (turned off by default)
+    - improved JSME_chemical_resolver_demo.html page
+
+
+JSME_2013-05-30:
+    - move atom button
+    - java application exits when its window is closed, no more END button
+    - new simpler HTML demo page
+    
+JSME_2013-05-01:
+    - bug fix: IE has no console unless the debugger window is open
+    - deleting explicit hydrogens when importing a structure from chemical resolver (demo page)
+
+JSME_2013-04-09:
+    - Custom paste menu and custom paste operation
+    - non GPL licensed image for the drag and drop icon
+    - local antialias for VML
+    - line width for the molecular area
+    - JavaDoc of the API
+    - clear function added 
+
+JSME_2013-04-01:
+    - bug fix in JSObject
+
+JSME_2013-03-30 :
+    - Drag out of MOL/RXN and drop onto another applet or on to a file system window to save the file
+    - DnD demo page
+    - No more alert window if the function jsmeOnLoad is not defined - instead provides a message to the console
+    - clear SDF stack as well when clicking on the clear icon
+    - stereo bond cancel bug fix (bug shows up visible with undo/redo)
+    - interactive atom marking demo page
+    - multiple instances of the editor in the same HTML page work
+    
+JSME_2013-03-24 :
+    - Drag and drop of files onto the applet
+
+JSME_2013-03-21 :
+    - undo bug fix
+    - showInfo function
+
+
+JSME_2013-03-19 :
+    - antialias is on by default for SVG and off for VML
+    - new help page
+    - first public release
+
+JSME_2013-03-18 :
+    - spiro button
+    - triple bond in menu is improved - looks better with browser with poor antialias
+
+
+JSME_2013-03-16 :
+    - rename JavaScriptApplet to JSApplet to avoid trademark problems with JavaScript
+    - disable molecule scaling for IOS
+    - removes blue marking about atoms and bonds after click enabled unless touch device
+
+
+JSME_2013-03-14 :
+    - increased touch radius for atoms and bonds - much better usability on iPad
+
+JSME_2013-03-13 : not for redistribution
+    - first DIV shield - still bugs
+    - rubber banding box was not saved in the undo stack - fixed
+
+JSME_2013-03-12 : not for redistribution
+    - Rollback of all the Smiles changes, no more example of NotifyStructuralChangeJSfunction provided
+    - improved rotation&scaling on iPad. Scaling is still buggy
+JSME_2013-03-11 : not for redistribution
+    - Smiles generation changes the atom ordering of the atoms in the editor, which is a problem for the NotifyStructuralChangeJSfunction. Fixed.
+JSME_2013-03-10 : not for redistribution
+    - Scaling of the molecule implemented for touch devices - still buggy. Problem with rotation, does not work on Android
+    - NotifyStructuralChangeJSfunction - problem with smiles generation
+JSME_2013-03-07
+    - Marked atoms are not displayed anymore with a blue square after touch/mouse up
+    - Touch device: rotation bug fixed (random jump move at the end of the rotation)
+    - bug fix for CSS distribution
+JSME_2013-03-04
+    - Touch device: rotation works on iPad
+
+
+JSME_2013-03-03
+    - Touch device: touch and hold will show the copy&paste popup menu
+    - Touch device: mouse events of drawing area were replaced by touch events in order to have a faster response on the iPad
+    - Touch device: structure can be moved. It is smooth on a iPad 4, slow on a Samsung Note
+    - Touch device: bond angle can be changed, multichain works
+    - CSS pollution: all global CSS definitions were removed from all the included CSS files from GWT and gwt-mosaic
+    - CSS global protection: better protection against global CSS definitions from the host page
+    
+    
+    
+Known bug: scaling and bond length rubber banding
+    

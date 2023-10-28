@@ -1,0 +1,571 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!--                                           -->
+    <title>JSME test page</title>
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+
+    <script>
+
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            // glutathione is chiral
+
+
+            var glutathione_smiles = "CC(CC(=O)N[C@@H](CS)C(=O)NCC(=O)O)[C@H](N)C(=O)O";
+            var glutathione_mol3 = "\n" +
+                "JME 2014-06-28 Sat Jun 05 10:12:20 GMT+200 2021\n" +
+                "\n" +
+                "  0  0  0  0  0  0  0  0  0  0999 V3000\n" +
+                "M  V30 BEGIN CTAB\n" +
+                "M  V30 COUNTS 20 19 0 0 1\n" +
+                "M  V30 BEGIN ATOM\n" +
+                "M  V30 1 C 1.2105 2.1008 0.0000 0\n" +
+                "M  V30 2 C 2.4209 1.4005 0.0000 0\n" +
+                "M  V30 3 O 1.2105 3.5013 0.0000 0\n" +
+                "M  V30 4 O 0.0000 1.4005 0.0000 0\n" +
+                "M  V30 5 N 2.4209 0.0000 0.0000 0\n" +
+                "M  V30 6 C 3.6314 2.1008 0.0000 0\n" +
+                "M  V30 7 C 4.8518 1.4005 0.0000 0\n" +
+                "M  V30 8 C 6.0623 2.1008 0.0000 0\n" +
+                "M  V30 9 N 7.2728 1.4005 0.0000 0\n" +
+                "M  V30 10 O 6.0623 3.5013 0.0000 0\n" +
+                "M  V30 11 C 8.4832 2.1008 0.0000 0\n" +
+                "M  V30 12 C 9.7037 1.4005 0.0000 0\n" +
+                "M  V30 13 O 9.7037 0.0000 0.0000 0\n" +
+                "M  V30 14 N 10.9141 2.1008 0.0000 0\n" +
+                "M  V30 15 C 12.1246 1.4005 0.0000 0\n" +
+                "M  V30 16 C 13.3351 2.1008 0.0000 0\n" +
+                "M  V30 17 C 8.4832 3.5013 0.0000 0\n" +
+                "M  V30 18 O 14.5455 1.4005 0.0000 0\n" +
+                "M  V30 19 O 13.3351 3.5013 0.0000 0\n" +
+                "M  V30 20 S 9.6937 4.2016 0.0000 0\n" +
+                "M  V30 END ATOM\n" +
+                "M  V30 BEGIN BOND\n" +
+                "M  V30 1 1 1 2\n" +
+                "M  V30 2 2 1 3\n" +
+                "M  V30 3 1 1 4\n" +
+                "M  V30 4 1 2 5 CFG=3\n" +
+                "M  V30 5 1 2 6\n" +
+                "M  V30 6 1 6 7\n" +
+                "M  V30 7 1 7 8\n" +
+                "M  V30 8 1 8 9\n" +
+                "M  V30 9 2 8 10\n" +
+                "M  V30 10 1 9 11\n" +
+                "M  V30 11 1 11 12\n" +
+                "M  V30 12 2 12 13\n" +
+                "M  V30 13 1 12 14\n" +
+                "M  V30 14 1 14 15\n" +
+                "M  V30 15 1 15 16\n" +
+                "M  V30 16 1 11 17 CFG=1\n" +
+                "M  V30 17 1 16 18\n" +
+                "M  V30 18 2 16 19\n" +
+                "M  V30 19 1 17 20\n" +
+                "M  V30 END BOND\n" +
+                "M  V30 END CTAB\n" +
+                "M  END\n";
+
+            var glutathione_JME = "21 20 C 1.21 2.10 C 2.42 1.40 O 1.21 3.50 O 0.00 1.40 N 2.42 0.00 C 3.63 2.10 C 4.85 1.40 C 6.06 2.10 N 7.27 1.40 O 6.06 3.50 C 8.48 2.10 C 9.70 1.40 O 9.70 0.00 N 10.91 2.10 C 12.12 1.40 C 13.34 2.10 C 8.48 3.50 O 14.55 1.40 O 13.34 3.50 S 9.69 4.20 C 3.62 3.50 1 2 1 1 3 2 1 4 1 2 5 -2 2 6 1 6 7 1 7 8 1 8 9 1 8 10 2 9 11 1 11 12 1 12 13 2 12 14 1 14 15 1 15 16 1 11 17 -1 16 18 1 16 19 2 17 20 1 6 21 1";
+
+            var glutathione_mol = "\n" +
+                "JME 2014-06-28 Sat Jun 05 11:57:23 GMT+200 2021\n" +
+                "\n" +
+                " 21 20  0  0  1  0  0  0  0  0999 V2000\n" +
+                "    1.2101    2.1001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    2.4201    1.4001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    1.2101    3.5002    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    0.0000    1.4001    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    2.4201    0.0000    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    3.6302    2.1001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    4.8502    1.4001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    6.0603    2.1001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    7.2704    1.4001    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    6.0603    3.5002    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    8.4804    2.1001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    9.7005    1.4001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    9.7005    0.0000    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "   10.9105    2.1001    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "   12.1206    1.4001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "   13.3407    2.1001    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    8.4804    3.5002    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "   14.5507    1.4001    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "   13.3407    3.5002    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    9.6905    4.2002    0.0000 S   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "    3.6202    3.5002    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n" +
+                "  1  2  1  0  0  0  0\n" +
+                "  1  3  2  0  0  0  0\n" +
+                "  1  4  1  0  0  0  0\n" +
+                "  2  5  1  6  0  0  0\n" +
+                "  2  6  1  0  0  0  0\n" +
+                "  6  7  1  0  0  0  0\n" +
+                "  7  8  1  0  0  0  0\n" +
+                "  8  9  1  0  0  0  0\n" +
+                "  8 10  2  0  0  0  0\n" +
+                "  9 11  1  0  0  0  0\n" +
+                " 11 12  1  0  0  0  0\n" +
+                " 12 13  2  0  0  0  0\n" +
+                " 12 14  1  0  0  0  0\n" +
+                " 14 15  1  0  0  0  0\n" +
+                " 15 16  1  0  0  0  0\n" +
+                " 11 17  1  1  0  0  0\n" +
+                " 16 18  1  0  0  0  0\n" +
+                " 16 19  2  0  0  0  0\n" +
+                " 17 20  1  0  0  0  0\n" +
+                "  6 21  1  0  0  0  0\n" +
+                "M  END\n";
+
+
+            //Instantiate a new JSME:
+            //arguments: HTML id, width, height (must be string not number!)
+
+            jsmeApplet = new JSApplet.JSME("appletContainer", "600px", "440px", {
+                //optional parameters
+                "options": "query,hydrogens,fullScreenIcon",
+                //"smiles" : glutathione_smiles
+                //"jme" : glutathione_JME
+                //"mol" : glutathione_mol
+                "chem" : glutathione_mol3 // use generic input file format with automatic chemical format detection
+
+            });
+            jsmeApplet.showInfo("Glutathione is an antioxidant produced in cells"); // customize the info bar
+            // clean the info bar after a change of the displayed structure, disable the callback event
+            // "readMolFile" is the name of the action of the event called during initialization
+            jsmeApplet.setCallBack("AfterStructureModified", (event) => { if(event.action != "readMolFile") {event.src.showInfo("");  event.src.setCallBack("AfterStructureModified",null)}});
+
+            console.log(jsmeApplet.getSupportedFileFormats());
+            var copyFormatSelector = document.getElementById("copy_format");
+            for (var x of jsmeApplet.getSupportedFileFormats()) {
+                copyFormatSelector.options[copyFormatSelector.options.length] = new Option(x, x);
+            }
+            copyFormatSelector.onchange = function(event) {
+                var options = event.target.options;
+                var format =options.item(options.selectedIndex).text;
+
+                // used for both clipboard and drag out
+                jsmeApplet.setCopyToClipboardFormat(format);
+
+                /* Known issue: some format require loading of additional JavaScript code. The first time such a format is requested, the copy and
+                drag will not work correctly because of loading of JavaScript code.
+                */
+
+            }
+
+
+
+
+            //Alternative method: the size is not specified: the applet will use 100% of the space of its parent container "appletContainer".
+            //Be sure that the parent container size > 0, otherwise the applet will not be visible
+
+            /*    	jsmeApplet = new JSApplet.JSME("appletContainer",  {
+                         //optional parameters
+                        "options" : "query,hydrogens",
+                        "jme" : startingStructure
+                    });
+             */
+
+
+            //Opera patch: if some applet elements are not displayed, force repaint
+            //jsmeApplet.deferredRepaint(); //the applet will be repainted after the browser event loop returns
+            //it is recommended to use it if the JSME is created outside this jsmeOnLoad() function
+
+
+            //jsmeApplet has the same API as the original Java applet
+            //One can mimic the JME Java applet access to simplify the adaptation of HTML and JavaScript code:
+            document.JME = jsmeApplet;
+
+
+            //suggestion
+            //all buttons that access the jsme variable were disabled in the html
+            //Now enable all buttons that can access the jsme variable since the applet is ready
+            //example:
+            //document.getElementById("button").disabled=false;
+
+
+            document.getElementById("inchiKeyUrlTextArea").value = jsmeApplet.getWebSearchInchiKeyBaseUrl();
+
+        }
+
+
+        function readMolecule() {
+            var jme = "16 17 C 7.37 -8.99 C 7.37 -7.59 C 6.16 -6.89 C 4.95 -7.59 C 4.95 -8.99 C 6.16 -9.69 N 8.58 -6.89 C 8.58 -5.49 C 7.37 -4.79 O 6.16 -5.49 C 9.80 -7.59 O 9.80 -8.99 C 11.01 -6.89 Cl 12.22 -7.59 Cl 11.01 -5.49 C 9.80 -4.79 1 2 1 2 3 2 3 4 1 4 5 2 5 6 1 6 1 2 7 8 1 8 9 1 9 10 1 3 10 1 2 7 1 7 11 1 11 12 2 11 13 1 13 14 1 13 15 1 8 16 1";
+            jsmeApplet.readMolecule(jme); // or document.JME.readMolecule(jme);
+        }
+
+        function readMultipart() {
+            var jme = "9 9 C 6.68 -7.15 C 5.47 -6.45 C 4.26 -7.15 C 4.26 -8.55 C 5.47 -9.25 C 6.68 -8.55 C 5.47 -5.05 O- 6.68 -4.35 O 4.26 -4.35 1 2 1 2 3 2 3 4 1 4 5 2 5 6 1 6 1 2 2 7 1 7 8 1 7 9 2|1 0 Na+ 12.21 -6.61";
+            jsmeApplet.readMolecule(jme) // or document.JME.readMolecule(jme
+        }
+
+        function readReaction() {
+            var jme = "3 2 C:1 1.41 -7.12 O:2 1.41 -5.72 Cl 2.63 -7.82 1 2 2 1 3 1|3 2 N:3 5.72 -6.78 C:4 7.12 -6.78 H:5 5.02 -7.99 1 2 1 1 3 1 >> 5 4 C:1 13.51 -6.40 O:2 13.51 -5.00 N:3 14.72 -7.10 C:4 15.94 -6.40 H:5 14.71 -8.50 1 2 2 1 3 1 3 4 1 3 5 1";
+            jsmeApplet.readMolecule(jme);
+        }
+
+
+        function getMolfile(isV3000) {
+            var data = document.JME.molFile(isV3000);
+            document.getElementById("jme_output").value = data;
+
+        }
+
+        function getSmiles() {
+            var data = document.JME.smiles();
+            document.getElementById("jme_output").value = data;
+        }
+
+        function getJMEstring() {
+            var data = document.JME.jmeFile();
+            document.getElementById("jme_output").value = data;
+        }
+
+        function getMultiSDFstack() {
+            var data = document.JME.getMultiSDFstack();
+            var output = "No multirecords SDF was pasted into the editor ";
+            if (data.length > 0) {
+                output = data.join("$$$$\n") + "$$$$\n";
+            }
+            document.getElementById("jme_output").value = output;
+        }
+
+        function readMoleculeFromTextArea() {
+            var jme = document.getElementById("jme_output").value;
+            jsmeApplet.readMolecule(jme);
+        }
+
+        function readMOLFromTextArea() {
+            var mol = document.getElementById("jme_output").value;
+            jsmeApplet.readMolFile(mol);
+        }
+
+        function readAnyFromTextArea() {
+            var mol = document.getElementById("jme_output").value;
+            jsmeApplet.readGenericMolecularInput(mol);
+        }
+
+    </script>
+</head>
+
+
+<body>
+
+
+<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+<noscript>
+    <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+    </div>
+</noscript>
+<h1>JSME test page</h1>
+
+<table align="center">
+    <tr>
+        <td id="appletContainer"></td>
+    </tr>
+    </tr>
+</table>
+
+
+<table align="center">
+    <tr>
+        <td>
+            <button type="button" onclick="jsmeApplet.options('oldLook');">Old look</button>
+        </td>
+        <td>
+            <button type="button" onclick="jsmeApplet.options('newLook');">New look</button>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+            <button type="button" onclick="jsmeApplet.setAntialias(true);">Turn on antialias</button>
+        </td>
+        <td>
+            <button type="button" onclick="jsmeApplet.setAntialias(false);">Turn off antialias</button>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <button type="button" onclick="jsmeApplet.setMolecularAreaAntiAlias(true);">Turn on antialias for the
+                molecular drawing area
+            </button>
+        </td>
+        <td>
+            <button type="button" onclick="jsmeApplet.setMolecularAreaAntiAlias(false);">Turn off antialias for the
+                molecular drawing area
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>Drawing area line width: <input type="text" name="linewidth" id="linewidth" value="2.0" maxlength="10"/>
+        </td>
+        <td>
+            <button type="button"
+                    onclick='jsmeApplet.setMolecularAreaLineWidth(parseFloat(document.getElementById("linewidth").value));'>
+                set line width
+            </button>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td>Drawing area font size: <input type="text" name="fontSize" id="fontsize" value="12" maxlength="10"/>
+        </td>
+        <td>
+            <button type="button"
+                    onclick='jsmeApplet.setAtomMolecularAreaFontSize(parseFloat(document.getElementById("fontsize").value));'>
+                set font size
+            </button>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Drawing area scale: <input type="text" name="mareascale" id="mareascale" value="1.5" maxlength="10"/>
+        </td>
+        <td>
+            <button type="button"
+                    onclick='jsmeApplet.setMolecularAreaScale(parseFloat(document.getElementById("mareascale").value));'>
+                set scale
+            </button>
+            <button type="button"
+                    onclick='document.getElementById("mareascale").value=jsmeApplet.getMolecularAreaScale();'>get scale
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>Non drawing area scale: <input type="text" name="nmareascale" id="nmareascale" value="1.5" maxlength="10"/>
+        </td>
+        <td>
+            <button type="button"
+                    onclick='jsmeApplet.setMenuScale(parseFloat(document.getElementById("nmareascale").value));'>set
+                scale
+            </button>
+            <button type="button" onclick='document.getElementById("nmareascale").value=jsmeApplet.getMenuScale();'>get
+                scale
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Set another background color for the GUI frame and the dialog boxes
+        </td>
+        <td>
+            <button type="button" onclick='jsmeApplet.setUserInterfaceBackgroundColor("#FFFBBCC");'>set predefined
+                color
+            </button>
+        </td>
+    </tr>
+
+</table>
+
+<p></p>
+
+<p></p>
+
+
+<table align="center">
+    <tr>
+        <td>
+            Turning AA on and off does not work with IE 9 & 10 (it is always on).
+        </td>
+    </tr>
+    <p></p>
+    <p></p>
+
+</table>
+
+<div align="center">
+    <button TYPE="button" onClick="jsmeApplet.reset()">Clear Editor</button>
+    <button type="button" onclick='JSApplet.JSME.clearFontCache()'>Clear the font cache</button>
+    <button type="button" onclick='jsmeApplet.repaint()'>Repaint the applet</button>
+</div>
+
+
+<hr>
+
+
+<table align="center">
+    <tr>
+        <td colspan="2" style="font-weight:bold;">Set options:</td>
+    </tr>
+    <tr>
+        <td>
+            <textarea id="optionsTextArea" , rows="1" cols="50">polarnitro,reaction,noquery,oldlook,noatommovebutton</textarea>
+
+        </td>
+        <td>
+            <button type="button" id="optionsButton"
+                    onclick='var options = document.getElementById("optionsTextArea").value; jsmeApplet.options(options);'>
+                Set options
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Customize the help URL: <textarea id="urlTextArea" , rows="1" cols="50">https://jsme-editor.github.io/help.html</textarea>
+        </td>
+
+        <td>
+            <button type="button" id="urlButton"
+                    onclick='var url = document.getElementById("urlTextArea").value; jsmeApplet.setHelpURL(url);'>Set
+                help URL
+            </button>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td>
+            Display a message in the bottom bar: <textarea id="msgTextArea" , rows="1" cols="50">MW: XXXX.XXX</textarea>
+        </td>
+        <td>
+            <button type="button" id="msgButton"
+                    onclick='var msg = document.getElementById("msgTextArea").value; jsmeApplet.showInfo(msg);'>Show a
+                message in the bottom bar
+            </button>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td>
+            Customize the InChIKey search base URL: <textarea id="inchiKeyUrlTextArea" , rows="1" cols="50"></textarea>
+        </td>
+        <td>
+            <button type="button"
+                    onclick='var url = document.getElementById("inchiKeyUrlTextArea").value; jsmeApplet.setWebSearchInchiKeyBaseUrl(url);'>
+                Set InChIKey search base URL
+            </button>
+        <td>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Customize the InChIKey search using a custom function. In this example, the search function is replaced by
+            opening a simple alert.
+        </td>
+        <td>
+            <button type="button"
+                    onclick='jsmeApplet.setCallBack("InchiKeySearch", function(jsmeEvent) {alert(jsmeEvent.argument.key + "\n" + jsmeEvent.argument.inchi + "\n");});'>
+                Set InChIKey search callback function
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Reset InChIKey search to its default function.
+        </td>
+        <td>
+            <button type="button" onclick='jsmeApplet.setCallBack("InchiKeySearch", null);'>Set InChi key search
+                callback function to null
+            </button>
+        </td>
+    </tr>
+
+</table>
+
+<p></p>
+<p></p>
+
+
+<table align="center">
+    <tr>
+        <td colspan="3" style="font-weight:bold;">Import predefined chemical structure to applet:</td>
+    </tr>
+    <tr>
+        <td>
+            <button type="button" onclick='readMolecule();'>Read JME String</button>
+
+        </td>
+        <td id="readMultipartButton">
+            <button type="button" onclick='readMultipart();'>Read Multipart Structure</button>
+
+        </td>
+        <td id="readReactionButton">
+            <button type="button" onclick='readReaction();'>Read reaction</button>
+
+        </td>
+    </tr>
+</table>
+
+<p></p>
+<p></p>
+
+<table align="center">
+    <tr>
+        <td colspan="3" style="font-weight:bold;">Export chemical structure from applet:</td>
+    </tr>
+    <tr>
+        <td>
+            <button type="button" onclick='getMolfile(false);'>Get molfile</button>
+        </td>
+        <td>
+            <button type="button" onclick='getMolfile(true);'>Get molfile V3000</button>
+        </td>
+        <td>
+            <button type="button" onclick='getSmiles();'>Get smiles</button>
+        </td>
+        <td>
+            <button type="button" onclick='getJMEstring();'>Get JME string</button>
+        </td>
+        <td>
+            <button type="button" onclick='getMultiSDFstack();'>Get SDF stack</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <TEXTAREA id="jme_output" ROWS=20 COLS=80></TEXTAREA>
+        </td>
+    </tr>
+
+</table>
+
+<table align="center">
+    <tr>
+        <td colspan="3" style="font-weight:bold;">Import chemical structure from text area above to applet:</td>
+    </tr>
+    <tr>
+        <td>
+            <button type="button" onclick='readMOLFromTextArea();'>Read MOL</button>
+        </td>
+        <td>
+            <button type="button" onclick='readMoleculeFromTextArea();'>Read JME String</button>
+        </td>
+        <td>
+            <button type="button" onclick='readAnyFromTextArea();'>Read any supported format</button>
+        </td>
+
+</table>
+
+
+<p></p>
+
+<hr>
+<div align="center">
+Select default copy format for Ctrl C and Drag&Drop:
+    <br>
+    <select name="copy_format" id="copy_format">
+    <option value="" selected="selected">Select format</option>
+</select>
+    <br><br>
+
+    Known issue: some formats (e.g InChi) require loading of additional JavaScript code. The first time such a format is requested, the copy or
+drag will not work correctly because of loading of JavaScript code.
+<br><br>
+</div>
+
+<hr>
+
+
+</body>
+</html>

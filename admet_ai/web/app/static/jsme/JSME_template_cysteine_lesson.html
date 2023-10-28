@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template Cysteine lesson</title>
+
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script type="text/javascript" language="javascript">
+        // cysteine template
+        var template_jsme = "7 6 C 8.32 -7.86 N 10.48 -8.56 C 9.66 -7.42 C 10.09 -6.09 O 9.15 -5.05 O 11.46 -5.80 S 7.19 -7.03 2 3 1 3 1 -1 3 4 1 4 5 2 4 6 1 1 7 1";
+
+        function transfertTemplate(event) {
+            var action = event.action;
+            if ( action != "markAtom") {
+                return;
+            }
+            var template = event.src;
+            if (template.hasMarkedAtom()) {
+                console.log(template.jmeFile());
+                jsmeEditor.setTemplate(template.jmeFile(), "cystein template set");
+            } else {
+                // Should not add a template without marked atom
+                jsmeEditor.alert("No marked atom in template");
+            }
+        }
+        function jsmeOnLoad() {
+            jsmeEditor = new JSApplet.JSME("jsme_container1", "600px", "400px",
+                {"options": " hydrogens keephs  atommovebutton  polarnitro nouseOclidcode noexportinchi noexportinchikey noexportinchiauxinfo nosearchinchiKey nouseopenchemlib  nocontextmenu"});
+            jsmeEditor.setMolecularAreaScale(1.5);
+            jsmeEditor.setAtomMolecularAreaFontSize(11);
+
+
+
+            jsmeTemplate = new JSApplet.JSME("jsmeTemplate", "100px", "100px", {
+                "options": "depictAction marker1 noValenceState markAtomOnly",
+                "atombgsize": "0.5", "bondbgsize": "0.4",
+                "jme": template_jsme
+            });
+            jsmeTemplate.setAction(105);
+            jsmeTemplate.setCallBack("AfterStructureModified", transfertTemplate);
+
+
+
+        }
+
+    </script>
+
+</head>
+<body>
+<H1>Template Cysteine lesson</H1>
+<H2>This example shows how to build a simple lesson to learn the making of the S-S bond</H2>
+Cystine is a sulfur-containing amino acid obtained by the oxidation of two cysteine molecules which are then linked via
+a disulfide bond.
+<H3>Combine two cysteine molecules to make up a cystine molecule</H3>
+
+<table>
+    <tr>
+        <td>
+            <div id="jsme_container1"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div  id="jsmeTemplate" align="right" onClick="transfertTemplate()"></div>
+        </td>
+    </tr>
+</table>
+
+
+Procedure:
+<ol>
+    <li>click on the sulfur atom of the cysteine in the template (below the  editor)t to mark the atom to be used as an anchor</li>
+    <li>click on the editor to add the cysteine</li>
+    <li>click on the sulfur atom of the cysteine in the editor</li>
+</ol>
+</body>
+</html>

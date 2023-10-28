@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <script>
+    dojo_is_ready = false;
+    jsme_is_ready = false;
+    </script>
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <!-- load the "claro" theme -->
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.9.3/dijit/themes/claro/claro.css">
+    <!-- load dojo and provide config via data attribute -->
+    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.9.3/dojo/dojo.js"
+        data-dojo-config="async: true, parseOnLoad: true">
+    </script>
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+<script>
+
+function dojo_jsme_ready() {
+	if(dojo_is_ready && jsme_is_ready) {
+		jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
+	}
+	
+}
+require([
+         "dijit/Menu",
+         "dijit/MenuItem",
+         "dijit/MenuSeparator",
+         "dojo/domReady!"
+     ], function(){
+
+	   dojo_is_ready=true;
+	   dojo_jsme_ready();
+    
+});
+
+    
+
+    //this function will be called after the JavaScriptApplet code has been loaded.
+    function jsmeOnLoad() {
+    	jsme_is_ready = true;
+    	dojo_jsme_ready();
+   }
+</script>
+</head>
+
+<body>
+<div id="jsme_container"></div>
+
+</body>
+</html>
+

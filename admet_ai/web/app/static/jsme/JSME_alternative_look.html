@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSME alternative look</title>
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script type="text/javascript" language="javascript">
+
+
+        function jsmeOnLoad() {
+            jsmeEditor = new JSApplet.JSME("jsme_container", "600px", "400px",
+                {"options": "newlook",
+                    "guicolor": "#FFFFFF",
+                    "guiAtomColor": "#000000"
+                });
+
+        }
+
+    </script>
+
+</head>
+<body>
+<H1>Alternative look</H1>
+<div style="display: flex; justify-content: center">
+    <div id="jsme_container"></div>
+</div>
+
+</body>
+</html>

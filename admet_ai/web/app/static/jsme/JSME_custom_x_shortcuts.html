@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom X shortcuts</title>
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script type="text/javascript" language="javascript">
+
+
+        function jsmeOnLoad() {
+            var example ="20 21 C 13.23 -12.71 C 13.23 -11.31 C 12.01 -10.61 C 10.80 -11.31 C 10.80 -12.71 C 12.01 -13.41 C 12.01 -9.21 C 13.23 -8.51 C 10.80 -8.51 C 10.80 -7.11 e 12.01 -6.41 d 9.59 -9.21 C 14.44 -9.21 C 14.44 -10.61 C 15.65 -11.31 C 16.86 -10.61 C 16.86 -9.21 C 15.65 -8.51 t 18.08 -8.51 g 18.08 -11.31 1 2 1 2 3 2 3 4 1 4 5 2 5 6 1 6 1 2 3 7 1 7 8 1 7 9 1 9 10 1 10 11 1 9 12 1 8 13 1 14 15 1 15 16 2 16 17 1 17 18 2 13 18 1 13 14 2 17 19 1 16 20 1";
+
+            jsmeEditor = new JSApplet.JSME("jsme_container", "600px", "400px", {
+                "jme": example
+            });
+            jsmeEditor.setMolecularAreaScale(1.5);
+            jsmeEditor.setAtomMolecularAreaFontSize(11);
+
+
+            jsmeEditor.setMenuXShortcuts("edtg");
+        }
+
+    </script>
+</head>
+<body>
+<H1>Custom Menu X keyboard shortcuts</H1>
+<p>
+This example shows the application of a custom set of shortcuts that can be used to easily enter
+    multiple atom symbols for several polymer endpoints: ‘e’, ‘d’, ’t’, and ‘g’.
+</p>
+
+<p>
+    To use the shortcut, mouse over an atom and type the atom symbol.
+</p>
+<div id="jsme_container"></div>
+
+</body>
+</html>

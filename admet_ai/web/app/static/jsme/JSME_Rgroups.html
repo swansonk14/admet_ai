@@ -1,0 +1,44 @@
+<html>
+
+<head>
+
+    <title>
+        R groups
+    </title>
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script>
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            // glutathione
+            var startingStructure = "12 13 C 3.64 1.76 C 3.64 3.16 C 2.42 3.86 C 1.21 3.16 C 1.21 1.76 C 2.42 1.06 N 4.97 1.33 C 5.79 2.46 C 4.97 3.60 R1 2.42 5.26 R2 0.00 1.06 R3 5.40 0.00 1 2 1 2 3 2 3 4 1 4 5 2 5 6 1 6 1 2 7 8 1 8 9 2 2 9 1 1 7 1 3 10 1 5 11 1 7 12 1";
+            //Instantiate a new JSME:
+            //arguments: HTML id, width, height (must be string not number!)
+
+            jsmeApplet = new JSApplet.JSME("jsme_container", "600px", "440px", {
+                //optional parameters
+                "options": "query,hydrogens,fullScreenIcon,rbutton",
+                "jme": startingStructure // JME mol format
+            });
+
+
+        }
+
+    </script>
+</head>
+
+<body>
+<H1>
+    R groups
+</H1>
+<h3>
+    R group ca be set by using the R button or by by typing "r" while the mouse over an atom.
+    <br>
+    R number can be set by typing a number on the keyboard while mousing over the R symbol.
+</h3>
+<div id="jsme_container"></div>
+
+
+
+</body>
+</html>

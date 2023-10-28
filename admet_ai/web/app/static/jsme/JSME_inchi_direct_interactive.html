@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <title>Interactive InChI generation</title>
+
+
+    <script>
+        var JSApplet = {};
+        JSApplet.Inchi = {};
+
+        function computeInchi(mol) {
+            var result;
+            var tmp_function_name = "__local_ff";
+            JSApplet.Inchi[tmp_function_name] = function (inchi_result) {
+                result = inchi_result
+            };
+            JSApplet.Inchi.computeInchi(mol, "JSApplet.Inchi." + tmp_function_name);
+            delete JSApplet.Inchi[tmp_function_name];
+
+            return result;
+        }
+
+    </script>
+    <script language="javascript" src="jsme/96E40B969193BD74B8A621486920E79C.cache.js"
+            type="text/javascript"></script>
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+
+    <script>
+
+        function showInchi(jsme_event) {
+            var mol = jsme_event.src.molFile();
+            var result = computeInchi(mol)
+            console.log(result);
+            var text = "Structure change event: " + jsme_event.action + "\n\n";
+            Object.keys(result).forEach(function (k) {
+                text += k + ": " + result[k] + "\n"
+            });
+            document.getElementById("inchi").innerHTML = text;
+        }
+
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            jsmeApplet = new JSApplet.JSME("jsme_container", "720px", "360px", {
+                "options": "polarnitro,oldlook"
+            });
+
+            // each time the structure is modified, the editor will call showInchi()
+            jsmeApplet.setCallBack("AfterStructureModified", showInchi);
+        }
+
+
+    </script>
+</head>
+
+<body>
+<H2>Interactive InChI generation</H2>
+
+<div id="jsme_container"></div>
+<br>
+<hr>
+<br</b><textarea type="text" id="inchi" rows="20" cols="90"></textarea>
+
+<HR>
+InChI is computed in JavaScript within the browser. The JavaScript InChI code size is about 1200 KB. The InChI code is lazy loaded, which means that it is loaded the first time an
+InChI is calculated in order to reduce the loading time of the editor. This loading happens asynchronously, like the
+loading of any other resources in the browser. For this reason, there is no method like jme.smiles() for InChI. This is why in this example, the InChI code must be loaded explicitly.
+
+
+
+</body>
+</html>
+

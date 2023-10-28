@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <TITLE>SMILES performance test</TITLE>
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+
+    <style>
+        table, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<H1>
+    JSME in depict mode initialized with a SMILES-
+    Performance test using 1 PubChem smiles.
+</H1>
+
+<p>Click the button to create a TABLE with 1 SMILES depiction.</p>
+
+<button onclick="myFunction()">Try it</button>
+<span id="time_id"> </span>
+
+<script>
+    var smiles_array = ['3045381', 'CN(CCCN1CCC2=CC(=C(C=C2CC1=O)OC)OC)C[C@H]3CC4=CC(=C(C=C34)OC)OC.Cl'];
+
+    function myFunction() {
+
+        // remove the previous table if thereis one (useful for the econd click on the button
+        var tables = document.getElementsByTagName('table');
+        while (tables.length > 0)
+            tables[0].parentNode.removeChild(tables[0]);
+
+        var table = document.createElement("TABLE");
+        table.setAttribute("id", "smiles_table");
+        document.body.appendChild(table);
+        for (var i = 0; i < smiles_array.length; i += 2) {
+            var tr = document.createElement("TR");
+            var cpd_id = smiles_array[i];
+            var smiles = smiles_array[i + 1];
+            //tr.setAttribute("id", "myTr");
+            //document.getElementById("myTable").appendChild(tr);
+
+            var cell = document.createElement("TD");
+            var text = document.createTextNode(i / 2 + 1);
+            cell.appendChild(text);
+            tr.appendChild(cell);
+
+            cell = document.createElement("TD");
+            var text = document.createTextNode(cpd_id);
+            cell.appendChild(text);
+            tr.appendChild(cell);
+
+            cell = document.createElement("TD");
+            var d = document.createElement("DIV");
+            cell.appendChild(d);
+            d.setAttribute("id", cpd_id)
+
+
+            tr.appendChild(cell);
+            //document.getElementById("myTr").appendChild(z);
+
+            table.appendChild(tr);
+
+
+        }
+        document.getElementById("time_id").innerHTML = "Table creation completed";
+
+        function insertSmiles() {
+            for (var i = 0; i < smiles_array.length; i += 2) {
+                var cpd_id = smiles_array[i];
+                var smiles = smiles_array[i + 1];
+
+                new JSApplet.JSME(cpd_id, "320px", "180px", {"smiles": smiles, "options": "depict"});
+            }
+
+
+        }
+
+        var performance = window.performance;
+        var t0 = performance.now();
+        insertSmiles();
+        var t1 = performance.now();
+        var elapsedTime = "Call to insertSmiles took " + (t1 - t0) + " milliseconds.";
+
+        console.log(elapsedTime)
+        document.getElementById("time_id").innerHTML = elapsedTime;
+        //JSApplet.Utils.runAfterBrowserEventLoopReturns(function()
+
+    }
+</script>
+
+</body>
+</html>
+

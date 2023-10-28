@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Functional group coloring</title>
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script>
+        functionalGroups = [
+            ['Acid', "#ff847c", 1],
+            ["Anhydride", "#febf63", 2],
+            ['Ester', "#ede682", 3],
+            ["Thioester", "#05dfd7", 4],
+            ['Acid Halide', "#ba7967", 5],
+            ['Amide', "#feceab", 6],
+            ["Nitrile", "#fe91ca", 7],
+            ["Aldehyde", "#ade498", 8],
+            ["Ketone", "#ffffdd", 9],
+            ["Alcohol", "#bbe1fa", 10],
+            ["Phenol", "#3282b8", 11],
+            ["Thiol", "#c295d8", 12],
+            ["Amine", "#a3f7bf", 13],
+            ["Imine", "#96bb7c", 14],
+            ["Ether", "#b9ac92", 15],
+            ["Sulfide", "#b83b5e", 16],
+            ["Disulfide", "#eebb4d", 17],
+            ["Alkene", "#dfd3c3", 18],
+            ["Alkyne", "#fa26a0", 19],
+            ["Alkyl Halide", "#e5cfe5", 20],
+            ["Nitro", "#7fdbda", 21]];
+
+        // input is glutathione
+        var inputJme = "20 19 C 19.71 -14.90 C 20.92 -15.60 O 19.71 -13.49 O 18.50 -15.60 N 20.92 -17.00 C 22.13 -14.90 C 23.35 -15.60 C 24.56 -14.90 N 25.77 -15.60 O 24.56 -13.49 C 26.98 -14.90 C 28.20 -15.60 O 28.20 -17.00 N 29.41 -14.90 C 30.62 -15.60 C 31.83 -14.90 C 26.98 -13.49 O 33.05 -15.60 O 31.83 -13.49 S 28.19 -12.79 1 2 1 1 3 2 1 4 1 2 5 -2 2 6 1 6 7 1 7 8 1 8 9 1 8 10 2 9 11 1 11 12 1 12 13 2 12 14 1 14 15 1 15 16 1 11 17 -1 16 18 1 16 19 2 17 20 1";
+
+        // not canonized, has 2D coordinates, used to display
+        var expectedAnswerJme = "20 19 C:1 4.58 -9.52 C:13 5.79 -10.22 O:1 4.58 -8.12 O:1 3.38 -10.22 N:13 5.79 -11.62 C 7.00 -9.52 C 8.22 -10.22 C:6 9.43 -9.52 N:6 10.64 -10.22 O:6 9.43 -8.12 C 11.84 -9.52 C:6 13.06 -10.22 O:6 13.06 -11.62 N:6 14.27 -9.52 C 15.48 -10.22 C:1 16.69 -9.52 C:12 11.84 -8.12 O:1 17.90 -10.22 O:1 16.69 -8.12 S:12 13.05 -7.42 1 2 1 1 3 2 1 4 1 2 5 -2 2 6 1 6 7 1 7 8 1 8 9 1 8 10 2 9 11 1 11 12 1 12 13 2 12 14 1 14 15 1 15 16 1 11 17 -1 16 18 1 16 19 2 17 20 1";
+
+        // canonized - could be used to check the answer
+        var expectedAnswerSmiles = "[NH2:13][C@@H:13](CC[C:6](=[O:6])[NH:6][C@@H]([CH2:12][SH:12])[C:6](=[O:6])[NH:6]C[C:1](=[O:1])[OH:1])[C:1](=[O:1])[OH:1]";
+
+        function showMessage(msg) {
+            var elt = document.getElementById("show-atom-fg");
+
+            elt.innerHTML = msg;
+        }
+        function activateFG(fg) {
+            jsmeApplet.activateMarkerColor(fg[2]);
+            showMessage("Mark atom as " + fg[0].toLowerCase());
+            jsmeApplet.setAction(105);
+
+        }
+
+        // mouse over an atom with assigned FG => show in the editor or better highlighr/animate the FG cell
+        function atomFGHighLight(jsmeEvent) {
+            var colorIndex = jsmeEvent.atomBackgroundColorIndex;
+            var fg = "";
+            if (colorIndex > 0) {
+                fg = "Marked as " + functionalGroups[colorIndex-1][0];
+            }
+            showMessage(fg);
+
+        }
+
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            jsmeApplet = new JSApplet.JSME("jsme_container", "340px", "348px", {
+                "options": "oldlook,marker,markerMenu, markAtomOnly",
+                "atombgsize": "1",
+                "bondbgsize": "1",
+                "jme": inputJme
+            });
+
+            // colors: doublet: #color, label
+            var a = functionalGroups.map(function (fg) {
+                return { color: fg[1], label: fg[0] };
+            });
+            console.log(functionalGroups.map(function(fg) {return fg[1];}));
+            jsmeApplet.setMarkerMenuBackGroundColorPalette(a);
+
+            jsmeApplet.setCallBack("AtomHighlight", atomFGHighLight);
+
+            activateFG(functionalGroups[0]);
+
+            initFGtable();
+        }
+
+        function generateFGButton(fg) {
+            var button = document.createElement("BUTTON");
+            button.onclick = function () {
+                activateFG(fg);
+            };
+            button.innerText = fg[0];
+            return button;
+
+        }
+
+        function insertFGcellsToRow(row, col, fg) {
+
+            // cell with color background
+            var fgCell = row.insertCell(col);
+            fgCell.innerText = fg[2];
+            fgCell.style.backgroundColor = fg[1];
+            fgCell.style.width = "50px";
+
+            // cell with button
+            var button = generateFGButton(fg);
+            button.style.width = "100px";
+
+            var buttonCell = row.insertCell(col + 1);
+            buttonCell.appendChild(button);
+        }
+
+        function initFGtable() {
+            var table = document.getElementById("FGTABLE");
+            var ncols = 2;
+            var fgPerCol = Math.ceil(functionalGroups.length / ncols);
+            for (var i = 0; i < fgPerCol; i++) {
+                var row = table.insertRow(i);
+
+                // insert the cells
+                for (var c = 0; c < ncols; c++) {
+                    var fg = functionalGroups[i + fgPerCol * c];
+
+                    if (fg != null) {
+                        insertFGcellsToRow(row, c * 2, fg); // need two columns per row for each FG
+                    }
+                }
+
+            }
+
+
+        }
+
+        function showAnswer() {
+            jsmeApplet.readMolecule(expectedAnswerJme);
+        }
+        function checkAnswer() {
+            var smiles = jsmeApplet.smiles();
+            var result = smiles === expectedAnswerSmiles ? "correct" : "wrong";
+            alert("Answer: " + result);
+        }
+
+        function retry() {
+            jsmeApplet.readMolecule(inputJme);
+        }
+
+    </script>
+</head>
+
+
+<body>
+
+
+<H1>Functional group coloring</H1>
+
+
+<table width="400" align="left" border="0">
+    <tbody>
+    <tr>
+        <td
+        <div id="jsme_container"></div>
+        </td>
+
+        <td>
+            <div id="fg_buttons">
+                <table id="FGTABLE" width="400" align="left" border="0">
+                    <tbody>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </td>
+
+    </tr>
+    <tr><td id="show-atom-fg">
+
+    </td></tr>
+    <tr>
+        <td>
+            <button onclick="checkAnswer()">Check answer</button>
+            <button onclick="showAnswer()">Show answer</button>
+            <button onclick="retry()">Retry</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>

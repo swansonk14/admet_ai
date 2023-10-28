@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JSME internal chemical data</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+            $(".show_hide").hide();
+            $(".show_hide_button").click(function () {
+                $(".show_hide").toggle();
+            });
+        });
+    </script>
+
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script>
+
+        functionalGroups = [
+            ['Acid', "#ff847c", 1],
+            ["Anhydride", "#febf63", 2],
+            ['Ester', "#ede682", 3],
+            ["Thioester", "#05dfd7", 4],
+            ['Acid Halide', "#ba7967", 5],
+            ['Amide', "#feceab", 6],
+            ["Nitrile", "#fe91ca", 7],
+            ["Aldehyde", "#ade498", 8],
+            ["Ketone", "#ffffdd", 9],
+            ["Alcohol", "#bbe1fa", 10],
+            ["Phenol", "#3282b8", 11],
+            ["Thiol", "#c295d8", 12],
+            ["Amine", "#a3f7bf", 13],
+            ["Imine", "#96bb7c", 14],
+            ["Ether", "#b9ac92", 15],
+            ["Sulfide", "#b83b5e", 16],
+            ["Disulfide", "#eebb4d", 17],
+            ["Alkene", "#dfd3c3", 18],
+            ["Alkyne", "#fa26a0", 19],
+            ["Alkyl Halide", "#e5cfe5", 20],
+            ["Nitro", "#7fdbda", 21]];
+
+
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+
+            // atom marking
+            (() => {
+                var tabIndex = 1;
+
+
+                jsmeApplet1 = new JSApplet.JSME("jsme_container-" + tabIndex, "640px", "400px", {
+                    "options": "oldlook,number",
+
+                });
+                jsmeApplet1.setCallBack("AfterStructureModified", (event) => showEvent(event, tabIndex));
+                resetLogs(tabIndex);
+            })();
+
+            (() => {
+
+                var tabIndex = 2;
+
+
+                jsmeApplet2 = new JSApplet.JSME("jsme_container-" + tabIndex, "640px", "400px", {
+                    "options": "oldlook,marker,markerMenu"
+
+                });
+
+                // colors: doublet: #color, label
+                var a = functionalGroups.map(function (fg) {
+                    return {color: fg[1], label: fg[0]};
+                });
+                jsmeApplet2.setMarkerMenuBackGroundColorPalette(a);
+
+                jsmeApplet2.setCallBack("AfterStructureModified", (event) => showEvent(event, tabIndex));
+                resetLogs(tabIndex);
+            })();
+
+            // background colors
+            (() => {
+                var tabIndex = 3;
+                jsmeApplet3 = new JSApplet.JSME("jsme_container-" + tabIndex, "640px", "400px", {
+                    "options": "oldlook",
+                    "jme": "3 2 C 0.00 2.10 C 1.21 1.40 C 1.21 0.00 1 2 2 2 3 1"
+
+                });
+                jsmeApplet3.setCallBack("AfterStructureModified", (event) => {
+                    showEvent(event, tabIndex)
+                });
+                resetLogs(tabIndex);
+            })();
+
+            // reaction
+            (() => {
+                var tabIndex = 4;
+                jsmeApplet4 = new JSApplet.JSME("jsme_container-" + tabIndex, "640px", "400px", {
+                    "options": "oldlook,reaction",
+
+                });
+                jsmeApplet4.setCallBack("AfterStructureModified", (event) => showEvent(event, tabIndex));
+                resetLogs(tabIndex);
+            })();
+
+            // Query
+            (() => {
+                var tabIndex = 5;
+                jsmeApplet5 = new JSApplet.JSME("jsme_container-" + tabIndex, "640px", "400px", {
+                    "options": "oldlook,query",
+
+                });
+                jsmeApplet5.setCallBack("AfterStructureModified", (event) => showEvent(event, tabIndex));
+                resetLogs(tabIndex);
+
+
+            })();
+
+        }
+
+        function resetLogs(tabIndex) {
+            document.getElementById("molsLog-" + tabIndex).value = "";
+            document.getElementById("atomsLog-" + tabIndex).value = "";
+            document.getElementById("bondsLog-" + tabIndex).value = "";
+
+        }
+
+        function showEvent(event, tabIndex) {
+            showMols(event.src, tabIndex);
+            showAtoms(event.src, tabIndex);
+            showBonds(event.src, tabIndex);
+        }
+
+        function showMols(jsme, tabIndex) {
+            var n = jsme.numberOfMolecules();
+            var s = "Number of molecules: " + n;
+            var log = document.getElementById("molsLog-" + tabIndex);
+
+            log.value = s + "\n";
+            for (i = 1; i < n + 1; i++) {
+                var mol = jsme.getMolecule(i);
+                var s = JSON.stringify(mol);
+                log.value += s + "\n";
+
+            }
+
+        }
+
+        function showAtoms(jsme, tabIndex) {
+            var n = jsme.totalNumberOfAtoms();
+            var s = "Number of atoms: " + n;
+
+            log = document.getElementById("atomsLog-" + tabIndex);
+            log.value = s + "\n";
+            var i;
+            for (i = 1; i < n + 1; i++) {
+                var atom = jsme.getAtom(0, i);
+                var s = JSON.stringify(atom);
+                log.value += s + "\n";
+
+            }
+
+
+        }
+
+        function showBonds(jsme, tabIndex) {
+            var n = jsme.totalNumberOfBonds();
+            var s = "Number of bonds: " + n;
+
+            log = document.getElementById("bondsLog-" + tabIndex);
+            log.value = s + "\n";
+            var i;
+            for (i = 1; i < n + 1; i++) {
+                var bond = jsme.getBond(0, i);
+                var s = JSON.stringify(bond);
+                log.value += s + "\n";
+            }
+
+
+        }
+
+        function setAtomBackgroundColorsExample(jsme) {
+            jsme.setAtomBackgroundColors(0, '1,1,1,2,2,3,2,4');
+        }
+        function setBondBackgroundColorsExample(jsme) {
+            jsme.setBondBackgroundColors(0, '1,4,1,5');
+        }
+
+
+    </script>
+
+</head>
+<body>
+<div id="tabs_auto">
+</div>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Atom numbering</a></li>
+        <li><a href="#tabs-2">Atom and bond marker</a></li>
+        <li><a href="#tabs-3">Background colors</a></li>
+        <li><a href="#tabs-4">Reaction</a></li>
+        <li><a href="#tabs-5">Query box</a></li>
+    </ul>
+    <div id="tabs-1">
+        <div id="jsme_container-1"></div>
+        <BR>
+        <button class="show_hide_button">More testing ...</button>
+        <div class="show_hide">
+            <BR>
+            <button onclick="setAtomBackgroundColorsExample(jsmeApplet1)">Set custom background colors for atoms 1 and 2</button>
+            <BR>
+            <BR>
+            <button onclick="setBondBackgroundColorsExample(jsmeApplet1)">Set custom background colors for bond 1</button>
+            <BR>
+            Setting the background colors of an atom or bond does not trigger the structural change event. Thus, an additional change in the structure is needed
+            to show the backGroundColors values in the Atoms log window below.
+            <BR>
+
+        </div>
+        <BR>
+        <BR>
+        Molecules:
+        <BR>
+        <textarea id="molsLog-1" rows="4" cols="80"></textarea>
+        <BR>
+        Atoms:
+        <BR>
+        <textarea id="atomsLog-1" rows="15" cols="80"> </textarea>
+        <BR>
+
+        Bonds:
+        <BR>
+        <textarea id="bondsLog-1" rows="15" cols="80"> </textarea>
+        <BR>
+    </div>
+    <div id="tabs-2">
+        Atom marking numbers are exported and imported as atom mapping numbers.
+        There is no import/export for bond marking numbers. Bond marking numbers can be retrieved using the getBond() method as shown in the bonds log below.
+        <BR>
+        <div id="jsme_container-2"></div>
+        <BR>
+        <BR>
+        <button class="show_hide_button">More testing ...</button>
+        <div class="show_hide">
+            <BR>
+            <button onclick="setAtomBackgroundColorsExample(jsmeApplet2)">Set custom background colors for atoms 1 and 2</button>
+            <BR>
+            <BR>
+            <button onclick="setBondBackgroundColorsExample(jsmeApplet2)">Set custom background colors for bond 1</button>
+            <BR>
+            Setting the background colors of an atom or bond does not trigger the structural change event. Thus, an additional change in the structure is needed
+            to show the backGroundColors values in the Atoms log window below.
+            <BR>
+
+        </div>
+        <BR>
+        <BR>
+        Molecules:
+        <BR>
+        <textarea id="molsLog-2" rows="4" cols="80"></textarea>
+        <BR>
+        Atoms:
+        <BR>
+        <textarea id="atomsLog-2" rows="15" cols="80"> </textarea>
+        <BR>
+
+        Bonds:
+        <BR>
+        <textarea id="bondsLog-2" rows="15" cols="80"> </textarea>
+        <BR>
+    </div>
+    <div id="tabs-3">
+
+        <div id="jsme_container-3"></div>
+        <BR>
+        <button onclick="setAtomBackgroundColorsExample(jsmeApplet3)">Set custom background colors for atoms 1 and 2</button>
+        <BR>
+        <BR>
+        <button onclick="setBondBackgroundColorsExample(jsmeApplet3)">Set custom background colors for bond 1</button>
+        <BR>
+        Setting the background colors of an atom or bond does not trigger the structural change event. Thus, an additional change in the structure is needed
+        to show the backGroundColors values in the Atoms log window below.
+        <BR>
+        <BR>
+        Molecules:
+        <BR>
+        <textarea id="molsLog-3" rows="4" cols="80"></textarea>
+        <BR>
+        Atoms:
+        <BR>
+        <textarea id="atomsLog-3" rows="15" cols="80"> </textarea>
+        <BR>
+
+        Bonds:
+        <BR>
+        <textarea id="bondsLog-3" rows="15" cols="80"> </textarea>
+        <BR>
+    </div>
+    <div id="tabs-4">
+        <div id="jsme_container-4"></div>
+        <BR>
+        Molecules:
+        <BR>
+        <textarea id="molsLog-4" rows="4" cols="80"></textarea>
+        <BR>
+        Atoms:
+        <BR>
+        <textarea id="atomsLog-4" rows="15" cols="80"> </textarea>
+        <BR>
+
+        Bonds:
+        <BR>
+        <textarea id="bondsLog-4" rows="15" cols="80"> </textarea>
+        <BR>
+    </div>
+    <div id="tabs-5">
+        <div id="jsme_container-5"></div>
+        <BR>
+        Molecules:
+        <BR>
+        <textarea id="molsLog-5" rows="4" cols="80"></textarea>
+        <BR>
+        Atoms:
+        <BR>
+        <textarea id="atomsLog-5" rows="15" cols="80"> </textarea>
+        <BR>
+
+        Bonds:
+        <BR>
+        <textarea id="bondsLog-5" rows="15" cols="80"> </textarea>
+        <BR>
+    </div>
+</div>
+
+
+</body>
+</html>
+
+

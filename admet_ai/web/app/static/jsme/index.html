@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>JSME Molecule Editor</title>
+</head>
+<body>
+<h1>JSME Molecule Editor Distribution</h1>
+
+<h3>This distribution contains two directories:<br></h3>
+<ul>
+    <li>jsme - the actual JSME code - every file in the directory is a JavaScript code optimized for specific browser
+    </li>
+    <li><a href="api_javadoc/index.html">api_javadoc</a> - the JSME API - please note that although the JSME is in
+        JavaScript, the documentation was generated automatically and therefore follows the Java conventions, anyway it
+        should provide sufficient information to call low-level JSME functions
+    </li>
+</ul>
+<br>
+
+<a href="doc.html">doc.html</a> provides basic information about JSME implementation into web page - start with this
+document<br>
+<br>
+
+<br>
+<h3>Example pages:<br></h3>
+<ul>
+    <li><a href="JSME_minimal.html">JSME_minimal.html</a> minimalistic example how to incorporate JSME into a web page
+    </li>
+
+
+    <li><a href="JSME_test.html">JSME_test.html</a> Example containing description of various program options</li>
+    <li><a href="JME_to_JSME_simple.html">JME_to_JSME_simple.html</a> Adapt a page with the JME Java applet to use JSME</li>
+    <li><a href="JME_to_JSME.html">JME_to_JSME.html</a> Adapt a page with the JME Java applet to use JSME</li>
+    <li><a href="JSME_dnd_demo.html">JSME_dnd_demo.html</a> Example illustrating JSME drag-and-drop capabilities</li>
+    <li><a href="JSME_atom_highlight_demo.html">JSME_atom_highlight_demo.html</a> Example of atom highlighting</li>
+    <li><a href="JSME_smiles_atom_highlight.html">JSME_smiles_atom_highlight.html</a> Example of atom highlighting
+        inside a SMILES
+    </li>
+    <li><a href="JSME_chemical_resolver_demo.html">JSME_chemical_resolver_demo.html</a> JSME can communicate with the <a
+            href="http://cactus.nci.nih.gov/chemical/structure">Chemical Identifier Resolver service</a> at NIH and
+        automatically retrieve pasted molecules
+    </li>
+    <li><a href="JSME_callback_and_mark.html">JSME_callback_and_mark.html</a>JavaScript callback for structure
+        modification. Atom marking
+    </li>
+    <li><a href="JSME_access_internal_data.html">JSME_access_internal_data.html</a>Access the chemical data of the structures and reactions depicted in the editor
+    </li>
+
+    <li><a href="JSME_resize.html">JSME_resize.html</a> Resize the applet</li>
+    <li><a href="JSME_autoresize.html">JSME_autoresize.html</a> Resize the applet when the window size changes</li>
+    <li><a href="JSME_depict_smiles.html">JSME_depict_smiles.html</a> JSME in depict mode initialized with a SMILES</li>
+    <li><a href="JSME_Rgroups.html">JSME_Rgroups.html</a> Handling of R groups</li>
+
+
+    <li><a href="JSME_depict_edit_toggle.html">JSME_depict_edit_toggle.html</a> Toggle between depict and edit mode</li>
+    <li><a href="JSME_smiles_atom_highlight.html">JSME_smiles_atom_highlight.html</a> Show SMILES with atom highlight
+    </li>
+    <li><a href="JSME_depict_action.html">JSME_depict_action.html</a> Depict mode with action enabled dynamically</li>
+    <li><a href="JSME_additional_data.html">JSME_additional_data.html</a> JSME_save custom data into atoms and bonds,
+        custom background coloring
+    </li>
+    <li><a href="JSME_parent_and_metabolites.html">JSME_parent_and_metabolites.html</a> Setup for metabolites generation
+        that uses custom templates
+    </li>
+    <li><a href="JSME_template.html">JSME_template.html</a> Creation of custom templates</li>
+
+    <li><a href="JSME_template_aminoacids.html">JSME_template_aminoacids.html</a> Attempt to create a peptide builder
+    </li>
+    <li><a href="JSME_functional_group_coloring.html">JSME_functional_group_coloring.html</a>Show how to create a custom
+        background color palette for atoms
+    </li>
+
+    <li><a href="JSME_alternative_look.html">JSME_alternative_look.htmll</a>Customization of the JSME look
+    </li>
+
+
+    <li><a href="JSME_custom_x_shortcuts.html">JSME_custom_x_shortcuts.html</a>Create custom keyboard shortcuts</li>
+
+    <li><a href="JSME_inchi_direct.html">JSME_inchi_direct.html</a> Show how to use the provided InChI library</li>
+    <li><a href="JSME_inchi_direct_interactive.html">JSME_inchi_direct_interactive.html</a> Another example to show how to use the provided InChI library</li>
+    <li><a href="JSME_test_api.html">JSME_test_api.html</a>Test JSApplet.JSME.replaceAllAppletsByJSME</li>
+
+    <li><a href="JSME_SVG.html">JSME_SVG.html</a>SVG generation</li>
+    <li><a href="JSME_editor_plus_SVG.html">JSME_editor_plus_SVG.html</a>SVG generation</li>
+    <li><a href="JSME_hidden.html">JSME_hidden.html</a>JSME in a hidden div</li>
+    <li><a href="JSME_dojo.html">JSME_dojo.html</a>Example showing how to dynamically load JSME with another dynamic loading library</li>
+
+</ul>
+<br>
+<h3>This distribution contains also many test pages that are used by the developers to check the behavior and
+    performance of JSME:</h3>
+
+
+<ul>
+    <li>
+        <a href="test_bootstrap.html">test_bootstrap.html</a> Check the compatibility with the bootstrap CSS
+    </li>
+
+    <li>
+        <a href="test_depict_many.html">test_depict_many.html</a> Display of 200 chemical identical structures in JSME
+        format
+    </li>
+    <li><a href="test_depict_many_smiles.html">test_depict_many_smiles.html</a> Display of 200 chemical structures in
+        SMILES
+        format
+    </li>
+    <li><a href="test_depict_one_smiles_in_table.html">test_depict_one_smiles_in_table.html</a> Display of 1chemical
+        structure in SMILES format inside a dynamically created table
+    </li>
+    <li><a href="test_depict_many_smiles_in_table.html">test_depict_many_smiles_in_table.html</a> Display of 100
+        chemical
+        structures in SMILES format inside a dynamically created table
+    </li>
+    <li><a href="test_pubchem_aspirin_depict.html">test_pubchem_aspirin_depict.html</a> Display of 121 chemical
+        structures
+        in MOL format inside a dynamically created table
+    </li>
+    <li><a href="test_depict_patent_reactions_smirks.html">test_depict_patent_reactions_smirks.html</a> Display of 200
+        chemical reactions in SMIRKS format
+    </li>
+    <li><a href="test_resize_and_replace_jme.html">test_resize_and_replace_jme.html</a>Test dynamic resizing and
+        replaceAllAppletsByJSME
+    </li>
+    <li><a href="test_hidden_iframe.html">test_hidden_iframe.html</a>Show and hide JSME embedded in an iframe</li>
+
+
+</ul>
+<br>
+<h3>And some other files:</h3>
+<ul>
+    <li><a href="license.txt">license.txt</a> contains text of the BSD license under which the JSME is distributed</li>
+    <li><a href="release_notes.txt">release_notes.txt</a> provides JSME changelog</li>
+</ul>
+<br>
+If you are using the JSME cite please the following article:<br><br>
+B. Bienfait and P. Ertl, <a href="http://www.jcheminf.com/content/5/1/24"><b>JSME: a free molecule editor in
+    JavaScript</b></a>, J. Cheminformatics 5:24 (2013)
+<br><br>
+Happy molecule editing!
+</body>

@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <script type="text/javascript" language="javascript" src="jsme/jsme.nocache.js"></script>
+
+    <script>
+
+        // data from https://binfalse.de/software/parseable-biodata/amino-acids/
+        //SMILES for histidine corrected
+        //some amino acids lack stereochemistry
+        var aminoAcidsData = ['Alanine	Ala	A	C3H7NO2	O=C(O)C(N)C	nonpolar	neutral	1.8	nonessential	6.01	2.35	9.87',
+            'Arginine	Arg	R	C6H14N4O2	O=C(O)C(N)CCC/N=C(\N)N	polar	positive	−4.5	essential	10.76	1.82	8.99',
+            'Asparagine	Asn	N	C4H8N2O3	O=C(N)C[C@H](N)C(=O)O	polar	neutral	−3.5	nonessential	5.41	2.14	8.72',
+            'Aspartic acid	Asp	D	C4H7NO4	O=C(O)CC(N)C(=O)O	polar	negative	−3.5	nonessential	2.85	1.99	9.90',
+            'Cysteine	Cys	C	C3H7NO2S	C([C@@H](C(=O)O)N)S	nonpolar	neutral	2.5	nonessential	5.05	1.92	10.70',
+            'Glutamic acid	Glu	E	C5H9NO4	C(CC(=O)O)C(C(=O)O)N	polar	negative	−3.5	nonessential	3.15	2.10	9.47',
+            'Glutamine	Gln	Q	C5H10N2O3	O=C(N)CCC(N)C(=O)O	polar	neutral	−3.5	nonessential	5.65	2.17	9.13',
+            'Glycine	Gly	G	C2H5NO2	C(C(=O)O)N	nonpolar	neutral	−0.4	nonessential	6.06	2.35	9.78',
+            'Histidine	His	H	C6H9N3O2	O=C(O)[C@@H](N)CC1=CN=C[N]1	polar	neutral(90%)−3.2	essential	7.60	1.80	9.33',
+            'Isoleucine	Ile	I	C6H13NO2	CC[C@H](C)[C@@H](C(=O)O)N	nonpolar	neutral	4.5	essential	6.05	2.32	9.76',
+            'Leucine	Leu	L	C6H13NO2	CC(C)C[C@@H](C(=O)O)N	nonpolar	neutral	3.8	essential	6.01	2.33	9.74',
+            'Lysine	Lys	K	C6H14N2O2	C(CCN)CC(C(=O)O)N	polar	positive	−3.9	essential	9.60	2.16	9.06',
+            'Methionine	Met	M	C5H11NO2S	CSCCC(C(=O)O)N	nonpolar	neutral	1.9	essential	5.74	2.13	9.28',
+            'Phenylalanine	Phe	F	C9H11NO2	c1ccc(cc1)C[C@@H](C(=O)O)N	nonpolar	neutral	2.8	essential	5.49	2.20	9.31',
+            'Proline	Pro	P	C5H9NO2	C1CC(NC1)C(=O)O	nonpolar	neutral	−1.6	nonessential	6.30	1.95	10.64',
+            'Serine	Ser	S	C3H7NO3	C([C@@H](C(=O)O)N)O	polar	neutral	−0.8	nonessential	5.68	2.19	9.21',
+            'Threonine	Thr	T	C4H9NO3	C[C@H]([C@@H](C(=O)O)N)O	polar	neutral	−0.7	essential	2.09	2.09	9.10',
+            'Tryptophan	Trp	W	C11H12N2O2	c1ccc2c(c1)c(c[nH]2)C[C@@H](C(=O)O)N	nonpolar	neutral	−0.9	essential	5.89	2.46	9.41',
+            'Tyrosine	Tyr	Y	C9H11NO3	N[C@@H](Cc1ccc(O)cc1)C(O)=O	polar	neutral	−1.3	nonessential	5.64	2.20	9.21',
+            'Valine	Val	V	C5H11NO2	CC(C)[C@@H](C(=O)O)N	nonpolar	neutral	4.2	essential	6.00	2.39	9.74'];
+
+        aminoAcidsData = aminoAcidsData.map(function (line) {
+            return line.split('\t');
+        });
+        //console.log(aminoAcidsData);
+        var smilesIndex = 4;
+        var nameIndex = 0;
+        var abbIndex = 1;
+
+        function createAminoAcidTable() {
+            //
+            var nRows = 4;
+            var nCells = aminoAcidsData.length / nRows;
+
+            var table = document.createElement('table');
+            var aaIndex = 0;
+            for (var i = 0; i < nRows; i++) {
+                var tr1 = document.createElement('tr');
+                var tr2 = document.createElement('tr');
+
+                for (var j = 0; j < nCells; j++, aaIndex++) {
+                    var td1 = document.createElement('td');
+                    var td2 = document.createElement('td');
+
+                    var text1 = document.createTextNode(aminoAcidsData[aaIndex][nameIndex] + ' (' + aminoAcidsData[aaIndex][abbIndex] + ')');
+                    var d = document.createElement("DIV");
+                    var id = aminoAcidsData[aaIndex][abbIndex];
+                    d.setAttribute("id", id);
+                    td1.appendChild(text1);
+                    td2.appendChild(d);
+                    tr1.appendChild(td1);
+                    tr2.appendChild(td2);
+
+                }
+
+
+                table.appendChild(tr1);
+                table.appendChild(tr2);
+            }
+            document.body.appendChild(table);
+
+
+        }
+
+        //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            var peptideEditor = new JSApplet.JSME("jsme_container", "100%", "480px");
+            peptideEditor.options("nofgmenu");
+            createAminoAcidTable();
+
+            var pasteAction = function (aaDepiction, event) {
+                peptideEditor.setNewButtonStatus(true); //the clicked aa will be added to the molecule already present in the editor
+                peptideEditor.readMolecule(aaDepiction.jmeFile());
+                peptideEditor.setNewButtonStatus(false);
+
+            };
+
+            //create depiction for each amino acid
+            for (var i = 0; i < aminoAcidsData.length; i++) {
+                var id = aminoAcidsData[i][abbIndex];
+                var depictedAA = new JSApplet.JSME(id, "100%", "110px", {
+                    "smiles": aminoAcidsData[i][smilesIndex],
+                    "options": "depict"
+                });
+                depictedAA.addClickHandler(pasteAction);
+
+            }
+
+
+        }
+    </script>
+</head>
+
+<body>
+<title>Simple peptide builder</title>
+<h1>Simple peptide builder</h1>
+<h2>This tool is intended to be used for learning to make peptide bonds and create short peptides.</h2>
+Note: The functional group popup menu has been disabled.
+
+TODO: Use the template example, allow to click an mark one atom of the template to set the FG and its anchor
+<div id="jsme_container"></div>
+
+</body>
+</html>
+
