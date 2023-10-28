@@ -159,7 +159,7 @@
                 <input class="form-control" id="atc-selection" type="text" placeholder="Search..">
                 <li>
                     {% for atc_code in drugbank_atc_codes %}
-                    <a class="dropdown-item atc-item" href="#">{{ atc_code }}</a>
+                    <a class="dropdown-item atc-item" style="cursor: pointer">{{ atc_code }}</a>
                     {% endfor %}
                 </li>
             </div>
@@ -174,7 +174,7 @@
                 <input class="form-control" id="drugbank-{{ axis }}-axis-selection" type="text" placeholder="Search..">
                 <li>
                     {% for task in drugbank_tasks %}
-                    <a class="dropdown-item drugbank-{{ axis }}-axis-item" href="#">{{ task }}</a>
+                    <a class="dropdown-item drugbank-{{ axis }}-axis-item" style="cursor: pointer">{{ task }}</a>
                     {% endfor %}
                 </li>
             </div>
@@ -258,11 +258,13 @@
                                     </a>
                                     <span
                                             class="glyphicon glyphicon-question-sign"
-                                            style="font-size:15px" data-toggle="tooltip"
+                                            style="font-size:15px"
+                                            data-toggle="tooltip"
+                                            data-html="true"
                                             data-placement="right"
-                                            title="Dataset {{ row['metric'] }}: {{ '{:.4f}'.format(row['performance']) }}
-                                                                    Dataset Size: {{ '{:,}'.format(row['size']) }}
-                                                                    TDC Leaderboard Rank: {{ row['rank'] }}">
+                                            title="Dataset {{ row['metric'] }}: {{ '{:.4f}'.format(row['performance']) }}<br>
+                                            Dataset Size: {{ '{:,}'.format(row['size']) }}<br>
+                                            TDC Leaderboard Rank: {{ row['rank'] }}">
                                                                 </span>
                                     {% if row["performance"] < 0.6 %}
                                     <span
@@ -279,7 +281,9 @@
                                 </td>
 
                                 <td>
-                                    {{ "{:.2f}".format(smiles_to_preds[smiles][row['id']]["drugbank_approved_percentile"]) }}%
+                                    {{
+                                    "{:.2f}".format(smiles_to_preds[smiles][row['id']]["drugbank_approved_percentile"])
+                                    }}%
                                 <td>
                                     {{ row["units"] }}
                                 </td>
