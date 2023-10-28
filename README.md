@@ -89,7 +89,7 @@ ADMET predictions can be made using the ADMET-AI web server, as illustrated belo
 Note: Running the below command requires the additional web dependencies (i.e., `pip install admet_ai[web]`).
 
 ```bash
-admet_ai_web
+admet_web
 ```
 
 Then navigate to http://127.0.0.1:5000 to view the website.

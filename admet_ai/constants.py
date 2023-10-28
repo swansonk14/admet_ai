@@ -2,7 +2,7 @@
 from tdc.single_pred import ADME, Tox
 from tdc.utils import retrieve_label_name_list
 
-
+# TODO: change constants so that it doesn't rely on TDC being installed
 TDC_DATASET_TO_CLASS = {
     "Caco2_Wang": ADME,
     "PAMPA_NCATS": ADME,

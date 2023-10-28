@@ -26,7 +26,10 @@ setup(
     packages=find_packages(),
     package_data={"admet_ai": ["py.typed"]},
     entry_points={
-        "console_scripts": ["admet_predict=admet_ai.predict:admet_predict_command_line"]
+        "console_scripts": [
+            "admet_predict=admet_ai.predict:admet_predict_command_line",
+            "admet_web=admet_ai.web.run:admet_web"
+        ]
     },
     install_requires=[
         "chemfunc>=1.0.4",

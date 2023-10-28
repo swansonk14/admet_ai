@@ -1,0 +1,146 @@
+body {
+    padding-top: 65px;
+    padding-bottom: 65px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.navbar.navbar-inverse {
+    background-color: #e5f6fc;
+    border-color: #12272b;
+}
+
+.navbar.navbar-inverse .navbar-nav > li > a {
+    color: white;
+}
+
+.navbar.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+#content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #555;
+    margin-left: 13px;
+}
+
+h4 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #777;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Add styles for the table */
+table {
+    min-width: 300px;
+    /* width: 30%;  */
+    border-collapse: collapse;
+    background-color: #f2f2f2;
+    border-color: #8dec9c;
+}
+
+th, td {
+    padding: 4px; /* Adjust the padding as needed */
+    border: 1px solid #dddddd;
+    text-align: center;
+    font-size: 12px; /* Adjust the font size as needed */
+}
+
+th {
+    background-color: #9c9c9c;
+    color: rgb(23, 23, 23);
+}
+
+/* CSS for  image container */
+.mol-image {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    margin-left: 10px;
+    background-color: #f8f4f4;
+    float: right;
+}
+
+.mol-image2 {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    margin-left: 10px;
+    background-color: #f8f4f4;
+}
+
+.collapse {
+    /* background-color: #d01212;  */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.btn-link2 {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    /* padding: 15px; */
+    width: 100%;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+    background-color: #e5f6fc;
+    /* color: #007bff; */
+    text-decoration: none;
+}
+
+.btn-link2:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.table_header {
+    color: #007bff
+}
+
+.data_link {
+    color: black
+}
