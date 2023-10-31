@@ -20,9 +20,9 @@ from admet_ai.web.app.drugbank import (
     compute_drugbank_percentile,
     get_drugbank_task_names,
     get_drugbank_unique_atc_codes,
-    plot_drugbank_reference,
 )
 from admet_ai.web.app.models import get_admet_model
+from admet_ai.web.app.plot import plot_drugbank_reference, plot_radial_summary
 from admet_ai.web.app.utils import (
     get_smiles_from_request,
     smiles_to_mols,
@@ -135,8 +135,8 @@ def index():
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
         preds_df=all_preds_with_drugbank,
-        x_task_name=session.get("drugbank_x_task_name"),
-        y_task_name=session.get("drugbank_y_task_name"),
+        x_property_name=session.get("drugbank_x_task_name"),
+        y_property_name=session.get("drugbank_y_task_name"),
         atc_code=session.get("atc_code"),
     )
 
@@ -147,12 +147,24 @@ def index():
     # Create molecule SVG images
     mol_svgs = [smiles_to_svg(mol) for mol in mols[:num_display_smiles]]
 
+    # Create molecule radial plots
+    # TODO: make toxicity the max of all toxicity properties
+    # TODO: both original prediction and drugbank percentile?
+    radial_svgs = [
+        plot_radial_summary(
+            molecule_preds=smiles_to_property_to_pred[smiles],
+            property_names=app.config["RADIAL_PLOT_PROPERTIES"],
+        )
+        for smiles in all_smiles[:num_display_smiles]
+    ]
+
     # TODO: better handle the show more case
     return render(
         predicted=True,
         all_smiles=all_smiles,
         smiles_to_property_to_pred=smiles_to_property_to_pred,
         mol_svgs=mol_svgs,
+        radial_svgs=radial_svgs,
         num_display_smiles=num_display_smiles,
         show_more=show_more,
         drugbank_plot=drugbank_plot_svg,
@@ -178,8 +190,8 @@ def drugbank_plot():
     # Create DrugBank reference plot with ATC code
     drugbank_plot_svg = plot_drugbank_reference(
         preds_df=USER_TO_PREDS.get(session["user_id"], pd.DataFrame()),
-        x_task_name=session["drugbank_x_task_name"],
-        y_task_name=session["drugbank_y_task_name"],
+        x_property_name=session["drugbank_x_task_name"],
+        y_property_name=session["drugbank_y_task_name"],
         atc_code=session["atc_code"],
     )
 

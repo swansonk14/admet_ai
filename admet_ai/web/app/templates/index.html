@@ -216,13 +216,16 @@
         {% set smiles = all_smiles[smiles_index] %}
 
         <li class="index">
-            <div>
+            <div style="height: 250px">
                 <button id="collapseButton{{ smiles_index }}" class="btn btn-link2" type="button" data-toggle="collapse"
                         data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
                         aria-controls="collapseInfo{{ smiles_index }}" style="display: flex; align-items: center;">
                     <strong style="font-size: x-large; text-wrap: wrap; overflow: hidden; text-overflow: ellipsis;">Molecule
                         {{ smiles_index + 1 }}: {{
                         smiles }} </strong>
+                    <div id="radial-plot{{ smiles_index }}" class="radial-plot" style="margin-left: auto">
+                        {{ radial_svgs[smiles_index]|safe }}
+                    </div>
                     <div id="molecule-image{{ smiles_index }}" class="mol-image" style="margin-left: auto">
                         {{ mol_svgs[smiles_index]|safe }}
                     </div>

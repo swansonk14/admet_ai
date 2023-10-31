@@ -89,7 +89,7 @@ th {
 }
 
 /* CSS for  image container */
-.mol-image {
+.mol-image .radial-plot {
     display: inline-block;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -97,15 +97,6 @@ th {
     margin-left: 10px;
     background-color: #f8f4f4;
     float: right;
-}
-
-.mol-image2 {
-    display: inline-block;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 5px;
-    margin-left: 10px;
-    background-color: #f8f4f4;
 }
 
 .collapse {

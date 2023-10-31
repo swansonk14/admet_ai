@@ -1,18 +1,14 @@
 """Defines functions for the DrugBank approved reference set."""
 from collections import defaultdict
 from functools import lru_cache
-from io import BytesIO
 
 import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy.stats import percentileofscore
 
 from admet_ai.web.app import app
-from admet_ai.web.app.admet_info import get_admet_id_to_name, get_admet_name_to_id
-from admet_ai.web.app.utils import replace_svg_dimensions
+from admet_ai.web.app.admet_info import get_admet_id_to_name
 
 matplotlib.use("Agg")
 
@@ -119,80 +115,3 @@ def get_drugbank_task_names() -> list[str]:
     ]
 
     return drugbank_task_names
-
-
-def plot_drugbank_reference(
-    preds_df: pd.DataFrame,
-    x_task_name: str | None = None,
-    y_task_name: str | None = None,
-    atc_code: str | None = None,
-) -> str:
-    """Creates a 2D scatter plot of the DrugBank reference set vs the new set of molecules on two tasks.
-
-    :param preds_df: A DataFrame containing the predictions on the new molecules.
-    :param x_task_name: The name of the task to plot on the x-axis.
-    :param y_task_name: The name of the task to plot on the y-axis.
-    :param atc_code: The ATC code to filter the DrugBank reference set by.
-    :return: A string containing the SVG of the plot.
-    """
-    # Set default values
-    if x_task_name is None:
-        x_task_name = "Human Intestinal Absorption"
-
-    if y_task_name is None:
-        y_task_name = "Clinical Toxicity"
-
-    if atc_code is None:
-        atc_code = "all"
-
-    # Get DrugBank reference, optionally filtered ATC code
-    drugbank = get_drugbank(atc_code=atc_code)
-
-    # Map task names to IDs
-    admet_name_to_id = get_admet_name_to_id()
-    x_task_id = admet_name_to_id[x_task_name]
-    y_task_id = admet_name_to_id[y_task_name]
-
-    # Scatter plot of DrugBank molecules with density coloring
-    sns.scatterplot(
-        x=drugbank[x_task_id],
-        y=drugbank[y_task_id],
-        edgecolor=None,
-        label="DrugBank Approved" + (" (ATC filter)" if atc_code != "all" else ""),
-    )
-
-    # Set input label
-    input_label = "Input Molecule" + ("s" if len(preds_df) > 1 else "")
-
-    # Scatter plot of new molecules
-    if len(preds_df) > 0:
-        sns.scatterplot(
-            x=preds_df[x_task_id],
-            y=preds_df[y_task_id],
-            color="red",
-            marker="*",
-            s=200,
-            label=input_label,
-        )
-
-    # Set title
-    plt.title(
-        f"{input_label} vs DrugBank Approved"
-        + (f"\nATC = {atc_code}" if atc_code != "all" else "")
-    )
-
-    # Set axis labels
-    plt.xlabel(x_task_name)
-    plt.ylabel(y_task_name)
-
-    # Save plot as svg to pass to frontend
-    buf = BytesIO()
-    plt.savefig(buf, format="svg")
-    plt.close()
-    buf.seek(0)
-    drugbank_svg = buf.getvalue().decode("utf-8")
-
-    # Set the SVG width and height to 100%
-    drugbank_svg = replace_svg_dimensions(drugbank_svg)
-
-    return drugbank_svg
