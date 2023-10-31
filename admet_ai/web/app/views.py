@@ -2,7 +2,6 @@
 from uuid import uuid4
 from tempfile import NamedTemporaryFile
 
-import numpy as np
 import pandas as pd
 from flask import (
     after_this_request,
@@ -14,6 +13,7 @@ from flask import (
     session,
 )
 
+from admet_ai.physchem_compute import compute_physicochemical_properties
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
@@ -22,9 +22,12 @@ from admet_ai.web.app.drugbank import (
     get_drugbank_unique_atc_codes,
     plot_drugbank_reference,
 )
-from admet_ai.web.app.models import predict_all_models
-from admet_ai.web.app.physchem import compute_physicochemical_properties
-from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols, smiles_to_svg
+from admet_ai.web.app.models import get_admet_model
+from admet_ai.web.app.utils import (
+    get_smiles_from_request,
+    smiles_to_mols,
+    smiles_to_svg,
+)
 
 
 USER_TO_PREDS: dict[str, pd.DataFrame] = {}
@@ -78,7 +81,9 @@ def index():
     num_invalid_mols = sum(mol is None for mol in mols)
     if num_invalid_mols > 0:
         ending = "s" if num_invalid_mols > 1 else ""
-        warnings.append(f"Input contains {num_invalid_mols:,} invalid SMILES string{ending}.")
+        warnings.append(
+            f"Input contains {num_invalid_mols:,} invalid SMILES string{ending}."
+        )
 
     # Remove invalid molecules
     all_smiles = [smile for smile, mol in zip(all_smiles, mols) if mol is not None]
@@ -88,59 +93,48 @@ def index():
     if len(all_smiles) == 0:
         return render(errors=["No valid SMILES strings given."])
 
-    # Make predictions
-    task_names, preds = predict_all_models(smiles=all_smiles)
-    num_tasks = len(task_names)
+    # Compute physicochemical properties
+    physchem_preds = compute_physicochemical_properties(
+        all_smiles=all_smiles, mols=mols
+    )
+
+    # Make ADMET predictions
+    admet_model = get_admet_model()
+    admet_preds = admet_model.predict(smiles=all_smiles)
 
     # TODO: Display physicochemical properties (and compare to DrugBank)
-    # Compute physicochemical properties
-    physchem_names, physchem_preds = compute_physicochemical_properties(smiles=all_smiles)
+
+    # Combine physicochemical and ADMET properties
+    all_preds = pd.concat((physchem_preds, admet_preds), axis=1)
 
     # Compute DrugBank percentiles
-    preds_numpy = np.array(preds).transpose()  # (num_tasks, num_molecules)
-    drugbank_percentiles = np.stack(
-        [
-            compute_drugbank_percentile(
-                task_name=task_name,
-                predictions=task_preds,
+    drugbank_percentiles = pd.DataFrame(
+        data={
+            f"{property_name}_drugbank_approved_percentile": compute_drugbank_percentile(
+                property_name=property_name,
+                predictions=all_preds[property_name].values,
                 atc_code=session.get("atc_code"),
             )
-            for task_name, task_preds in zip(task_names, preds_numpy)
-        ]
-    ).transpose()  # (num_molecules, num_tasks)
+            for property_name in all_preds.columns
+        },
+        index=all_smiles,
+    )
 
-    # Convert predictions to a dictionary mapping SMILES to preds
-    smiles_to_preds: dict[str, dict[str, dict[str, float]]] = {
-        smiles: {
-            task_name: {
-                "prediction": preds[smiles_index][task_index],
-                "drugbank_approved_percentile": drugbank_percentiles[smiles_index][task_index]
-            }
-            for task_index, task_name in enumerate(task_names)
-        }
-        for smiles_index, smiles in enumerate(all_smiles)
-    }
+    # Combine predictions and percentiles
+    all_preds_with_drugbank = pd.concat((all_preds, drugbank_percentiles), axis=1)
 
-    # Convert predictions to DataFrame
-    preds_df = pd.DataFrame([
-        {
-            "smiles": smiles,
-            **{
-                f"{task_name}_{pred_type}": pred
-                for task_name, pred_type_to_pred in smiles_to_preds[smiles].items()
-                for pred_type, pred in pred_type_to_pred.items()
-            }
-        }
-        for smiles in all_smiles
-    ])
+    # Convert predictions to a dictionary mapping SMILES to property name to value
+    smiles_to_property_to_pred: dict[
+        str, dict[str, float]
+    ] = all_preds_with_drugbank.to_dict(orient="index")
 
     # TODO: figure out how to remove predictions from memory once no longer needed (i.e., once session ends)
     # Store predictions in memory
-    USER_TO_PREDS[session["user_id"]] = preds_df
+    USER_TO_PREDS[session["user_id"]] = all_preds_with_drugbank
 
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
-        preds_df=USER_TO_PREDS[session["user_id"]],
+        preds_df=all_preds_with_drugbank,
         x_task_name=session.get("drugbank_x_task_name"),
         y_task_name=session.get("drugbank_y_task_name"),
         atc_code=session.get("atc_code"),
@@ -157,14 +151,12 @@ def index():
     return render(
         predicted=True,
         all_smiles=all_smiles,
-        smiles_to_preds=smiles_to_preds,
+        smiles_to_property_to_pred=smiles_to_property_to_pred,
         mol_svgs=mol_svgs,
         num_display_smiles=num_display_smiles,
         show_more=show_more,
-        task_names=task_names,
-        num_tasks=num_tasks,
         drugbank_plot=drugbank_plot_svg,
-        warnings=warnings
+        warnings=warnings,
     )
 
 

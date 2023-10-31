@@ -68,7 +68,7 @@
         ADMET-AI can make predictions for up to 1,000 molecules at a time by either (1)
         providing SMILES (one per line) in the text box, (2) uploading a CSV file with SMILES in the
         first column, or (3) drawing a molecule using the interactive tool and converting it to a SMILES.
-        ADMET-AI can make predictions for roughly 10 molecules per second.
+        ADMET-AI can make predictions for roughly 30 molecules per second.
     </p>
     <p>
         For regression ADMET properties, the property value is directly predicted with the units shown. For
@@ -117,7 +117,8 @@
         </div>
 
         {% if max_molecules %}
-        <h5><b>Note:</b> Predictions can be made for at most {{ "{:,}".format(max_molecules) }} molecules at a time.</h5>
+        <h5><b>Note:</b> Predictions can be made for at most {{ "{:,}".format(max_molecules) }} molecules at a time.
+        </h5>
         {% endif %}
 
         <!--SMILES input-->
@@ -230,7 +231,8 @@
 
             <div id="collapseInfo{{ smiles_index }}" class="collapse">
                 <div style="display: flex; flex-wrap: wrap;">
-                    {% for category in ["Absorption", "Distribution", "Metabolism", "Excretion", "Toxicity"] %}
+                    {% for category in ["Physicochemical", "Absorption", "Distribution", "Metabolism", "Excretion",
+                    "Toxicity"] %}
                     <div style="flex: 1; width: 100%;">
                         <div style="display: flex;">
                             <h3 class="table_header">{{ category }}</h3>
@@ -260,6 +262,7 @@
                                     <a href={{ row["url"] }} target="_blank" class="data_link">
                                     {{ row["name"] }}
                                     </a>
+                                    {% if category != "Physicochemical" %}
                                     <span
                                             class="glyphicon glyphicon-question-sign"
                                             style="font-size:15px"
@@ -278,15 +281,17 @@
                                             title="Lower accuracy">
                                                                             </span>
                                     {% endif %}
+                                    {% endif %}
                                 </strong></td>
 
                                 <td>
-                                    {{ "{:.4f}".format(smiles_to_preds[smiles][row["id"]]["prediction"]) }}
+                                    {{ "{:.4f}".format(smiles_to_property_to_pred[smiles][row["id"]]) }}
                                 </td>
 
                                 <td>
                                     {{
-                                    "{:.2f}".format(smiles_to_preds[smiles][row['id']]["drugbank_approved_percentile"])
+                                    "{:.2f}".format(smiles_to_property_to_pred[smiles][row["id"] +
+                                    "_drugbank_approved_percentile"])
                                     }}%
                                 <td>
                                     {{ row["units"] }}

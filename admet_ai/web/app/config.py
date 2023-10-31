@@ -7,3 +7,4 @@ MODEL_DIR = ROOT_DIR / "models"
 ADMET_PATH = DATA_DIR / "admet.csv"
 DRUGBANK_PATH = DATA_DIR / "drugbank_approved.csv"
 LOW_PERFORMANCE_THRESHOLD = 0.6
+NUM_WORKERS = 0

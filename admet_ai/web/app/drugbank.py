@@ -23,8 +23,6 @@ ATC_CODE_TO_DRUGBANK_INDICES: dict[str, list[int]] = {}
 
 def load_drugbank() -> None:
     """Loads the reference set of DrugBank approved molecules with their model predictions."""
-    print("--- LOADING DRUGBANK ---")
-
     # Set up global variables
     global DRUGBANK_DF, ATC_CODE_TO_DRUGBANK_INDICES
 
@@ -60,11 +58,11 @@ def get_drugbank(atc_code: str | None = None) -> pd.DataFrame:
 
 
 def compute_drugbank_percentile(
-    task_name: str, predictions: np.ndarray, atc_code: str | None = None
+    property_name: str, predictions: np.ndarray, atc_code: str | None = None
 ) -> np.ndarray:
     """Computes the percentile of the predictions compared to the DrugBank approved molecules.
 
-    :param task_name: The name of the task (property) that is predicted.
+    :param property_name: The name of the property that is predicted.
     :param predictions: A 1D numpy array of predictions.
     :param atc_code: The ATC code to filter by. If None or 'all', returns the entire DrugBank.
     :return: A 1D numpy array of percentiles of the predictions compared to the DrugBank approved molecules.
@@ -73,7 +71,7 @@ def compute_drugbank_percentile(
     drugbank = get_drugbank(atc_code=atc_code)
 
     # Compute percentiles
-    return percentileofscore(drugbank[task_name], predictions)
+    return percentileofscore(drugbank[property_name], predictions)
 
 
 @lru_cache()
@@ -169,8 +167,8 @@ def plot_drugbank_reference(
     # Scatter plot of new molecules
     if len(preds_df) > 0:
         sns.scatterplot(
-            x=preds_df[f"{x_task_id}_prediction"],
-            y=preds_df[f"{y_task_id}_prediction"],
+            x=preds_df[x_task_id],
+            y=preds_df[y_task_id],
             color="red",
             marker="*",
             s=200,

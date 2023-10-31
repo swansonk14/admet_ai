@@ -141,6 +141,15 @@ admet_predict \
     --smiles_column smiles
 ```
 
+Compute physicochemical properties on DrugBank approved drugs using RDKit.
+
+```bash
+physchem_compute \
+    --data_path data/drugbank/drugbank_approved_admet.csv \
+    --save_path data/drugbank/drugbank_approved_admet_physchem.csv \
+    --smiles_column smiles
+```
+
 ## Plot results
 
 Plot TDC ADMET results. First, download the results from [here](https://docs.google.com/spreadsheets/d/1bh9FEHqhbfHKF-Nxjad0Cpy2p5ztH__p0pijB43yc94/edit?usp=sharing) and save them to `results/TDC ADMET Results.xlsx`. Then run the following command.

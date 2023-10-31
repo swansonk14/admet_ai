@@ -11,8 +11,6 @@ ADMET_NAME_TO_ID: dict[str, str] = {}
 
 def load_admet_info() -> None:
     """Loads the ADMET info."""
-    print("--- LOADING ADMET INFO ---")
-
     # Set up global variables
     global ADMET_DF, ADMET_ID_TO_NAME, ADMET_NAME_TO_ID
 

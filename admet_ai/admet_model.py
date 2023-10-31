@@ -12,6 +12,7 @@ from chemprop.data import (
     set_cache_graph,
     set_cache_mol,
 )
+from chemprop.data.data import SMILES_TO_MOL
 from chemprop.models import MoleculeModel
 from chemprop.train import predict
 from chemprop.utils import load_args, load_checkpoint, load_scalers
@@ -43,6 +44,7 @@ class ADMETModel:
         # Set caching
         set_cache_graph(cache_molecules)
         set_cache_mol(cache_molecules)
+        self.cache_molecules = cache_molecules
 
         # Set device based on GPU availability
         self.device = (
@@ -104,10 +106,18 @@ class ADMETModel:
         if isinstance(smiles, str):
             smiles = [smiles]
 
-        # Convert SMILES to RDKit molecules
-        mols = [
-            Chem.MolFromSmiles(smile) for smile in tqdm(smiles, desc="SMILES to Mol")
-        ]
+        # Convert SMILES to RDKit molecules and cache if desired
+        mols = []
+        for smile in tqdm(smiles, desc="SMILES to Mol"):
+            if smile in SMILES_TO_MOL:
+                mol = SMILES_TO_MOL[smile]
+            else:
+                mol = Chem.MolFromSmiles(smile)
+
+            mols.append(mol)
+
+            if self.cache_molecules:
+                SMILES_TO_MOL[smile] = mol
 
         # Remove invalid molecules
         invalid_mols = [mol is None for mol in mols]

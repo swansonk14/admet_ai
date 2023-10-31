@@ -27,7 +27,8 @@ setup(
     package_data={"admet_ai": ["py.typed"]},
     entry_points={
         "console_scripts": [
-            "admet_predict=admet_ai.predict:admet_predict_command_line",
+            "admet_predict=admet_ai.admet_predict:admet_predict_command_line",
+            "physchem_compute=admet_ai.physchem_compute:physchem_compute_command_line",
             "admet_web=admet_ai.web.run:admet_web",
         ]
     },

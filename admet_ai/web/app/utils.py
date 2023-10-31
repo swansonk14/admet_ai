@@ -4,12 +4,13 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pandas as pd
-from chemprop.data import cache_mol
 from chemprop.data.data import SMILES_TO_MOL
 from flask import request
 from rdkit import Chem
 from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 from werkzeug.utils import secure_filename
+
+from admet_ai.web.app import app
 
 
 SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
@@ -51,7 +52,7 @@ def smiles_to_mols(smiles: list[str]) -> list[Chem.Mol]:
 
         mols.append(mol)
 
-        if cache_mol():
+        if app.config["CACHE_MOLECULES"]:
             SMILES_TO_MOL[smile] = mol
 
     return mols
