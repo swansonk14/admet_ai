@@ -22,12 +22,8 @@ from admet_ai.web.app.drugbank import (
     get_drugbank_unique_atc_codes,
 )
 from admet_ai.web.app.models import get_admet_model
-from admet_ai.web.app.plot import plot_drugbank_reference, plot_radial_summary
-from admet_ai.web.app.utils import (
-    get_smiles_from_request,
-    smiles_to_mols,
-    smiles_to_svg,
-)
+from admet_ai.web.app.plot import plot_drugbank_reference, plot_molecule_svg, plot_radial_summary
+from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols
 
 
 USER_TO_PREDS: dict[str, pd.DataFrame] = {}
@@ -145,7 +141,7 @@ def index():
     show_more = max(0, len(all_smiles) - 10)
 
     # Create molecule SVG images
-    mol_svgs = [smiles_to_svg(mol) for mol in mols[:num_display_smiles]]
+    mol_svgs = [plot_molecule_svg(mol) for mol in mols[:num_display_smiles]]
 
     # Create molecule radial plots
     # TODO: make toxicity the max of all toxicity properties

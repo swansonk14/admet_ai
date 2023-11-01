@@ -1,14 +1,33 @@
 """Defines functions for plotting for the ADMET-AI website."""
+import re
 from io import BytesIO
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from rdkit import Chem
+from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 
 from admet_ai.web.app.admet_info import get_admet_name_to_id
 from admet_ai.web.app.drugbank import get_drugbank
-from admet_ai.web.app.utils import replace_svg_dimensions
+
+
+SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
+SVG_HEIGHT_PATTERN = re.compile(r"height=['\"]\d+(\.\d+)?[a-z]+['\"]")
+
+
+def replace_svg_dimensions(svg_content: str) -> str:
+    """Replace the SVG width and height with 100%.
+
+    :param svg_content: The SVG content.
+    :return: The SVG content with the width and height replaced with 100%.
+    """
+    # Replacing the width and height with 100%
+    svg_content = SVG_WIDTH_PATTERN.sub('width="100%"', svg_content)
+    svg_content = SVG_HEIGHT_PATTERN.sub('height="100%"', svg_content)
+
+    return svg_content
 
 
 def plot_drugbank_reference(
@@ -122,14 +141,28 @@ def plot_radial_summary(
     ax.fill(angles, preds, color="red", alpha=0.25)
     ax.plot(angles, preds, color="red", linewidth=2)
 
+    # Set y limits
+    ax.set_ylim(0, 1)  # TODO: make this dynamic (if not using drugbank percentiles)
+
+    # Labels for radial lines
+    yticks = [0, 25, 50, 75, 100]
+    yticklabels = [str(ytick) for ytick in yticks]
+    ax.set_yticks(yticks)
+    ax.set_yticklabels(yticklabels)
+
     # Labels for categories
-    ax.set_yticklabels([])
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(property_names)
 
+    # Make the plot square (to match square molecule images)
+    ax.set_aspect("equal", "box")
+
+    # Ensure no text labels are cut off
+    plt.tight_layout()
+
     # Save plot as svg to pass to frontend
     buf = BytesIO()
-    plt.savefig(buf, format="svg", bbox_inches="tight")
+    plt.savefig(buf, format="svg")
     plt.close()
     buf.seek(0)
     radial_svg = buf.getvalue().decode("utf-8")
@@ -138,3 +171,26 @@ def plot_radial_summary(
     radial_svg = replace_svg_dimensions(radial_svg)
 
     return radial_svg
+
+
+def plot_molecule_svg(mol: str | Chem.Mol) -> str:
+    """Plots a molecule as an SVG image.
+
+    :param mol: A SMILES string or RDKit molecule.
+    :return: An SVG image of the molecule.
+    """
+    # Convert SMILES to Mol if needed
+    if isinstance(mol, str):
+        mol = Chem.MolFromSmiles(mol)
+
+    # Convert Mol to SVG
+    d = MolDraw2DSVG(200, 200)
+    d.DrawMolecule(mol)
+    d.FinishDrawing()
+    smiles_svg = d.GetDrawingText()
+
+    # Set the SVG width and height to 100%
+    # TODO: get this to work
+    smiles_svg = replace_svg_dimensions(smiles_svg)
+
+    return smiles_svg

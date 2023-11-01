@@ -215,22 +215,25 @@
         {% for smiles_index in range(num_display_smiles) %}
         {% set smiles = all_smiles[smiles_index] %}
 
-        <li class="index">
-            <div style="height: 250px">
-                <button id="collapseButton{{ smiles_index }}" class="btn btn-link2" type="button" data-toggle="collapse"
-                        data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
-                        aria-controls="collapseInfo{{ smiles_index }}" style="display: flex; align-items: center;">
-                    <strong style="font-size: x-large; text-wrap: wrap; overflow: hidden; text-overflow: ellipsis;">Molecule
-                        {{ smiles_index + 1 }}: {{
-                        smiles }} </strong>
-                    <div id="radial-plot{{ smiles_index }}" class="radial-plot" style="margin-left: auto">
+        <li class="index" style="margin-top: 25px;">
+            <button id="collapseButton{{ smiles_index }}" class="btn btn-link2" type="button" data-toggle="collapse"
+                    data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
+                    aria-controls="collapseInfo{{ smiles_index }}"
+                    style="display: flex; align-items: center; height: 200px;">
+                <strong style="font-size: x-large; text-wrap: wrap; overflow: hidden; text-overflow: ellipsis;">Molecule
+                    {{ smiles_index + 1 }}: {{
+                    smiles }} </strong>
+                <div class="svg-container" style="margin-left: auto; height: 100%; display: flex; flex-shrink: 0;">
+                    <div id="radial-plot{{ smiles_index }}" class="radial-plot"
+                         style="margin-left: 20px; height: 100%;">
                         {{ radial_svgs[smiles_index]|safe }}
                     </div>
-                    <div id="molecule-image{{ smiles_index }}" class="mol-image" style="margin-left: auto">
+                    <div id="molecule-image{{ smiles_index }}" class="mol-image"
+                         style="margin-left: 20px; height: 100%;">
                         {{ mol_svgs[smiles_index]|safe }}
                     </div>
-                </button>
-            </div>
+                </div>
+            </button>
 
             <div id="collapseInfo{{ smiles_index }}" class="collapse">
                 <div style="display: flex; flex-wrap: wrap;">
