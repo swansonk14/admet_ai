@@ -32,73 +32,99 @@
 </nav>
 
 <div class="container" id="description">
-    <h1>ADMET-AI Prediction</h1>
-    <h4>Background</h4>
-    <!--    <p>-->
-    <!--        The evaluation of pharmacokinetics and toxicity is crucial for the design of new therapeutic candidates.-->
-    <!--        In silico virtual screens and generative AI approaches output a vast number of molecules that must be-->
-    <!--        filtered to a tractable number for synthesis and experimental validation. An effective primary filter-->
-    <!--        is needed for the evaluation of the candidate compounds for their <b>A</b>bsorption, <b>D</b>istribution,-->
-    <!--        <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) profiles.-->
-    <!--    </p>-->
-    <p><b>ADMET-AI</b> provides a simple, fast, and accurate web interface to enable users to predict the <b>A</b>bsorption,
+    <h1>ADMET-AI</h1>
+    <p style="font-size: 18px;">
+        <b>ADMET-AI</b> is a simple, fast, and accurate web interface to enable users to predict the <b>A</b>bsorption,
         <b>D</b>istribution,
         <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) properties of molecules.
-        ADMET-AI uses a graph neural network called Chemprop-RDKit, which was trained on 41 ADMET datasets from
-        the <a href="https://tdcommons.ai/">Therapeutics Data Commons</a> (TDC). ADMET-AI’s Chemprop-RDKit model has the
-        highest average rank on the
-        TDC ADMET Benchmark Group <a href="https://tdcommons.ai/benchmark/admet_group/overview/">Leaderboard</a> and it
-        is also currently the fastest web-based ADMET predictor.</p>
-    <!--    <p>-->
-    <!--        The details regarding the training and evaluation of the model are described in an article titled: A novel-->
-    <!--        machine-->
-    <!--        learning ADMET platform for evaluation of large-scale chemical libraries.-->
-    <!--    </p>-->
-    <!--    <p>-->
-    <!--        The predictor has been applied to evaluate cardiovascular drugs and drugs with cardiovascular effects in an-->
-    <!--        article-->
-    <!--        titled: ADMET profiles of known cardiovascular drugs accurately predicted using a novel machine learned-->
-    <!--        Predictor.-->
-    <!--    </p>-->
-
-    <br>
-
-    <h4>Use</h4>
-    <p>
-        ADMET-AI can make predictions for up to 1,000 molecules at a time by either (1)
-        providing SMILES (one per line) in the text box, (2) uploading a CSV file with SMILES in the
-        first column, or (3) drawing a molecule using the interactive tool and converting it to a SMILES.
-        ADMET-AI can make predictions for roughly 30 molecules per second.
     </p>
-    <p>
-        For regression ADMET properties, the property value is directly predicted with the units shown. For
-        classification ADMET properties, the prediction value is the probability of the molecule having that
-        property (e.g., probability of blood-brain barrier penetration).
-    </p>
-    <p>
-        For context, the ADMET predictions are
-        compared to a set of 2,579 molecules from the DrugBank that have received regulatory approval, and the
-        percentile of each prediction is shown with respect to this set of DrugBank molecules. This reference set
-        can be filtered to a specific category of drugs for a more relevant comparison by selecting an <a
-            href="https://www.whocc.no/atc_ddd_index/">Anatomical
-        Therapeutic Chemical</a> (ATC) code from the dropdown menu below.
-    </p>
-    <!--    <p>-->
-    <!--        Note: ADMET-AI does NOT store any molecules uploaded to the website. All molecules are deleted after predictions-->
-    <!--        are made.-->
-    <!--    </p>-->
 
-    <br>
+    <br><br>
 
-    <h4>Local Prediction</h4>
-    <p>ADMET-AI can also be run locally as a command line tool for large-scale batch prediction or as a Python module
-        for use within other Python-based tools (e.g., as a reward for a generative AI model for drug design). Please
-        see <a href="https://github.com/swansonk14/admet_ai">https://github.com/swansonk14/admet_ai</a></p>
+    <button id="collapseButtonBackground" class="btn btn-link2" type="button" data-toggle="collapse"
+            data-target="#backgroundText" aria-expanded="false" aria-controls="backgroundText">
+        <strong style="font-size: 22px">Background</strong>
+    </button>
+    <div id="backgroundText" class="collapse">
+        <p>
+            The evaluation of pharmacokinetics and toxicity is crucial for the design of new therapeutic candidates.
+            In silico virtual screens and generative AI approaches output a vast number of molecules that must be
+            filtered to a tractable number for synthesis and experimental validation. An effective primary filter
+            is needed for the evaluation of the candidate compounds for their ADMET profiles.
+        </p>
+        <p>
+            ADMET-AI uses a graph neural network called Chemprop-RDKit, which was trained on 41 ADMET datasets from
+            the <a href="https://tdcommons.ai/">Therapeutics Data Commons</a> (TDC). ADMET-AI’s Chemprop-RDKit model has
+            the
+            highest average rank on the
+            TDC ADMET Benchmark Group <a href="https://tdcommons.ai/benchmark/admet_group/overview/">Leaderboard</a> and
+            it
+            is also currently the fastest web-based ADMET predictor.</p>
+        <p>
+            The details regarding the training and evaluation of the model are described in an article titled: A novel
+            machine
+            learning ADMET platform for evaluation of large-scale chemical libraries.
+        </p>
+        <p>
+            The predictor has been applied to evaluate cardiovascular drugs and drugs with cardiovascular effects in an
+            article
+            titled: ADMET profiles of known cardiovascular drugs accurately predicted using a novel machine learned
+            predictor.
+        </p>
+    </div>
+
+    <br><br>
+
+    <button id="collapseButtonUse" class="btn btn-link2" type="button" data-toggle="collapse"
+            data-target="#useText" aria-expanded="false" aria-controls="useText">
+        <strong style="font-size: 22px">Use</strong>
+    </button>
+    <div id="useText" class="collapse">
+        <p>
+            ADMET-AI can make predictions for up to 1,000 molecules at a time by either (1)
+            providing SMILES (one per line) in the text box, (2) uploading a CSV file with SMILES in the
+            first column, or (3) drawing a molecule using the interactive tool and converting it to a SMILES.
+            ADMET-AI can make predictions for roughly 30 molecules per second.
+        </p>
+        <p>
+            For regression ADMET properties, the property value is directly predicted with the units shown. For
+            classification ADMET properties, the prediction value is the probability of the molecule having that
+            property (e.g., probability of blood-brain barrier penetration).
+        </p>
+        <p>
+            For context, the ADMET predictions are
+            compared to a set of 2,579 molecules from the DrugBank that have received regulatory approval, and the
+            percentile of each prediction is shown with respect to this set of DrugBank molecules. This reference
+            set
+            can be filtered to a specific category of drugs for a more relevant comparison by selecting an <a
+                href="https://www.whocc.no/atc_ddd_index/">Anatomical
+            Therapeutic Chemical</a> (ATC) code from the dropdown menu below.
+        </p>
+        <!--    <p>-->
+        <!--        Note: ADMET-AI does NOT store any molecules uploaded to the website. All molecules are deleted after predictions-->
+        <!--        are made.-->
+        <!--    </p>-->
+    </div>
+
+    <br><br>
+
+    <button id="collapseButtonLocal" class="btn btn-link2" type="button" data-toggle="collapse"
+            data-target="#localText" aria-expanded="false" aria-controls="localText">
+        <strong style="font-size: 22px">Local Prediction</strong>
+    </button>
+    <div id="localText" class="collapse">
+        <p>ADMET-AI can also be run locally as a command line tool for large-scale batch prediction or as a Python
+            module
+            for use within other Python-based tools (e.g., as a reward for a generative AI model for drug design).
+            Please
+            see <a href="https://github.com/swansonk14/admet_ai">https://github.com/swansonk14/admet_ai</a>
+        </p>
+    </div>
 </div>
-</body>
 
-<body>
 <div class="container" id="content">
+    <h2>Predict</h2>
+
     <form enctype="multipart/form-data" method="POST">
         <!--SMILES upload type selector-->
         <div class="btn-group" id="inputSelect" data-toggle="buttons">
@@ -149,7 +175,7 @@
     <br>
 
     <div id="drugbank-plot" style="flex: 1; text-align: center;">
-        <div id="drugbank-plot-inner" style="width: 70%; display: inline-block;">
+        <div id="drugbank-plot-inner" style="width: 60%; display: inline-block;">
             {{ drugbank_plot|safe }}
         </div>
     </div>
