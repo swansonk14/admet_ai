@@ -22,11 +22,20 @@ from admet_ai.web.app.drugbank import (
     get_drugbank_unique_atc_codes,
 )
 from admet_ai.web.app.models import get_admet_model
-from admet_ai.web.app.plot import plot_drugbank_reference, plot_molecule_svg, plot_radial_summary
+from admet_ai.web.app.plot import (
+    plot_drugbank_reference,
+    plot_molecule_svg,
+    plot_radial_summary,
+)
+from admet_ai.web.app.storage import (
+    get_user_preds,
+    set_user_preds,
+    update_user_activity,
+)
 from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols
 
 
-USER_TO_PREDS: dict[str, pd.DataFrame] = {}
+DRUGBANK_APPROVED_PERCENTILE_SUFFIX = "drugbank_approved_percentile"
 
 
 def render(**kwargs) -> str:
@@ -38,6 +47,8 @@ def render(**kwargs) -> str:
         drugbank_tasks=get_drugbank_task_names(),
         max_molecules=app.config["MAX_MOLECULES"],
         low_performance_threshold=app.config["LOW_PERFORMANCE_THRESHOLD"],
+        drugbank_approved_percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
+        heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         **kwargs,
     )
 
@@ -106,7 +117,7 @@ def index():
     # Compute DrugBank percentiles
     drugbank_percentiles = pd.DataFrame(
         data={
-            f"{property_name}_drugbank_approved_percentile": compute_drugbank_percentile(
+            f"{property_name}_{DRUGBANK_APPROVED_PERCENTILE_SUFFIX}": compute_drugbank_percentile(
                 property_name=property_name,
                 predictions=all_preds[property_name].values,
                 atc_code=session.get("atc_code"),
@@ -124,9 +135,8 @@ def index():
         str, dict[str, float]
     ] = all_preds_with_drugbank.to_dict(orient="index")
 
-    # TODO: figure out how to remove predictions from memory once no longer needed (i.e., once session ends)
     # Store predictions in memory
-    USER_TO_PREDS[session["user_id"]] = all_preds_with_drugbank
+    set_user_preds(user_id=session["user_id"], preds_df=all_preds_with_drugbank)
 
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
@@ -143,13 +153,12 @@ def index():
     # Create molecule SVG images
     mol_svgs = [plot_molecule_svg(mol) for mol in mols[:num_display_smiles]]
 
-    # Create molecule radial plots
-    # TODO: make toxicity the max of all toxicity properties
-    # TODO: both original prediction and drugbank percentile?
+    # Create molecule radial plots for DrugBank approved percentiles
     radial_svgs = [
         plot_radial_summary(
-            molecule_preds=smiles_to_property_to_pred[smiles],
+            property_name_to_percentile=smiles_to_property_to_pred[smiles],
             property_names=app.config["RADIAL_PLOT_PROPERTIES"],
+            percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
         )
         for smiles in all_smiles[:num_display_smiles]
     ]
@@ -185,7 +194,7 @@ def drugbank_plot():
 
     # Create DrugBank reference plot with ATC code
     drugbank_plot_svg = plot_drugbank_reference(
-        preds_df=USER_TO_PREDS.get(session["user_id"], pd.DataFrame()),
+        preds_df=get_user_preds(session["user_id"]),
         x_property_name=session["drugbank_x_task_name"],
         y_property_name=session["drugbank_y_task_name"],
         atc_code=session["atc_code"],
@@ -207,12 +216,24 @@ def download_predictions() -> Response:
         return response
 
     # Save predictions to temporary file
-    USER_TO_PREDS.get(session["user_id"], pd.DataFrame()).to_csv(
-        preds_file.name, index=False
-    )
+    get_user_preds(session["user_id"]).to_csv(preds_file.name, index=False)
     preds_file.seek(0)
 
     # Return the temporary file as a response
     return send_file(
         preds_file.name, as_attachment=True, download_name="predictions.csv"
     )
+
+
+@app.route("/heartbeat", methods=["POST"])
+def heartbeat() -> tuple[str, int]:
+    """Registers that the client is still using the site.
+
+    :return: A tuple containing an empty string and a 204 status code.
+    """
+    # Update user's last activity
+    session.modified = True
+    update_user_activity(session["user_id"])
+
+    # Send no content response
+    return "", 204

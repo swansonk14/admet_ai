@@ -107,22 +107,22 @@ def plot_drugbank_reference(
     return drugbank_svg
 
 
-# TODO: one for preds, one for DrugBank percentile
-# TODO: how to handle negative numbers
 def plot_radial_summary(
-    molecule_preds: dict[str, float], property_names: list[str],
+    property_name_to_percentile: dict[str, float], property_names: list[str], percentile_suffix: str = ''
 ) -> str:
-    """Creates a radial plot summary of the most important properties of a molecule.
+    """Creates a radial plot summary of important properties of a molecule in terms of DrugBank approved percentiles.
 
-    :param molecule_preds: A dictionary mapping property names to predictions.
-    :param property_names: A list of property names to plot.
+    :param property_name_to_percentile: A dictionary mapping property names to their DrugBank approved percentiles.
+                                        Property names include the percentile_suffix.
+    :param property_names: A list of property names to plot (without the percentile_suffix).
+    :param percentile_suffix: The suffix to add to the property names to get the DrugBank approved percentiles.
     :return: A string containing the SVG of the plot.
     """
-    # Get the predictions for the properties
+    # Get the percentiles for the properties
     admet_name_to_id = get_admet_name_to_id()
-    preds = [
-        molecule_preds[
-            f"{admet_name_to_id[property_name]}_drugbank_approved_percentile"
+    percentiles = [
+        property_name_to_percentile[
+            f"{admet_name_to_id[property_name]}_{percentile_suffix}"
         ]
         for property_name in property_names
     ]
@@ -131,18 +131,18 @@ def plot_radial_summary(
     angles = np.linspace(0, 2 * np.pi, len(property_names), endpoint=False).tolist()
 
     # Complete the loop
-    preds += preds[:1]
+    percentiles += percentiles[:1]
     angles += angles[:1]
 
     # Step 3: Create a plot
     fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
 
     # Plot the data
-    ax.fill(angles, preds, color="red", alpha=0.25)
-    ax.plot(angles, preds, color="red", linewidth=2)
+    ax.fill(angles, percentiles, color="red", alpha=0.25)
+    ax.plot(angles, percentiles, color="red", linewidth=2)
 
     # Set y limits
-    ax.set_ylim(0, 1)  # TODO: make this dynamic (if not using drugbank percentiles)
+    ax.set_ylim(0, 100)
 
     # Labels for radial lines
     yticks = [0, 25, 50, 75, 100]
@@ -190,7 +190,6 @@ def plot_molecule_svg(mol: str | Chem.Mol) -> str:
     smiles_svg = d.GetDrawingText()
 
     # Set the SVG width and height to 100%
-    # TODO: get this to work
     smiles_svg = replace_svg_dimensions(smiles_svg)
 
     return smiles_svg

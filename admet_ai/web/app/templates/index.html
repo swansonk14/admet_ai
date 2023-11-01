@@ -13,6 +13,14 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='scripts/predict.js')}}"></script>
+    <script>
+        // Heartbeat to indicate that the user is still interacting with the session
+        function sendHeartbeat() {
+            fetch('/heartbeat', {method: 'POST'});
+        }
+
+        setInterval(sendHeartbeat, "{{ heartbeat_frequency * 1000 }}");
+    </script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel='stylesheet' id='classic-theme-styles-css'
@@ -174,45 +182,53 @@
     <br>
     <br>
 
-    <div id="drugbank-plot" style="flex: 1; text-align: center;">
-        <div id="drugbank-plot-inner" style="width: 60%; display: inline-block;">
-            {{ drugbank_plot|safe }}
-        </div>
-    </div>
-
-    <br>
-
-    <div id="drugbank-plot-controls" style="text-align: center">
-        <div class="dropdown" style="display: inline">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Select ATC Code
-            </button>
-            <div class="dropdown-menu">
-                <input class="form-control" id="atc-selection" type="text" placeholder="Search..">
-                <li>
-                    {% for atc_code in drugbank_atc_codes %}
-                    <a class="dropdown-item atc-item" style="cursor: pointer">{{ atc_code }}</a>
-                    {% endfor %}
-                </li>
+    <button id="collapseButtonDrugBank" class="btn btn-link2" type="button" data-toggle="collapse"
+            data-target="#drugbank" aria-expanded="false" aria-controls="drugbank">
+        <strong style="font-size: 22px">DrugBank Comparison Plot</strong>
+    </button>
+    <div id="drugbank" class="collapse">
+        <div id="drugbank-plot" style="flex: 1; text-align: center;">
+            <div id="drugbank-plot-inner" style="width: 60%; display: inline-block;">
+                {{ drugbank_plot|safe }}
             </div>
         </div>
 
-        {% for axis in ["x", "y"] %}
-        <div class="dropdown" style="display: inline">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Select DrugBank {{ axis }}-axis property
-            </button>
-            <div class="dropdown-menu">
-                <input class="form-control" id="drugbank-{{ axis }}-axis-selection" type="text" placeholder="Search..">
-                <li>
-                    {% for task in drugbank_tasks %}
-                    <a class="dropdown-item drugbank-{{ axis }}-axis-item" style="cursor: pointer">{{ task }}</a>
-                    {% endfor %}
-                </li>
+        <br>
+
+        <div id="drugbank-plot-controls" style="text-align: center">
+            <div class="dropdown" style="display: inline">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Select ATC Code
+                </button>
+                <div class="dropdown-menu">
+                    <input class="form-control" id="atc-selection" type="text" placeholder="Search..">
+                    <li>
+                        {% for atc_code in drugbank_atc_codes %}
+                        <a class="dropdown-item atc-item" style="cursor: pointer">{{ atc_code }}</a>
+                        {% endfor %}
+                    </li>
+                </div>
             </div>
+
+            {% for axis in ["x", "y"] %}
+            <div class="dropdown" style="display: inline">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Select DrugBank {{ axis }}-axis property
+                </button>
+                <div class="dropdown-menu">
+                    <input class="form-control" id="drugbank-{{ axis }}-axis-selection" type="text"
+                           placeholder="Search..">
+                    <li>
+                        {% for task in drugbank_tasks %}
+                        <a class="dropdown-item drugbank-{{ axis }}-axis-item" style="cursor: pointer">{{ task }}</a>
+                        {% endfor %}
+                    </li>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
+
     <br>
     {% endif %}
 
@@ -323,8 +339,8 @@
 
                                 <td>
                                     {{
-                                    "{:.2f}".format(smiles_to_property_to_pred[smiles][row["id"] +
-                                    "_drugbank_approved_percentile"])
+                                    "{:.2f}".format(smiles_to_property_to_pred[smiles][row["id"] + "_" +
+                                    drugbank_approved_percentile_suffix])
                                     }}%
                                 <td>
                                     {{ row["units"] }}
