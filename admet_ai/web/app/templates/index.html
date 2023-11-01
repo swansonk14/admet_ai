@@ -277,7 +277,7 @@
                             <thead>
                             <tr>
                                 <th>Model</th>
-                                <th>Prediction</th>
+                                <th>{{ "Value" if category == "Physicochemical" else "Prediction" }}</th>
                                 <th>DrugBank Percentile{{ " (ATC filter)" if session.get("atc_code", "all") != "all"
                                     else "" }}
                                 </th>
@@ -301,9 +301,9 @@
                                             data-toggle="tooltip"
                                             data-html="true"
                                             data-placement="right"
-                                            title="Dataset {{ row['metric'] }}: {{ '{:.4f}'.format(row['performance']) }}<br>
-                                            Dataset Size: {{ '{:,}'.format(row['size']) }}<br>
-                                            TDC Leaderboard Rank: {{ row['rank'] }}">
+                                            title="Dataset {{ row['metric'] }}: {{ '{:.2f}'.format(row['performance']) }}<br>
+                                            Dataset Size: {{ '{:,.0f}'.format(row['size']) }}
+                                            {{ '<br>TDC Leaderboard Rank: {}'.format(row['rank']) if row['rank'] != '-' else '' }}">
                                                                 </span>
                                     {% if row["performance"] < low_performance_threshold %}
                                     <span
@@ -317,7 +317,8 @@
                                 </strong></td>
 
                                 <td>
-                                    {{ "{:.4f}".format(smiles_to_property_to_pred[smiles][row["id"]]) }}
+                                    {% set pred = smiles_to_property_to_pred[smiles][row["id"]] %}
+                                    {{ ("{:.2f}" if pred > 0.005 or pred < -0.005 else "{:.2e}").format(pred) }}
                                 </td>
 
                                 <td>
