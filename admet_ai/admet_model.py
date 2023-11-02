@@ -1,10 +1,11 @@
 """ADMET-AI class to contain ADMET model and prediction function."""
+from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import torch
-from chemfunc.molecular_fingerprints import compute_fingerprints
+from chemfunc.molecular_fingerprints import compute_rdkit_fingerprint
 from chemprop.data import (
     MoleculeDataLoader,
     MoleculeDatapoint,
@@ -30,6 +31,7 @@ class ADMETModel:
         model_dirs: list[Path | str],
         num_workers: int = 8,
         cache_molecules: bool = True,
+        fingerprint_multiprocessing_min: int = 100,
     ) -> None:
         """Initialize the ADMET-AI model.
 
@@ -37,14 +39,17 @@ class ADMETModel:
                            an ensemble of Chemprop-RDKit models.
         :param num_workers: Number of workers for the data loader.
         :param cache_molecules: Whether to cache molecules. Caching improves prediction speed but requires more memory.
+        :param fingerprint_multiprocessing_min: Minimum number of molecules for multiprocessing to be used for
+                                                fingerprint computation. Otherwise, single processing is used.
         """
         # Save parameters
         self.num_workers = num_workers
+        self.cache_molecules = cache_molecules
+        self.fingerprint_multiprocessing_min = fingerprint_multiprocessing_min
 
         # Set caching
-        set_cache_graph(cache_molecules)
-        set_cache_mol(cache_molecules)
-        self.cache_molecules = cache_molecules
+        set_cache_graph(self.cache_molecules)
+        set_cache_mol(self.cache_molecules)
 
         # Set device based on GPU availability
         self.device = (
@@ -132,7 +137,28 @@ class ADMETModel:
 
         # Compute fingerprints if needed
         if self.use_features:
-            fingerprints = compute_fingerprints(mols, fingerprint_type="rdkit")
+            # Select between multiprocessing and single processing
+            if len(mols) >= self.fingerprint_multiprocessing_min:
+                pool = Pool()
+                map_fn = pool.imap
+            else:
+                pool = None
+                map_fn = map
+
+            # Compute fingerprints
+            fingerprints = np.array(
+                list(
+                    tqdm(
+                        map_fn(compute_rdkit_fingerprint, mols),
+                        total=len(mols),
+                        desc=f"RDKit fingerprints",
+                    )
+                )
+            )
+
+            # Close pool if needed
+            if pool is not None:
+                pool.close()
         else:
             fingerprints = [None] * len(smiles)
 
