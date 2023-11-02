@@ -156,3 +156,12 @@ ul {
 .arrow-up {
     border-bottom: 30px solid black;
 }
+
+.dropdown {
+    display: inline;
+}
+
+.dropdown-menu {
+    max-height: 250px;
+    overflow-y: scroll;
+}
