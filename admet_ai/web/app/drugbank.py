@@ -110,8 +110,8 @@ def get_drugbank_task_names() -> list[str]:
     :return: A list of task names (properties) predicted in the DrugBank reference set.
     """
     admet_id_to_name = get_admet_id_to_name()
-    drugbank_task_names = [
+    drugbank_task_names = sorted(
         admet_id_to_name[task_id] for task_id in get_drugbank_tasks_ids()
-    ]
+    )
 
     return drugbank_task_names

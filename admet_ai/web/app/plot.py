@@ -9,7 +9,7 @@ import seaborn as sns
 from rdkit import Chem
 from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 
-from admet_ai.web.app.admet_info import get_admet_name_to_id
+from admet_ai.web.app.admet_info import get_admet_id_to_units, get_admet_name_to_id
 from admet_ai.web.app.drugbank import get_drugbank
 
 
@@ -90,9 +90,18 @@ def plot_drugbank_reference(
         + (f"\nATC = {atc_code}" if atc_code != "all" else "")
     )
 
+    # Get ADMET property units
+    admet_id_to_units = get_admet_id_to_units()
+
+    x_property_units = admet_id_to_units[x_property_id]
+    y_property_units = admet_id_to_units[y_property_id]
+
+    x_property_units = x_property_units if x_property_units != "-" else "probability"
+    y_property_units = y_property_units if y_property_units != "-" else "probability"
+
     # Set axis labels
-    plt.xlabel(x_property_name)
-    plt.ylabel(y_property_name)
+    plt.xlabel(f"{x_property_name} ({x_property_units})")
+    plt.ylabel(f"{y_property_name} ({y_property_units})")
 
     # Save plot as svg to pass to frontend
     buf = BytesIO()
@@ -108,7 +117,9 @@ def plot_drugbank_reference(
 
 
 def plot_radial_summary(
-    property_name_to_percentile: dict[str, float], property_names: list[str], percentile_suffix: str = ''
+    property_name_to_percentile: dict[str, float],
+    property_names: list[str],
+    percentile_suffix: str = "",
 ) -> str:
     """Creates a radial plot summary of important properties of a molecule in terms of DrugBank approved percentiles.
 
