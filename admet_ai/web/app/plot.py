@@ -35,6 +35,7 @@ def plot_drugbank_reference(
     x_property_name: str | None = None,
     y_property_name: str | None = None,
     atc_code: str | None = None,
+    max_molecule_num: int | None = None,
 ) -> str:
     """Creates a 2D scatter plot of the DrugBank reference set vs the new set of molecules on two properties.
 
@@ -42,6 +43,7 @@ def plot_drugbank_reference(
     :param x_property_name: The name of the property to plot on the x-axis.
     :param y_property_name: The name of the property to plot on the y-axis.
     :param atc_code: The ATC code to filter the DrugBank reference set by.
+    :param max_molecule_num: If provided, will display molecule numbers up to this number.
     :return: A string containing the SVG of the plot.
     """
     # Set default values
@@ -83,6 +85,32 @@ def plot_drugbank_reference(
             s=200,
             label=input_label,
         )
+
+    # Add molecule numbers
+    if max_molecule_num is not None:
+        # Create buffer around scatter plot points
+        x_min, x_max = plt.xlim()
+        x_range = x_max - x_min
+        x_buffer = x_range * 0.01
+
+        y_min, y_max = plt.ylim()
+        y_range = y_max - y_min
+        y_buffer = y_range * 0.01
+
+        # Get x and y values for first max_molecule_num molecules
+        x_vals = preds_df[x_property_id].values[:max_molecule_num]
+        y_vals = preds_df[y_property_id].values[:max_molecule_num]
+
+        # Add molecule numbers for first max_molecule_num molecules
+        for i, (x_val, y_val) in enumerate(zip(x_vals, y_vals)):
+            plt.text(
+                x_val - x_buffer,
+                y_val + y_buffer,
+                str(i + 1),
+                horizontalalignment="right",
+                verticalalignment="bottom",
+                c="red",
+            )
 
     # Set title
     plt.title(

@@ -142,6 +142,7 @@ def index():
         x_property_name=session.get("drugbank_x_task_name"),
         y_property_name=session.get("drugbank_y_task_name"),
         atc_code=session.get("atc_code"),
+        max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"]
     )
 
     # Get maximum number of molecules to display
@@ -194,6 +195,7 @@ def drugbank_plot():
         x_property_name=session["drugbank_x_task_name"],
         y_property_name=session["drugbank_y_task_name"],
         atc_code=session["atc_code"],
+        max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"]
     )
 
     return jsonify({"svg": drugbank_plot_svg})
