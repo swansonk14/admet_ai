@@ -32,7 +32,7 @@ from admet_ai.web.app.storage import (
     set_user_preds,
     update_user_activity,
 )
-from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols
+from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols, string_to_html_sup
 
 
 DRUGBANK_APPROVED_PERCENTILE_SUFFIX = "drugbank_approved_percentile"
@@ -49,6 +49,7 @@ def render(**kwargs) -> str:
         low_performance_threshold=app.config["LOW_PERFORMANCE_THRESHOLD"],
         drugbank_approved_percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
+        string_to_html_sup=string_to_html_sup,
         **kwargs,
     )
 

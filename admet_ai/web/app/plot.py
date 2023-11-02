@@ -11,6 +11,7 @@ from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 
 from admet_ai.web.app.admet_info import get_admet_id_to_units, get_admet_name_to_id
 from admet_ai.web.app.drugbank import get_drugbank
+from admet_ai.web.app.utils import string_to_latex_sup
 
 
 SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
@@ -128,8 +129,8 @@ def plot_drugbank_reference(
     y_property_units = y_property_units if y_property_units != "-" else "probability"
 
     # Set axis labels
-    plt.xlabel(f"{x_property_name} ({x_property_units})")
-    plt.ylabel(f"{y_property_name} ({y_property_units})")
+    plt.xlabel(f"{x_property_name} ({string_to_latex_sup(x_property_units)})")
+    plt.ylabel(f"{y_property_name} ({string_to_latex_sup(y_property_units)})")
 
     # Save plot as svg to pass to frontend
     buf = BytesIO()

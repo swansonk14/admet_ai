@@ -55,3 +55,21 @@ def smiles_to_mols(smiles: list[str]) -> list[Chem.Mol]:
             SMILES_TO_MOL[smile] = mol
 
     return mols
+
+
+def string_to_html_sup(string: str) -> str:
+    """Converts a string with an exponential to HTML superscript.
+
+    :param string: A string.
+    :return: The string with an exponential in HTML superscript.
+    """
+    return re.sub(r"\^(\d+)", r"<sup>\1</sup>", string)
+
+
+def string_to_latex_sup(string: str) -> str:
+    """Converts a string with an exponential to LaTeX superscript.
+
+    :param string: A string.
+    :return: The string with an exponential in LaTeX superscript.
+    """
+    return re.sub(r"\^(\d+)", r"$^{\1}$", string)

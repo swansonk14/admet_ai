@@ -198,7 +198,7 @@
     <div id="drugbank" class="collapse">
         <div id="drugbank-plot" style="flex: 1; text-align: center;">
             <div id="drugbank-plot-inner" style="width: 60%; display: inline-block;">
-                {{ drugbank_plot|safe }}
+                {{ drugbank_plot | safe }}
             </div>
         </div>
 
@@ -278,11 +278,11 @@
                 <div class="svg-container" style="margin-left: auto; height: 100%; display: flex; flex-shrink: 0;">
                     <div id="radial-plot{{ smiles_index }}" class="radial-plot"
                          style="margin-left: 20px; height: 100%;">
-                        {{ radial_svgs[smiles_index]|safe }}
+                        {{ radial_svgs[smiles_index] | safe }}
                     </div>
                     <div id="molecule-image{{ smiles_index }}" class="mol-image"
                          style="margin-left: 20px; height: 100%;">
-                        {{ mol_svgs[smiles_index]|safe }}
+                        {{ mol_svgs[smiles_index] | safe }}
                     </div>
                 </div>
                 <div id="molecule{{ smiles_index }}Arrow" class="arrow arrow-down" style="margin-left: 10px"></div>
@@ -345,8 +345,8 @@
                                             data-html="true"
                                             data-placement="right"
                                             title="Dataset Size: {{ '{:,.0f}'.format(row['size']) }}<br>
-                                            {{ '{}: {:.2f}'.format(first_metric, row[first_metric]) }}<br>
-                                            {{ '{}: {:.2f}'.format(second_metric, row[second_metric]) }}
+                                            {{ string_to_html_sup('{}: {:.2f}'.format(first_metric, row[first_metric])) | safe }}<br>
+                                            {{ string_to_html_sup('{}: {:.2f}'.format(second_metric, row[second_metric])) | safe }}
                                             {{ '<br>TDC Leaderboard Rank: {}'.format(row['tdc_rank']) if row['tdc_rank'] != '-' else '' }}">
                                                                 </span>
                                     {% if row[first_metric] < low_performance_threshold %}
@@ -371,7 +371,7 @@
                                     drugbank_approved_percentile_suffix])
                                     }}%
                                 <td>
-                                    {{ row["units"] }}
+                                    {{ string_to_html_sup(row["units"]) | safe }}
                                 </td>
 
                             </tr>
