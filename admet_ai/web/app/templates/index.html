@@ -42,16 +42,18 @@
 <div class="container" id="description">
     <h1>ADMET-AI</h1>
     <p style="font-size: 18px;">
-        <b>ADMET-AI</b> is a simple, fast, and accurate web interface to enable users to predict the <b>A</b>bsorption,
+        <b>ADMET-AI</b> is a simple, fast, and accurate web interface for predicting the <b>A</b>bsorption,
         <b>D</b>istribution,
-        <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) properties of molecules.
+        <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) properties of molecules using machine learning
+        models.
     </p>
 
-    <br><br>
+    <br>
 
     <button id="collapseButtonBackground" class="btn btn-link2" type="button" data-toggle="collapse"
             data-target="#backgroundText" aria-expanded="false" aria-controls="backgroundText">
-        <strong style="font-size: 22px">Background</strong>
+        <strong style="font-size: 22px">Background</strong><strong
+            style="font-size: 22px; margin-left: auto;">&darr;</strong>
     </button>
     <div id="backgroundText" class="collapse">
         <p>
@@ -314,17 +316,25 @@
                                     {{ row["name"] }}
                                     </a>
                                     {% if category != "Physicochemical" %}
+                                    {% if row["task_type"] == "classification" %}
+                                    {% set first_metric = "AUROC" %}
+                                    {% set second_metric = "AUPRC" %}
+                                    {% else %}
+                                    {% set first_metric = "R^2" %}
+                                    {% set second_metric = "MAE" %}
+                                    {% endif %}
                                     <span
                                             class="glyphicon glyphicon-question-sign"
                                             style="font-size:15px"
                                             data-toggle="tooltip"
                                             data-html="true"
                                             data-placement="right"
-                                            title="Dataset {{ row['metric'] }}: {{ '{:.2f}'.format(row['performance']) }}<br>
-                                            Dataset Size: {{ '{:,.0f}'.format(row['size']) }}
-                                            {{ '<br>TDC Leaderboard Rank: {}'.format(row['rank']) if row['rank'] != '-' else '' }}">
+                                            title="Dataset Size: {{ '{:,.0f}'.format(row['size']) }}<br>
+                                            {{ '{}: {:.2f}'.format(first_metric, row[first_metric]) }}<br>
+                                            {{ '{}: {:.2f}'.format(second_metric, row[second_metric]) }}
+                                            {{ '<br>TDC Leaderboard Rank: {}'.format(row['tdc_rank']) if row['tdc_rank'] != '-' else '' }}">
                                                                 </span>
-                                    {% if row["performance"] < low_performance_threshold %}
+                                    {% if row[first_metric] < low_performance_threshold %}
                                     <span
                                             class="glyphicon glyphicon-warning-sign"
                                             style="font-size:15px" data-toggle="tooltip"
