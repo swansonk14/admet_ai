@@ -9,7 +9,11 @@ import seaborn as sns
 from rdkit import Chem
 from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 
-from admet_ai.web.app.admet_info import get_admet_id_to_units, get_admet_name_to_id
+from admet_ai.web.app.admet_info import (
+    get_admet_id_to_units,
+    get_admet_name_to_id,
+    get_toxicity_ids,
+)
 from admet_ai.web.app.drugbank import get_drugbank
 from admet_ai.web.app.utils import string_to_latex_sup
 
@@ -146,25 +150,40 @@ def plot_drugbank_reference(
 
 
 def plot_radial_summary(
-    property_name_to_percentile: dict[str, float],
-    property_names: list[str],
-    percentile_suffix: str = "",
+    property_id_to_percentile: dict[str, float], percentile_suffix: str = "",
 ) -> str:
     """Creates a radial plot summary of important properties of a molecule in terms of DrugBank approved percentiles.
 
-    :param property_name_to_percentile: A dictionary mapping property names to their DrugBank approved percentiles.
-                                        Property names include the percentile_suffix.
-    :param property_names: A list of property names to plot (without the percentile_suffix).
+    :param property_id_to_percentile: A dictionary mapping property IDs to their DrugBank approved percentiles.
+                                      Keys are the property name along with the percentile_suffix.
     :param percentile_suffix: The suffix to add to the property names to get the DrugBank approved percentiles.
     :return: A string containing the SVG of the plot.
     """
-    # Get the percentiles for the properties
-    admet_name_to_id = get_admet_name_to_id()
+    # Get percentiles solubility, BBB, hERG
+    solubility_percentile = property_id_to_percentile[
+        f"Solubility_AqSolDB_{percentile_suffix}"
+    ]
+    bbb_percentile = property_id_to_percentile[f"BBB_Martins_{percentile_suffix}"]
+    herg_percentile = property_id_to_percentile[f"hERG_{percentile_suffix}"]
+
+    # Get maximum toxicity percentile
+    toxicity_percentile = max(
+        property_id_to_percentile[f"{toxicity_name}_{percentile_suffix}"]
+        for toxicity_name in get_toxicity_ids()
+    )
+
+    # Set up percentiles and names
     percentiles = [
-        property_name_to_percentile[
-            f"{admet_name_to_id[property_name]}_{percentile_suffix}"
-        ]
-        for property_name in property_names
+        solubility_percentile,
+        100 - bbb_percentile,
+        100 - herg_percentile,
+        100 - toxicity_percentile,
+    ]
+    property_names = [
+        "Aqueous\nSolubility",
+        "Blood Brain Barrier Non-Penetration",
+        "hERG\nSafety",
+        "Non-Toxicity",
     ]
 
     # Calculate the angles of the plot
@@ -175,7 +194,7 @@ def plot_radial_summary(
     angles += angles[:1]
 
     # Step 3: Create a plot
-    fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(3, 3), subplot_kw=dict(polar=True))
 
     # Plot the data
     ax.fill(angles, percentiles, color="red", alpha=0.25)

@@ -32,7 +32,11 @@ from admet_ai.web.app.storage import (
     set_user_preds,
     update_user_activity,
 )
-from admet_ai.web.app.utils import get_smiles_from_request, smiles_to_mols, string_to_html_sup
+from admet_ai.web.app.utils import (
+    get_smiles_from_request,
+    smiles_to_mols,
+    string_to_html_sup,
+)
 
 
 DRUGBANK_APPROVED_PERCENTILE_SUFFIX = "drugbank_approved_percentile"
@@ -130,7 +134,7 @@ def index():
     all_preds_with_drugbank = pd.concat((all_preds, drugbank_percentiles), axis=1)
 
     # Convert predictions to a dictionary mapping SMILES to property name to value
-    smiles_to_property_to_pred: dict[
+    smiles_to_property_id_to_pred: dict[
         str, dict[str, float]
     ] = all_preds_with_drugbank.to_dict(orient="index")
 
@@ -143,7 +147,7 @@ def index():
         x_property_name=session.get("drugbank_x_task_name"),
         y_property_name=session.get("drugbank_y_task_name"),
         atc_code=session.get("atc_code"),
-        max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"]
+        max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"],
     )
 
     # Get maximum number of molecules to display
@@ -155,8 +159,7 @@ def index():
     # Create molecule radial plots for DrugBank approved percentiles
     radial_svgs = [
         plot_radial_summary(
-            property_name_to_percentile=smiles_to_property_to_pred[smiles],
-            property_names=app.config["RADIAL_PLOT_PROPERTIES"],
+            property_id_to_percentile=smiles_to_property_id_to_pred[smiles],
             percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
         )
         for smiles in all_smiles[:num_display_molecules]
@@ -165,7 +168,7 @@ def index():
     return render(
         predicted=True,
         all_smiles=all_smiles,
-        smiles_to_property_to_pred=smiles_to_property_to_pred,
+        smiles_to_property_id_to_pred=smiles_to_property_id_to_pred,
         mol_svgs=mol_svgs,
         radial_svgs=radial_svgs,
         drugbank_plot=drugbank_plot_svg,
@@ -196,7 +199,7 @@ def drugbank_plot():
         x_property_name=session["drugbank_x_task_name"],
         y_property_name=session["drugbank_y_task_name"],
         atc_code=session["atc_code"],
-        max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"]
+        max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"],
     )
 
     return jsonify({"svg": drugbank_plot_svg})

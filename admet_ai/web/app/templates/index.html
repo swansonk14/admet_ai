@@ -271,10 +271,10 @@
                     data-toggle="collapse"
                     data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
                     aria-controls="collapseInfo{{ smiles_index }}"
-                    style="height: 200px;">
+                    style="height: 300px;">
                 <strong style="font-size: x-large; text-wrap: wrap; overflow: hidden; text-overflow: ellipsis;">Molecule
                     {{ smiles_index + 1 }}: {{
-                    smiles }} </strong>
+                    smiles }}</strong>
                 <div class="svg-container" style="margin-left: auto; height: 100%; display: flex; flex-shrink: 0;">
                     <div id="radial-plot{{ smiles_index }}" class="radial-plot"
                          style="margin-left: 20px; height: 100%;">
@@ -361,13 +361,13 @@
                                 </strong></td>
 
                                 <td>
-                                    {% set pred = smiles_to_property_to_pred[smiles][row["id"]] %}
+                                    {% set pred = smiles_to_property_id_to_pred[smiles][row["id"]] %}
                                     {{ ("{:.2f}" if pred > 0.005 or pred < -0.005 else "{:.2e}").format(pred) }}
                                 </td>
 
                                 <td>
                                     {{
-                                    "{:.2f}".format(smiles_to_property_to_pred[smiles][row["id"] + "_" +
+                                    "{:.2f}".format(smiles_to_property_id_to_pred[smiles][row["id"] + "_" +
                                     drugbank_approved_percentile_suffix])
                                     }}%
                                 <td>
