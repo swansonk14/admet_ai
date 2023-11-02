@@ -12,9 +12,12 @@ from werkzeug.utils import secure_filename
 from admet_ai.web.app import app
 
 
-# TODO: provide option for selecting SMILES column
-def get_smiles_from_request(smiles_column: str = "smiles") -> list[str]:
-    """Gets SMILES from a request."""
+# TODO: handle smiles column not being present
+def get_smiles_from_request() -> list[str]:
+    """Gets SMILES from a request.
+
+    :return: A list of SMILES.
+    """
     if request.form["textSmiles"] != "":
         smiles = request.form["textSmiles"].split()
     elif request.form["drawSmiles"] != "":
@@ -23,6 +26,7 @@ def get_smiles_from_request(smiles_column: str = "smiles") -> list[str]:
         # Upload data file with SMILES
         data = request.files["data"]
         data_name = secure_filename(data.filename)
+        smiles_column = request.form["smilesColumn"]
 
         with TemporaryDirectory() as temp_dir:
             data_path = str(Path(temp_dir) / data_name)

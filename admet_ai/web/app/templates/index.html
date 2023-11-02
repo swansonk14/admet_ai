@@ -162,8 +162,12 @@
                       style="width: 100%" required></textarea>
         </div>
         <div id="fileInputForm" style="display:none">
-            <h5>File containing SMILES (one per line)</h5>
-            <input id="fileSmilesInput" type="file" name="data" accept=".csv">
+            <h5>CSV file containing SMILES in the provided column</h5>
+            <div id="fileInput" style="display: flex; align-items: center;">
+                <input id="fileSmilesInput" type="file" name="data" accept=".csv">
+                <span style="margin-right: 5px"><b>SMILES column: </b></span>
+                <input id="fileSmilesColumn" name="smilesColumn" placeholder="SMILES column" value="smiles">
+            </div>
         </div>
         <div id="drawInputForm" style="display:none">
             <h5>Draw a molecule</h5>
