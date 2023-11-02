@@ -2,7 +2,7 @@
 from datetime import timedelta
 from threading import Thread
 
-from tap import Tap
+from tap import tapify
 
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import load_admet_info
@@ -11,36 +11,21 @@ from admet_ai.web.app.models import load_admet_model
 from admet_ai.web.app.storage import cleanup_storage
 
 
-class WebArgs(Tap):
-    host: str = "127.0.0.1"
-    """Host IP address."""
-    port: int = 5000
-    """Host port."""
-    secret_key: str = "f*3^iWiue*maS35MgYAJ"
-    """Secret key for Flask app. (TODO: do not use this default secret key in production.)"""
-    session_lifetime: int = 5 * 60
-    """Session lifetime in seconds."""
-    heartbeat_frequency: int = 60
-    """Frequency of client heartbeat in seconds."""
-    max_molecules: int | None = None
-    """Maximum number of molecules to allow predictions for."""
-    no_cache_molecules: bool = False
-    """Whether to turn off molecule caching (reduces memory but slows down predictions)."""
-
-
 def setup_web(
-    secret_key: str,
+    secret_key: str = "f*3^iWiue*maS35MgYAJ",
     session_lifetime: int = 5 * 60,
     heartbeat_frequency: int = 60,
-    max_molecules: int | None = None,
+    max_molecules: int = 1000,
+    max_visible_molecules: int = 25,
     no_cache_molecules: bool = False,
 ) -> None:
     """Sets up the ADMET-AI website.
 
-    :param secret_key: Secret key for Flask app.
+    :param secret_key: Secret key for Flask app. (TODO: do not use this default secret key in production.)
     :param session_lifetime: Session lifetime in seconds.
     :param heartbeat_frequency: Frequency of client heartbeat in seconds.
     :param max_molecules: Maximum number of molecules to allow predictions for.
+    :param max_visible_molecules: Maximum number of molecules to display.
     :param no_cache_molecules: Whether to turn off molecule caching (reduces memory but slows down predictions).
     """
     # Set up Flask app variables
@@ -49,6 +34,7 @@ def setup_web(
     app.config["SESSION_LIFETIME"] = session_lifetime
     app.config["HEARTBEAT_FREQUENCY"] = heartbeat_frequency
     app.config["MAX_MOLECULES"] = max_molecules
+    app.config["MAX_VISIBLE_MOLECULES"] = max_visible_molecules
     app.config["CACHE_MOLECULES"] = not no_cache_molecules
 
     # Load ADMET info, DrugBank, and models into memory
@@ -66,19 +52,14 @@ def setup_web(
     Thread(target=cleanup_storage).start()
 
 
-def admet_web() -> None:
-    """Runs the ADMET-AI website locally."""
-    # Parse arguments
-    args = WebArgs().parse_args()
+def admet_web(host: str = "127.0.0.1", port: int = 5000) -> None:
+    """Runs the ADMET-AI website locally.
 
-    # Set up web app
-    setup_web(
-        secret_key=args.secret_key,
-        session_lifetime=args.session_lifetime,
-        heartbeat_frequency=args.heartbeat_frequency,
-        max_molecules=args.max_molecules,
-        no_cache_molecules=args.no_cache_molecules,
-    )
+    :param host: Host to run the website on.
+    :param port: Port to run the website on.
+    """
+    # Set up web app with command line arguments
+    tapify(setup_web)
 
     # Run web app
-    app.run(host=args.host, port=args.port)
+    app.run(host=host, port=port)

@@ -146,12 +146,11 @@ def index():
         atc_code=session.get("atc_code"),
     )
 
-    # Set number of display molecules
-    num_display_smiles = min(10, len(all_smiles))
-    show_more = max(0, len(all_smiles) - 10)
+    # Get maximum number of molecules to display
+    num_display_molecules = min(len(all_smiles), app.config["MAX_VISIBLE_MOLECULES"])
 
     # Create molecule SVG images
-    mol_svgs = [plot_molecule_svg(mol) for mol in mols[:num_display_smiles]]
+    mol_svgs = [plot_molecule_svg(mol) for mol in mols[:num_display_molecules]]
 
     # Create molecule radial plots for DrugBank approved percentiles
     radial_svgs = [
@@ -160,19 +159,18 @@ def index():
             property_names=app.config["RADIAL_PLOT_PROPERTIES"],
             percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
         )
-        for smiles in all_smiles[:num_display_smiles]
+        for smiles in all_smiles[:num_display_molecules]
     ]
 
-    # TODO: better handle the show more case
     return render(
         predicted=True,
         all_smiles=all_smiles,
         smiles_to_property_to_pred=smiles_to_property_to_pred,
         mol_svgs=mol_svgs,
         radial_svgs=radial_svgs,
-        num_display_smiles=num_display_smiles,
-        show_more=show_more,
         drugbank_plot=drugbank_plot_svg,
+        num_molecules=len(all_smiles),
+        num_display_molecules=num_display_molecules,
         warnings=warnings,
     )
 

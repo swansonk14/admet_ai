@@ -11,6 +11,6 @@ NUM_WORKERS = 0
 RADIAL_PLOT_PROPERTIES = [
     "Aqueous Solubility",
     "Blood Brain Barrier Penetration",
-    "hERG Blocker",
+    "hERG Blocking",
     "Clinical Toxicity",  # TODO: this might change to all toxicity
 ]

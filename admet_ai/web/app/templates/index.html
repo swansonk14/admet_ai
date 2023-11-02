@@ -89,7 +89,7 @@
     </button>
     <div id="useText" class="collapse">
         <p>
-            ADMET-AI can make predictions for up to 1,000 molecules at a time by either (1)
+            ADMET-AI can make predictions for up to {{ max_molecules }} molecules at a time by either (1)
             providing SMILES (one per line) in the text box, (2) uploading a CSV file with SMILES in the
             first column, or (3) drawing a molecule using the interactive tool and converting it to a SMILES.
             ADMET-AI can make predictions for roughly 30 molecules per second.
@@ -108,10 +108,10 @@
                 href="https://www.whocc.no/atc_ddd_index/">Anatomical
             Therapeutic Chemical</a> (ATC) code from the dropdown menu below.
         </p>
-        <!--    <p>-->
-        <!--        Note: ADMET-AI does NOT store any molecules uploaded to the website. All molecules are deleted after predictions-->
-        <!--        are made.-->
-        <!--    </p>-->
+        <p>
+            Note: ADMET-AI does NOT store any molecules uploaded to the website. All molecules are deleted after
+            predictions are made.
+        </p>
     </div>
 
     <br><br>
@@ -254,7 +254,7 @@
     <br><br>
 
     <ul id="list">
-        {% for smiles_index in range(num_display_smiles) %}
+        {% for smiles_index in range(num_display_molecules) %}
         {% set smiles = all_smiles[smiles_index] %}
 
         <li class="index" style="margin-top: 25px;">
@@ -360,8 +360,8 @@
         {% endfor %}
     </ul>
 
-    {% if show_more > 0 %}
-    <p>... and {{ show_more }} more. Download file for full predictions.</p>
+    {% if num_molecules > num_display_molecules %}
+    <p>... and {{ num_molecules - num_display_molecules }} more. Download for full predictions.</p>
     {% endif %}
     {% endif %}
 
