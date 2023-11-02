@@ -11,11 +11,11 @@ body {
     border-color: #12272b;
 }
 
-.navbar.navbar-inverse .navbar-nav > li > a {
+.navbar.navbar-inverse, .navbar-nav > li > a {
     color: white;
 }
 
-.navbar.navbar-inverse .navbar-toggle .icon-bar {
+.navbar.navbar-inverse, .navbar-toggle, .icon-bar {
     background-color: white;
 }
 
@@ -24,13 +24,11 @@ body {
 }
 
 #content {
-    margin: 0 auto;
     padding: 20px;
     background-color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px auto;
 }
 
 h1 {
@@ -88,8 +86,7 @@ th {
     color: rgb(23, 23, 23);
 }
 
-/* CSS for  image container */
-.mol-image .radial-plot {
+.mol-image, .radial-plot {
     display: inline-block;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -104,8 +101,7 @@ th {
     align-items: center;
 }
 
-.collapse {
-    /* background-color: #d01212;  */
+.collapse, .collapsing {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
