@@ -109,8 +109,6 @@ def index():
     admet_model = get_admet_model()
     admet_preds = admet_model.predict(smiles=all_smiles)
 
-    # TODO: Display physicochemical properties (and compare to DrugBank)
-
     # Combine physicochemical and ADMET properties
     all_preds = pd.concat((physchem_preds, admet_preds), axis=1)
 
