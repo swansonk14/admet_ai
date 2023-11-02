@@ -50,10 +50,10 @@
 
     <br>
 
-    <button id="collapseButtonBackground" class="btn btn-link2" type="button" data-toggle="collapse"
+    <button id="backgroundCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#backgroundText" aria-expanded="false" aria-controls="backgroundText">
-        <strong style="font-size: 22px">Background</strong><strong
-            style="font-size: 22px; margin-left: auto;">&darr;</strong>
+        <strong style="font-size: 22px">Background</strong>
+        <div id="backgroundArrow" class="arrow arrow-down"></div>
     </button>
     <div id="backgroundText" class="collapse">
         <p>
@@ -85,9 +85,10 @@
 
     <br><br>
 
-    <button id="collapseButtonUse" class="btn btn-link2" type="button" data-toggle="collapse"
+    <button id="useCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#useText" aria-expanded="false" aria-controls="useText">
         <strong style="font-size: 22px">Use</strong>
+        <div id="useArrow" class="arrow arrow-down"></div>
     </button>
     <div id="useText" class="collapse">
         <p>
@@ -118,9 +119,10 @@
 
     <br><br>
 
-    <button id="collapseButtonLocal" class="btn btn-link2" type="button" data-toggle="collapse"
+    <button id="localCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#localText" aria-expanded="false" aria-controls="localText">
         <strong style="font-size: 22px">Local Prediction</strong>
+        <div id="localArrow" class="arrow arrow-down"></div>
     </button>
     <div id="localText" class="collapse">
         <p>ADMET-AI can also be run locally as a command line tool for large-scale batch prediction or as a Python
@@ -188,9 +190,10 @@
     <br>
     <br>
 
-    <button id="collapseButtonDrugBank" class="btn btn-link2" type="button" data-toggle="collapse"
+    <button id="drugbankCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#drugbank" aria-expanded="false" aria-controls="drugbank">
         <strong style="font-size: 22px">DrugBank Comparison Plot</strong>
+        <div id="drugbankArrow" class="arrow arrow-down"></div>
     </button>
     <div id="drugbank" class="collapse">
         <div id="drugbank-plot" style="flex: 1; text-align: center;">
@@ -264,10 +267,11 @@
         {% set smiles = all_smiles[smiles_index] %}
 
         <li class="index" style="margin-top: 25px;">
-            <button id="collapseButton{{ smiles_index }}" class="btn btn-link2" type="button" data-toggle="collapse"
+            <button id="molecule{{ smiles_index }}CollapseButton" class="btn btn-link2 collapse-button" type="button"
+                    data-toggle="collapse"
                     data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
                     aria-controls="collapseInfo{{ smiles_index }}"
-                    style="display: flex; align-items: center; height: 200px;">
+                    style="height: 200px;">
                 <strong style="font-size: x-large; text-wrap: wrap; overflow: hidden; text-overflow: ellipsis;">Molecule
                     {{ smiles_index + 1 }}: {{
                     smiles }} </strong>
@@ -281,6 +285,17 @@
                         {{ mol_svgs[smiles_index]|safe }}
                     </div>
                 </div>
+                <div id="molecule{{ smiles_index }}Arrow" class="arrow arrow-down" style="margin-left: 10px"></div>
+                <script>
+                    $(document).ready(function () {
+                        let buttonName = `molecule{{ smiles_index }}`;
+                        $(`#${buttonName}CollapseButton`).click(function () {
+                            let arrow_div = $(`#${buttonName}Arrow`);
+                            arrow_div.toggleClass("arrow-up");
+                            arrow_div.toggleClass("arrow-down");
+                        });
+                    });
+                </script>
             </button>
 
             <div id="collapseInfo{{ smiles_index }}" class="collapse">

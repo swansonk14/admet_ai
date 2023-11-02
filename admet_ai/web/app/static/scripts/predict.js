@@ -4,6 +4,18 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
+    // Swap up and down arrows on button click
+    // TODO: functionality for every molecule that is shown
+    let buttonNames = ["background", "use", "local", "drugbank"];
+    buttonNames.forEach(function (buttonName) {
+            $(`#${buttonName}CollapseButton`).click(function () {
+                let arrow_div = $(`#${buttonName}Arrow`);
+                arrow_div.toggleClass("arrow-up");
+                arrow_div.toggleClass("arrow-down");
+            });
+        }
+    );
+
     // Selection of SMILES input type
     $("#textButton").click(function () {
         $("#textInputForm").show();
@@ -101,15 +113,14 @@ $(document).ready(function () {
     let axes = ["x", "y"];
     axes.forEach(function (axis) {
         $(`#drugbank-${axis}-axis-selection`).on("keyup", function () {
-            console.log("keyup");
-            var value = $(this).val().toLowerCase();
+            let value = $(this).val().toLowerCase();
             $(`.drugbank-${axis}-axis-item`).filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
 
         $(`.drugbank-${axis}-axis-item`).click(function () {
-            var task = $(this).text();
+            let task = $(this).text();
             clickDrugBank(task, axis);
         });
     });

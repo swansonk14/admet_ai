@@ -99,6 +99,11 @@ th {
     float: right;
 }
 
+.collapse-button {
+    display: flex;
+    align-items: center;
+}
+
 .collapse {
     /* background-color: #d01212;  */
     border: 1px solid #ddd;
@@ -137,4 +142,21 @@ ul {
 
 .data_link {
     color: black
+}
+
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.arrow-down {
+    border-top: 30px solid black;
+}
+
+.arrow-up {
+    border-bottom: 30px solid black;
 }

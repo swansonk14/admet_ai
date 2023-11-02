@@ -229,7 +229,9 @@ def heartbeat() -> tuple[str, int]:
     """
     # Update user's last activity
     session.modified = True
-    update_user_activity(session["user_id"])
+
+    if "user_id" in session:
+        update_user_activity(session["user_id"])
 
     # Send no content response
     return "", 204
