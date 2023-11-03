@@ -165,3 +165,16 @@ ul {
     max-height: 250px;
     overflow-y: scroll;
 }
+
+.smiles-container {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 7;
+    line-height: 1.4em;
+    height: calc(1.4em * 7);
+    font-size: x-large;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+}
