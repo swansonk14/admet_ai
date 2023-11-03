@@ -63,7 +63,7 @@ $(document).ready(function () {
 
     // ATC selection search
     $("#atc-selection").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
+        let value = $(this).val().toLowerCase();
         $(".atc-item").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
     // ATC selection click
     $('.atc-item').click(function () {
-        var atc_code = $(this).text();
+        let atc_code = $(this).text();
         clickATC(atc_code);
     });
 
@@ -123,6 +123,10 @@ $(document).ready(function () {
             let task = $(this).text();
             clickDrugBank(task, axis);
         });
+    });
+
+    $("#predictButton").click(function () {
+        $("#spinner-overlay").css("visibility", "visible");
     });
 });
 

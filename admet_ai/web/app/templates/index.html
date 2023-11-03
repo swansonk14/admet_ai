@@ -39,6 +39,10 @@
     </div>
 </nav>
 
+<div id="spinner-overlay" class="spinner-overlay">
+    <div class="spinner"></div>
+</div>
+
 <div class="container" id="description">
     <h1>ADMET-AI</h1>
     <p style="font-size: 18px;">
@@ -183,7 +187,7 @@
 
         <br>
 
-        <button type="submit" class="btn btn-primary btn-md">Predict</button>
+        <button id="predictButton" type="submit" class="btn btn-primary btn-md">Predict</button>
     </form>
 
     {% if drugbank_plot %}
@@ -219,7 +223,7 @@
                 </div>
             </div>
 
-            {% for axis in ["x", "y"] %}
+            {% for axis in ["y", "x"] %}
             <div class="dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     Select DrugBank {{ axis }}-axis property

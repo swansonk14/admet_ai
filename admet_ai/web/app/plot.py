@@ -181,7 +181,7 @@ def plot_radial_summary(
     ]
     property_names = [
         "Aqueous\nSolubility",
-        "Blood Brain Barrier Non-Penetration",
+        "Blood-Brain Barrier Non-Penetration",
         "hERG\nSafety",
         "Non-Toxicity",
     ]
