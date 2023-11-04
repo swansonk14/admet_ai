@@ -5,15 +5,15 @@ import pandas as pd
 from tap import tapify
 
 from admet_ai import ADMETModel
+from admet_ai.utils import load_and_preprocess_data
 
 
-# TODO: test this script
 def admet_predict(
     data_path: Path,
-    model_dir: Path,
+    model_dir: Path,  # TODO: set default model dir
     save_path: Path | None = None,
     smiles_column: str = "smiles",
-    num_workers: int = 8,
+    num_workers: int = 0,
     cache_molecules: bool = True,
 ) -> None:
     """Make predictions on a dataset using Chemprop-RDKit models trained on TDC ADMET data.
@@ -26,22 +26,8 @@ def admet_predict(
                         may be faster if not using a GPU.
     :param cache_molecules: Whether to cache molecules. Caching improves prediction speed but requires more memory.
     """
-    # Load data
-    data = pd.read_csv(data_path)
-
-    # Remove missing SMILES
-    original_num_molecules = len(data)
-    data.dropna(subset=[smiles_column], inplace=True, ignore_index=True)
-
-    # Warn if molecules were removed
-    if len(data) < original_num_molecules:
-        print(
-            f"Warning: {original_num_molecules - len(data):,} molecules were removed "
-            f"from the dataset because they were missing SMILES."
-        )
-
-    # Set SMILES as index
-    data.set_index(smiles_column, inplace=True)
+    # Load and preprocess data
+    data = load_and_preprocess_data(data_path=data_path, smiles_column=smiles_column)
 
     # Build ADMETModel
     model = ADMETModel(

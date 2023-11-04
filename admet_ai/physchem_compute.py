@@ -15,6 +15,8 @@ from rdkit.Chem.rdMolDescriptors import (
 from tap import tapify
 from tqdm import tqdm
 
+from admet_ai.utils import load_and_preprocess_data
+
 
 def lipinski_rule_of_five(mol: Chem.Mol) -> float:
     """Determines how many of the Lipinski rules are satisfied by the molecule.
@@ -76,7 +78,6 @@ def compute_physicochemical_properties(
     return physchem_properties
 
 
-# TODO: test this script
 def physchem_compute(
     data_path: Path, save_path: Path | None = None, smiles_column: str = "smiles",
 ) -> None:
@@ -86,33 +87,13 @@ def physchem_compute(
     :param save_path: Path to a CSV file where the computed properties will be saved. If None, defaults to data_path.
     :param smiles_column: Name of the column containing SMILES strings.
     """
-    import time
-
-    # Load data
-    data = pd.read_csv(data_path)
-
-    # Remove missing SMILES
-    original_num_molecules = len(data)
-    data.dropna(subset=[smiles_column], inplace=True, ignore_index=True)
-
-    # Warn if molecules were removed
-    if len(data) < original_num_molecules:
-        print(
-            f"Warning: {original_num_molecules - len(data):,} molecules were removed "
-            f"from the dataset because they were missing SMILES."
-        )
-
-    # Set SMILES as index
-    data.set_index(smiles_column, inplace=True)
-
-    start = time.time()
+    # Load and preprocess data
+    data = load_and_preprocess_data(data_path=data_path, smiles_column=smiles_column)
 
     # Compute physicochemical properties
     physchem_properties = compute_physicochemical_properties(
         all_smiles=list(data.index)
     )
-
-    print(time.time() - start)
 
     # Merge data and preds
     data_with_preds = pd.concat((data, physchem_properties), axis=1)
