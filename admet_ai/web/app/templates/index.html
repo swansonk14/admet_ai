@@ -30,11 +30,11 @@
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid" style="margin-top: 20px; margin-bottom: 20px">
+    <div class="container-fluid header">
         <div class="navbar-header">
-            <a href="https://admet.ai.greenstonebio.com"><img src="../static/images/ADMET.jpg" alt="ADMET AI Logo"
-                                                              style="width:70px;height:70px;"/></a>
-            <h3 style="display: inline">ADMET AI</h3>
+            <a href="https://admet.ai.greenstonebio.com"><img id="header-logo" src="../static/images/ADMET.jpg"
+                                                              alt="ADMET AI Logo"/></a>
+            <h3 id="header-title">ADMET AI</h3>
         </div>
     </div>
 </nav>
@@ -45,7 +45,7 @@
 
 <div class="container" id="description">
     <h1>ADMET-AI</h1>
-    <p style="font-size: 18px;">
+    <p id="intro-text">
         <b>ADMET-AI</b> is a simple, fast, and accurate web interface for predicting the <b>A</b>bsorption,
         <b>D</b>istribution,
         <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (ADMET) properties of molecules using machine learning
@@ -54,12 +54,12 @@
 
     <br>
 
-    <button id="backgroundCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
-            data-target="#backgroundText" aria-expanded="false" aria-controls="backgroundText">
-        <strong style="font-size: 22px">Background</strong>
-        <div id="backgroundArrow" class="arrow arrow-down"></div>
+    <button id="background-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
+            data-target="#background-text" aria-expanded="false" aria-controls="background-text">
+        <strong class="dropdown-title">Background</strong>
+        <div id="background-arrow" class="arrow arrow-down"></div>
     </button>
-    <div id="backgroundText" class="collapse">
+    <div id="background-text" class="collapse">
         <p>
             The evaluation of pharmacokinetics and toxicity is crucial for the design of new therapeutic candidates.
             In silico virtual screens and generative AI approaches output a vast number of molecules that must be
@@ -89,12 +89,12 @@
 
     <br><br>
 
-    <button id="useCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
-            data-target="#useText" aria-expanded="false" aria-controls="useText">
-        <strong style="font-size: 22px">Use</strong>
-        <div id="useArrow" class="arrow arrow-down"></div>
+    <button id="use-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
+            data-target="#use-text" aria-expanded="false" aria-controls="use-text">
+        <strong class="dropdown-title">Use</strong>
+        <div id="use-arrow" class="arrow arrow-down"></div>
     </button>
-    <div id="useText" class="collapse">
+    <div id="use-text" class="collapse">
         <p>
             ADMET-AI can make predictions for up to {{ max_molecules }} molecules at a time by either (1)
             providing SMILES (one per line) in the text box, (2) uploading a CSV file with SMILES in the
@@ -123,12 +123,12 @@
 
     <br><br>
 
-    <button id="localCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
-            data-target="#localText" aria-expanded="false" aria-controls="localText">
-        <strong style="font-size: 22px">Local Prediction</strong>
-        <div id="localArrow" class="arrow arrow-down"></div>
+    <button id="local-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
+            data-target="#local-text" aria-expanded="false" aria-controls="local-text">
+        <strong class="dropdown-title">Local Prediction</strong>
+        <div id="local-arrow" class="arrow arrow-down"></div>
     </button>
-    <div id="localText" class="collapse">
+    <div id="local-text" class="collapse">
         <p>ADMET-AI can also be run locally as a command line tool for large-scale batch prediction or as a Python
             module
             for use within other Python-based tools (e.g., as a reward for a generative AI model for drug design).
@@ -138,23 +138,23 @@
     </div>
 </div>
 
-<div class="container" id="content">
+<div class="container" id="predict-content">
     <h2>Predict</h2>
 
     <form enctype="multipart/form-data" method="POST">
         <!--SMILES upload type selector-->
-        <div class="btn-group" id="inputSelect" data-toggle="buttons">
-            <label id="textButton" class="btn btn-primary active">
-                <input type="radio" name="inputType" value="text" autocomplete="off"> Text Input
+        <div class="btn-group" id="input-select" data-toggle="buttons">
+            <label id="text-button" class="btn btn-primary active">
+                <input type="radio" name="input-type" value="text" autocomplete="off"> Text Input
             </label>
-            <label id="fileButton" class="btn btn-primary">
-                <input type="radio" name="inputType" value="file" autocomplete="off"> Upload File
+            <label id="file-button" class="btn btn-primary">
+                <input type="radio" name="input-type" value="file" autocomplete="off"> Upload File
             </label>
-            <label id="drawButton" class="btn btn-primary">
-                <input type="radio" name="inputType" value="button" autocomplete="off"> Draw Molecule
+            <label id="draw-button" class="btn btn-primary">
+                <input type="radio" name="input-type" value="button" autocomplete="off"> Draw Molecule
             </label>
-            <label id="exampleButton" class="btn btn-primary">
-                <input type="radio" name="inputType" value="button" autocomplete="off"> Example
+            <label id="example-button" class="btn btn-primary">
+                <input type="radio" name="input-type" value="button" autocomplete="off"> Example
             </label>
         </div>
 
@@ -164,51 +164,51 @@
         {% endif %}
 
         <!--SMILES input-->
-        <div id="textInputForm">
+        <div id="text-input-form">
             <h5>SMILES (one per line)</h5>
-            <textarea id="textSmilesInput" name="textSmiles" cols="100" rows="10" placeholder="SMILES"
-                      style="width: 100%" required></textarea>
+            <textarea id="text-smiles-input" name="text-smiles" cols="100" rows="10" placeholder="SMILES"
+                      required></textarea>
         </div>
-        <div id="fileInputForm" style="display:none">
+        <div id="file-input-form">
             <h5>CSV file containing SMILES in the provided column</h5>
-            <div id="fileInput" style="display: flex; align-items: center;">
-                <input id="fileSmilesInput" type="file" name="data" accept=".csv">
-                <span style="margin-right: 5px"><b>SMILES column: </b></span>
-                <input id="fileSmilesColumn" name="smilesColumn" placeholder="SMILES column" value="smiles">
+            <div id="file-input">
+                <input id="file-smiles-input" type="file" name="data" accept=".csv">
+                <span id="smiles-column"><b>SMILES column: </b></span>
+                <input id="file-smiles-column" name="smiles-column" placeholder="SMILES column" value="smiles">
             </div>
         </div>
-        <div id="drawInputForm" style="display:none">
+        <div id="draw-input-form">
             <h5>Draw a molecule</h5>
             {{ chemdraw() }}
             <br>
-            <button type="button" id="convertToSmiles" class="btn btn-primary btn-xs">Convert to SMILES</button>
-            <input id="drawSmilesInput" name="drawSmiles" placeholder="SMILES">
+            <button type="button" id="convert-to-smiles" class="btn btn-primary btn-xs">Convert to SMILES</button>
+            <input id="draw-smiles-input" name="draw-smiles" placeholder="SMILES">
         </div>
 
         <br>
 
-        <button id="predictButton" type="submit" class="btn btn-primary btn-md">Predict</button>
+        <button id="predict-button" type="submit" class="btn btn-primary btn-md">Predict</button>
     </form>
 
     {% if drugbank_plot %}
     <br>
     <br>
 
-    <button id="drugbankCollapseButton" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
+    <button id="drugbank-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#drugbank" aria-expanded="false" aria-controls="drugbank">
-        <strong style="font-size: 22px">DrugBank Comparison Plot</strong>
-        <div id="drugbankArrow" class="arrow arrow-down"></div>
+        <strong class="dropdown-title">DrugBank Comparison Plot</strong>
+        <div id="drugbank-arrow" class="arrow arrow-down"></div>
     </button>
     <div id="drugbank" class="collapse">
-        <div id="drugbank-plot" style="flex: 1; text-align: center;">
-            <div id="drugbank-plot-inner" style="width: 60%; display: inline-block;">
+        <div id="drugbank-plot">
+            <div id="drugbank-plot-inner">
                 {{ drugbank_plot | safe }}
             </div>
         </div>
 
         <br>
 
-        <div id="drugbank-plot-controls" style="text-align: center">
+        <div id="drugbank-plot-controls">
             <div class="dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     Select ATC Code
@@ -217,7 +217,7 @@
                     <input class="form-control" id="atc-selection" type="text" placeholder="Search..">
                     <li>
                         {% for atc_code in drugbank_atc_codes %}
-                        <a class="dropdown-item atc-item" style="cursor: pointer">{{ atc_code }}</a>
+                        <a class="dropdown-item atc-item">{{ atc_code }}</a>
                         {% endfor %}
                     </li>
                 </div>
@@ -233,7 +233,7 @@
                            placeholder="Search..">
                     <li>
                         {% for task in drugbank_tasks %}
-                        <a class="dropdown-item drugbank-{{ axis }}-axis-item" style="cursor: pointer">{{ task }}</a>
+                        <a class="dropdown-item drugbank-{{ axis }}-axis-item">{{ task }}</a>
                         {% endfor %}
                     </li>
                 </div>
@@ -270,33 +270,32 @@
         {% for smiles_index in range(num_display_molecules) %}
         {% set smiles = all_smiles[smiles_index] %}
 
-        <li class="index" style="margin-top: 25px;">
-            <button id="molecule{{ smiles_index }}CollapseButton" class="btn btn-link2 collapse-button" type="button"
+        <li class="index molecule-prediction">
+            <button id="molecule-{{ smiles_index }}-collapse-button"
+                    class="btn btn-link2 collapse-button molecule-button"
+                    type="button"
                     data-toggle="collapse"
-                    data-target="#collapseInfo{{ smiles_index }}" aria-expanded="false"
-                    aria-controls="collapseInfo{{ smiles_index }}"
-                    style="height: 300px;">
+                    data-target="#collapse-info-{{ smiles_index }}" aria-expanded="false"
+                    aria-controls="collapse-info-{{ smiles_index }}">
                 <div class="smiles-container">
                     <strong>Molecule
                         {{ smiles_index + 1 }}: {{
                         smiles }}</strong>
                 </div>
-                <div class="svg-container" style="margin-left: auto; height: 100%; display: flex; flex-shrink: 0;">
-                    <div id="radial-plot{{ smiles_index }}" class="radial-plot"
-                         style="margin-left: 20px; height: 100%;">
+                <div class="molecule-svg-container">
+                    <div id="radial-plot-{{ smiles_index }}" class="radial-plot">
                         {{ radial_svgs[smiles_index] | safe }}
                     </div>
-                    <div id="molecule-image{{ smiles_index }}" class="mol-image"
-                         style="margin-left: 20px; height: 100%;">
+                    <div id="molecule-image-{{ smiles_index }}" class="mol-image">
                         {{ mol_svgs[smiles_index] | safe }}
                     </div>
                 </div>
-                <div id="molecule{{ smiles_index }}Arrow" class="arrow arrow-down" style="margin-left: 10px"></div>
+                <div id="molecule-{{ smiles_index }}-arrow" class="arrow arrow-down mol-arrow"></div>
                 <script>
                     $(document).ready(function () {
-                        let buttonName = `molecule{{ smiles_index }}`;
-                        $(`#${buttonName}CollapseButton`).click(function () {
-                            let arrow_div = $(`#${buttonName}Arrow`);
+                        let buttonName = `molecule-{{ smiles_index }}`;
+                        $(`#${buttonName}-collapse-button`).click(function () {
+                            let arrow_div = $(`#${buttonName}-arrow`);
                             arrow_div.toggleClass("arrow-up");
                             arrow_div.toggleClass("arrow-down");
                         });
@@ -304,18 +303,18 @@
                 </script>
             </button>
 
-            <div id="collapseInfo{{ smiles_index }}" class="collapse">
-                <div style="display: flex; flex-wrap: wrap;">
+            <div id="collapse-info-{{ smiles_index }}" class="collapse">
+                <div class="prediction-container">
                     {% for category in ["Physicochemical", "Absorption", "Distribution", "Metabolism", "Excretion",
                     "Toxicity"] %}
-                    <div style="flex: 1; width: 100%;">
-                        <div style="display: flex;">
+                    <div class="prediction-category-container">
+                        <div class="prediction-header">
                             <img src="../static/images/{{ category.lower() }}.jpg" alt="{{ category }}"
-                                 style="width:50px; height:50px; margin-left: 20px;"/>
-                            <h3 class="table_header">{{ category }}</h3>
+                                 class="prediction-category-image"/>
+                            <h3 class="table-header">{{ category }}</h3>
                         </div>
 
-                        <table style="width: 95%; margin: 10px;">
+                        <table class="prediction-table">
                             <thead>
                             <tr>
                                 <th>Model</th>
@@ -333,7 +332,7 @@
 
                             <tr>
                                 <td><strong>
-                                    <a href={{ row["url"] }} target="_blank" class="data_link">
+                                    <a href={{ row["url"] }} target="_blank" class="data-link">
                                     {{ row["name"] }}
                                     </a>
                                     {% if category != "Physicochemical" %}
@@ -345,8 +344,7 @@
                                     {% set second_metric = "MAE" %}
                                     {% endif %}
                                     <span
-                                            class="glyphicon glyphicon-question-sign"
-                                            style="font-size:15px"
+                                            class="glyphicon glyphicon-question-sign dataset-tooltip"
                                             data-toggle="tooltip"
                                             data-html="true"
                                             data-placement="right"
@@ -357,8 +355,8 @@
                                                                 </span>
                                     {% if row[first_metric] < low_performance_threshold %}
                                     <span
-                                            class="glyphicon glyphicon-warning-sign"
-                                            style="font-size:15px" data-toggle="tooltip"
+                                            class="glyphicon glyphicon-warning-sign lower-accuracy-tooltip"
+                                            data-toggle="tooltip"
                                             data-placement="right"
                                             title="Lower accuracy">
                                                                             </span>

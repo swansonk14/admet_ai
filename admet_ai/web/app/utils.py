@@ -18,15 +18,15 @@ def get_smiles_from_request() -> list[str]:
 
     :return: A list of SMILES.
     """
-    if request.form["textSmiles"] != "":
-        smiles = request.form["textSmiles"].split()
-    elif request.form["drawSmiles"] != "":
-        smiles = [request.form["drawSmiles"]]
+    if request.form["text-smiles"] != "":
+        smiles = request.form["text-smiles"].split()
+    elif request.form["draw-smiles"] != "":
+        smiles = [request.form["draw-smiles"]]
     else:
         # Upload data file with SMILES
         data = request.files["data"]
         data_name = secure_filename(data.filename)
-        smiles_column = request.form["smilesColumn"]
+        smiles_column = request.form["smiles-column"]
 
         with TemporaryDirectory() as temp_dir:
             data_path = str(Path(temp_dir) / data_name)

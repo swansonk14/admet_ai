@@ -5,11 +5,10 @@ $(document).ready(function () {
     });
 
     // Swap up and down arrows on button click
-    // TODO: functionality for every molecule that is shown
     let buttonNames = ["background", "use", "local", "drugbank"];
     buttonNames.forEach(function (buttonName) {
-            $(`#${buttonName}CollapseButton`).click(function () {
-                let arrow_div = $(`#${buttonName}Arrow`);
+            $(`#${buttonName}-collapse-button`).click(function () {
+                let arrow_div = $(`#${buttonName}-arrow`);
                 arrow_div.toggleClass("arrow-up");
                 arrow_div.toggleClass("arrow-down");
             });
@@ -17,48 +16,48 @@ $(document).ready(function () {
     );
 
     // Selection of SMILES input type
-    $("#textButton").click(function () {
-        $("#textInputForm").show();
-        $("#textSmilesInput").prop('required', true);
-        $("#fileInputForm").hide();
-        $("#fileSmilesInput").prop('required', false);
-        $("#drawInputForm").hide();
-        $("#drawSmilesInput").prop('required', false);
-        $("#drawSmilesInput").val('');
+    $("#text-button").click(function () {
+        $("#text-input-form").show();
+        $("#text-smiles-input").prop('required', true);
+        $("#file-input-form").hide();
+        $("#file-smiles-input").prop('required', false);
+        $("#draw-input-form").hide();
+        $("#draw-smiles-input").prop('required', false);
+        $("#draw-smiles-input").val('');
     });
-    $("#fileButton").click(function () {
-        $("#textInputForm").hide();
-        $("#textSmilesInput").prop('required', false);
-        $("#textSmilesInput").val('');
-        $("#fileInputForm").show();
-        $("#fileSmilesInput").prop('required', true);
-        $("#drawInputForm").hide();
-        $("#drawSmilesInput").prop('required', false);
-        $("#drawSmilesInput").val('');
+    $("#file-button").click(function () {
+        $("#text-input-form").hide();
+        $("#text-smiles-input").prop('required', false);
+        $("#text-smiles-input").val('');
+        $("#file-input-form").show();
+        $("#file-smiles-input").prop('required', true);
+        $("#draw-input-form").hide();
+        $("#draw-smiles-input").prop('required', false);
+        $("#draw-smiles-input").val('');
     });
-    $("#drawButton").click(function () {
-        $("#textInputForm").hide();
-        $("#textSmilesInput").prop('required', false);
-        $("#textSmilesInput").val('');
-        $("#fileInputForm").hide();
-        $("#fileSmilesInput").prop('required', false);
-        $("#drawInputForm").show();
-        $("#drawSmilesInput").prop('required', true);
+    $("#draw-button").click(function () {
+        $("#text-input-form").hide();
+        $("#text-smiles-input").prop('required', false);
+        $("#text-smiles-input").val('');
+        $("#file-input-form").hide();
+        $("#file-smiles-input").prop('required', false);
+        $("#draw-input-form").show();
+        $("#draw-smiles-input").prop('required', true);
     });
-    $("#exampleButton").click(function () {
-        $("#textInputForm").show();
-        $("#textSmilesInput").prop('required', true);
-        $("#textSmilesInput").val("O(c1ccc(cc1)CCOC)CC(O)CNC(C)C");
-        $("#fileInputForm").hide();
-        $("#fileSmilesInput").prop('required', false);
-        $("#drawInputForm").hide();
-        $("#drawSmilesInput").prop('required', false);
-        $("#drawSmilesInput").val('');
+    $("#example-button").click(function () {
+        $("#text-input-form").show();
+        $("#text-smiles-input").prop('required', true);
+        $("#text-smiles-input").val("O(c1ccc(cc1)CCOC)CC(O)CNC(C)C");
+        $("#file-input-form").hide();
+        $("#file-smiles-input").prop('required', false);
+        $("#draw-input-form").hide();
+        $("#draw-smiles-input").prop('required', false);
+        $("#draw-smiles-input").val('');
     });
 
     // Convert molecule drawing to SMILES
-    $("#convertToSmiles").click(function () {
-        $("#drawSmilesInput").val(jsmeApplet.smiles());
+    $("#convert-to-smiles").click(function () {
+        $("#draw-smiles-input").val(jsmeApplet.smiles());
     });
 
     // ATC selection search
@@ -125,7 +124,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#predictButton").click(function () {
+    $("#predict-button").click(function () {
         $("#spinner-overlay").css("visibility", "visible");
     });
 });
