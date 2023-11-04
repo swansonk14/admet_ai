@@ -69,16 +69,14 @@ def plot_drugbank_reference(
     x_property_id = admet_name_to_id[x_property_name]
     y_property_id = admet_name_to_id[y_property_name]
 
-    # Scatter plot of DrugBank molecules with density coloring
-    sns.scatterplot(
+    # Scatter plot of DrugBank molecules with histogram marginals
+    sns.jointplot(
         x=drugbank[x_property_id],
         y=drugbank[y_property_id],
-        edgecolor=None,
+        kind="scatter",
+        marginal_kws=dict(bins=50, fill=True),
         label="DrugBank Approved" + (" (ATC filter)" if atc_code != "all" else ""),
     )
-
-    # Set input label
-    input_label = "Input Molecule" + ("s" if len(preds_df) > 1 else "")
 
     # Scatter plot of new molecules
     if len(preds_df) > 0:
@@ -88,7 +86,7 @@ def plot_drugbank_reference(
             color="red",
             marker="*",
             s=200,
-            label=input_label,
+            label="Input Molecule" + ("s" if len(preds_df) > 1 else ""),
         )
 
     # Add molecule numbers
@@ -116,12 +114,6 @@ def plot_drugbank_reference(
                 verticalalignment="bottom",
                 c="red",
             )
-
-    # Set title
-    plt.title(
-        f"{input_label} vs DrugBank Approved"
-        + (f"\nATC = {atc_code}" if atc_code != "all" else "")
-    )
 
     # Get ADMET property units
     admet_id_to_units = get_admet_id_to_units()
