@@ -12,11 +12,10 @@ from werkzeug.utils import secure_filename
 from admet_ai.web.app import app
 
 
-# TODO: handle smiles column not being present
-def get_smiles_from_request() -> list[str]:
+def get_smiles_from_request() -> tuple[list[str] | None, str | None]:
     """Gets SMILES from a request.
 
-    :return: A list of SMILES.
+    :return: A tuple with a list of SMILES or None and an error message or None.
     """
     if request.form["text-smiles"] != "":
         smiles = request.form["text-smiles"].split()
@@ -31,9 +30,14 @@ def get_smiles_from_request() -> list[str]:
         with TemporaryDirectory() as temp_dir:
             data_path = str(Path(temp_dir) / data_name)
             data.save(data_path)
-            smiles = pd.read_csv(data_path)[smiles_column].tolist()
+            df = pd.read_csv(data_path)
 
-    return smiles
+            if smiles_column in df:
+                smiles = df[smiles_column].astype(str).tolist()
+            else:
+                return None, f"SMILES column '{smiles_column}' not found in data file."
+
+    return smiles, None
 
 
 def smiles_to_mols(smiles: list[str]) -> list[Chem.Mol]:

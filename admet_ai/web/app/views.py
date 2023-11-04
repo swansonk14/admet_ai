@@ -73,7 +73,11 @@ def index():
         return render()
 
     # Get the SMILES from the request
-    all_smiles = get_smiles_from_request()
+    all_smiles, error = get_smiles_from_request()
+
+    # Return any errors
+    if error is not None:
+        return render(errors=[error])
 
     # Error if too many molecules
     if (
