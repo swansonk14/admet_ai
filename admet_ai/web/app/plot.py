@@ -159,35 +159,51 @@ def plot_radial_summary(
     :param percentile_suffix: The suffix to add to the property names to get the DrugBank approved percentiles.
     :return: A string containing the SVG of the plot.
     """
-    # Get percentiles solubility, BBB, hERG
-    solubility_percentile = property_id_to_percentile[
-        f"Solubility_AqSolDB_{percentile_suffix}"
-    ]
-    bbb_percentile = property_id_to_percentile[f"BBB_Martins_{percentile_suffix}"]
-    herg_percentile = property_id_to_percentile[f"hERG_{percentile_suffix}"]
+    # Set max percentile
+    max_percentile = 100
 
-    # Get maximum toxicity percentile
-    toxicity_percentile = max(
-        property_id_to_percentile[f"{toxicity_name}_{percentile_suffix}"]
-        for toxicity_name in get_toxicity_ids()
-    )
-
-    # Set up percentiles and names
+    # Set up properties
+    properties = {
+        "Blood-Brain Barrier Safe": {
+            "percentile": max_percentile
+            - property_id_to_percentile[f"BBB_Martins_{percentile_suffix}"],
+        },
+        "Non\nToxic": {
+            "percentile": max_percentile
+            - max(
+                property_id_to_percentile[f"{toxicity_name}_{percentile_suffix}"]
+                for toxicity_name in get_toxicity_ids()
+            ),
+            "vertical_alignment": "bottom",
+        },
+        "Soluble": {
+            "percentile": property_id_to_percentile[
+                f"Solubility_AqSolDB_{percentile_suffix}"
+            ],
+            "vertical_alignment": "top",
+        },
+        "Bioavailable": {
+            "percentile": property_id_to_percentile[
+                f"Bioavailability_Ma_{percentile_suffix}"
+            ],
+            "vertical_alignment": "top",
+        },
+        "hERG\nSafe": {
+            "percentile": max_percentile
+            - property_id_to_percentile[f"hERG_{percentile_suffix}"],
+            "vertical_alignment": "bottom",
+        },
+    }
+    property_names = [property_name for property_name in properties]
     percentiles = [
-        solubility_percentile,
-        100 - bbb_percentile,
-        100 - herg_percentile,
-        100 - toxicity_percentile,
-    ]
-    property_names = [
-        "Aqueous\nSolubility",
-        "Blood-Brain Barrier Non-Penetration",
-        "hERG\nSafety",
-        "Non-Toxicity",
+        properties[property_name]["percentile"] for property_name in properties
     ]
 
-    # Calculate the angles of the plot
-    angles = np.linspace(0, 2 * np.pi, len(property_names), endpoint=False).tolist()
+    # Calculate the angles of the plot (angles start at pi / 2 and go counter-clockwise)
+    angles = (
+        (np.linspace(0, 2 * np.pi, len(properties), endpoint=False) + np.pi / 2)
+        % (2 * np.pi)
+    ).tolist()
 
     # Complete the loop
     percentiles += percentiles[:1]
@@ -208,10 +224,16 @@ def plot_radial_summary(
     yticklabels = [str(ytick) for ytick in yticks]
     ax.set_yticks(yticks)
     ax.set_yticklabels(yticklabels)
+    ax.set_rlabel_position(335)
 
     # Labels for categories
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(property_names)
+
+    # Adjust xticklabels so they don't overlap the plot
+    for label, property_name in zip(ax.get_xticklabels(), property_names):
+        if "vertical_alignment" in properties[property_name]:
+            label.set_verticalalignment(properties[property_name]["vertical_alignment"])
 
     # Make the plot square (to match square molecule images)
     ax.set_aspect("equal", "box")
