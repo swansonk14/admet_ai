@@ -9,6 +9,7 @@ This file contains instructions for reproducing the ADMET-AI data, models, and r
 - [Train Chemprop-RDKit ADMET predictors](#train-chemprop-rdkit-admet-predictors)
 - [Evaluate TDC ADMET Benchmark Group models](#evaluate-tdc-admet-benchmark-group-models)
 - [Get approved drugs from DrugBank](#get-approved-drugs-from-drugbank)
+- [Subsample approved drugs from DrugBank](#subsample-approved-drugs-from-drugbank)
 - [Make predictions on DrugBank approved drugs](#make-predictions-on-drugbank-approved-drugs)
 - [Plot results](#plot-results)
 
@@ -127,6 +128,21 @@ Get approved drugs from [DrugBank](https://go.drugbank.com/) (v5.1.10) to create
 python scripts/get_drugbank_approved.py \
     --data_path data/drugbank/drugbank.xml \
     --save_path data/drugbank/drugbank_approved.csv
+```
+
+## Subsample approved drugs from DrugBank
+
+Subsample approved drugs from DrugBank for measuring ADMET website speed. Limit SMILES length to 200 for compatibility with SwissADME.
+
+```bash
+for NUM_MOLECULES in 1 10 100 1000
+do
+python scripts/sample_molecules.py \
+    --data_path data/drugbank/drugbank_approved.csv \
+    --num_molecules ${NUM_MOLECULES} \
+    --max_smiles_length 200 \
+    --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}.csv
+done
 ```
 
 ## Make predictions on DrugBank approved drugs
