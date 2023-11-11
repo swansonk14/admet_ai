@@ -140,7 +140,13 @@ def index():
     # Convert predictions to a dictionary mapping SMILES to property name to value
     smiles_to_property_id_to_pred: dict[
         str, dict[str, float]
-    ] = all_preds_with_drugbank.to_dict(orient="index")
+    ] = all_preds_with_drugbank[
+        ~all_preds_with_drugbank.index.duplicated(
+            keep="first"
+        )  # drop duplicate SMILES indices
+    ].to_dict(
+        orient="index"
+    )
 
     # Store predictions in memory
     set_user_preds(user_id=session["user_id"], preds_df=all_preds_with_drugbank)
@@ -222,7 +228,7 @@ def download_predictions() -> Response:
         return response
 
     # Save predictions to temporary file
-    get_user_preds(session["user_id"]).to_csv(preds_file.name, index=False)
+    get_user_preds(session["user_id"]).to_csv(preds_file.name)
     preds_file.seek(0)
 
     # Return the temporary file as a response

@@ -135,7 +135,7 @@ python scripts/get_drugbank_approved.py \
 Subsample approved drugs from DrugBank for measuring ADMET website speed. Limit SMILES length to 200 for compatibility with SwissADME.
 
 ```bash
-for NUM_MOLECULES in 1 10 100 1000
+for NUM_MOLECULES in 1 10 100
 do
 python scripts/sample_molecules.py \
     --data_path data/drugbank/drugbank_approved.csv \
@@ -144,6 +144,19 @@ python scripts/sample_molecules.py \
     --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}.csv
 done
 ```
+
+Due to compatibility issues with ADMETlab2.0, four compounds in `drugbank_approved_100.csv` were replaced with other randomly sampled compounds from DrugBank. The replacements are as follows.
+
+Helium ==> Cabazitaxel
+
+Chromic nitrate ==> Butorphanol
+
+Perboric acid ==> Methazolamide
+
+Fluoride ion F-18 ==> Tetracaine
+
+Then, `drugbank_approved_1000.csv` was constructed by repeating `drugbank_approved_100.csv` ten times (in order to maintain compatibility with ADMETlab2.0).
+
 
 ## Make predictions on DrugBank approved drugs
 
