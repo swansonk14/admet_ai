@@ -31,11 +31,13 @@
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid header">
-        <div class="navbar-header">
-            <a href="https://admet.ai.greenstonebio.com"><img id="header-logo" src="../static/images/ADMET.jpg"
-                                                              alt="ADMET AI Logo"/></a>
-            <h3 id="header-title">ADMET AI</h3>
-        </div>
+        <a href="https://admet.ai.greenstonebio.com">
+            <div class="navbar-header">
+                <img id="header-logo" src="../static/images/ADMET.jpg"
+                     alt="ADMET AI Logo"/>
+                <h2 id="header-title">ADMET AI</h2>
+            </div>
+        </a>
     </div>
 </nav>
 
@@ -277,17 +279,19 @@
                     data-toggle="collapse"
                     data-target="#collapse-info-{{ smiles_index }}" aria-expanded="false"
                     aria-controls="collapse-info-{{ smiles_index }}">
-                <div class="smiles-container">
-                    <strong>Molecule
-                        {{ smiles_index + 1 }}: {{
-                        smiles }}</strong>
-                </div>
-                <div class="molecule-svg-container">
-                    <div id="radial-plot-{{ smiles_index }}" class="radial-plot">
-                        {{ radial_svgs[smiles_index] | safe }}
+                <div class="smiles-and-svg-container">
+                    <div class="smiles-container">
+                        <strong>Molecule
+                            {{ smiles_index + 1 }}: {{
+                            smiles }}</strong>
                     </div>
-                    <div id="molecule-image-{{ smiles_index }}" class="mol-image">
-                        {{ mol_svgs[smiles_index] | safe }}
+                    <div class="molecule-svg-container">
+                        <div id="radial-plot-{{ smiles_index }}" class="radial-plot">
+                            {{ radial_svgs[smiles_index] | safe }}
+                        </div>
+                        <div id="molecule-image-{{ smiles_index }}" class="mol-image">
+                            {{ mol_svgs[smiles_index] | safe }}
+                        </div>
                     </div>
                 </div>
                 <div id="molecule-{{ smiles_index }}-arrow" class="arrow arrow-down mol-arrow"></div>

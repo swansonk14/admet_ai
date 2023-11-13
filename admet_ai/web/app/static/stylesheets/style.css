@@ -6,6 +6,11 @@ body {
     background-attachment: fixed;
 }
 
+.navbar-header {
+    display: flex;
+    align-items: center;
+}
+
 .navbar.navbar-inverse {
     background-color: #e5f6fc;
     border-color: #12272b;
@@ -15,6 +20,7 @@ body {
 .header {
     margin-top: 20px;
     margin-bottom: 20px;
+    width: 60%;
 }
 
 #header-logo {
@@ -24,6 +30,8 @@ body {
 
 #header-title {
     display: inline;
+    margin: 15px;
+    color: black;
 }
 
 .container {
@@ -204,15 +212,11 @@ ul {
     margin-top: 25px;
 }
 
-.molecule-button {
-    height: 300px;
-}
-
 .molecule-svg-container {
     margin-left: auto;
-    height: 100%;
+    height: 250px;
     display: flex;
-    flex-shrink: 0;
+    justify-content: center;
 }
 
 .table-header {
@@ -233,7 +237,7 @@ ul {
 }
 
 .arrow.mol-arrow {
-    margin-left: 10px;
+    margin-left: auto;
 }
 
 .arrow-down {
@@ -253,17 +257,15 @@ ul {
     overflow-y: scroll;
 }
 
+.smiles-and-svg-container {
+    width: 95%;
+}
+
 .smiles-container {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 7;
-    line-height: 1.4em;
-    height: calc(1.4em * 7);
     font-size: x-large;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: normal;
-    word-wrap: break-word;
+    text-align: center;
 }
 
 .spinner-overlay {
