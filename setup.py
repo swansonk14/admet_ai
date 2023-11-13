@@ -39,7 +39,7 @@ setup(
         "pandas",
         "rdkit>=2023.3.3",
         "tqdm",
-        "typed-argument-parser>=1.8.1",
+        "typed-argument-parser>=1.9.0",
     ],
     extras_require={
         "tdc": ["openpyxl", "PyTDC>=0.4.1", "seaborn"],
@@ -50,6 +50,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Typing :: Typed",
