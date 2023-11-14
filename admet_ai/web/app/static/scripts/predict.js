@@ -1,7 +1,9 @@
 $(document).ready(function () {
     // Set up tooltips
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip({
+            container: "body"
+        });
     });
 
     // Swap up and down arrows on button click

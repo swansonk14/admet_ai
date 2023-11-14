@@ -141,6 +141,7 @@ a:hover {
 
 .prediction-header {
     display: flex;
+    align-items: center;
 }
 
 .prediction-category-image {

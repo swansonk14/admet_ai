@@ -54,8 +54,6 @@
         models.
     </p>
 
-    <br>
-
     <button id="background-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#background-text" aria-expanded="false" aria-controls="background-text">
         <strong class="dropdown-title">Background</strong>
@@ -89,7 +87,7 @@
         </p>
     </div>
 
-    <br><br>
+    <br>
 
     <button id="use-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#use-text" aria-expanded="false" aria-controls="use-text">
@@ -123,7 +121,7 @@
         </p>
     </div>
 
-    <br><br>
+    <br>
 
     <button id="local-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#local-text" aria-expanded="false" aria-controls="local-text">
@@ -251,7 +249,8 @@
 
         <p><strong><u>Input:</u> {{ "{:,}".format(num_molecules) }}</strong> {{ "molecule" if num_molecules == 1 else
             "molecules"
-            }}. <strong><u>DrugBank reference:</u> {{ "{:,}".format(drugbank_size) }}</strong> {{ "molecule" if drugbank_size
+            }}. <strong><u>DrugBank reference:</u> {{ "{:,}".format(drugbank_size) }}</strong> {{ "molecule" if
+            drugbank_size
             == 1 else "molecules"
             }} with ATC code
             "<strong
@@ -356,10 +355,20 @@
                         <table class="prediction-table">
                             <thead>
                             <tr>
-                                <th>Model</th>
-                                <th>{{ "Value" if category == "Physicochemical" else "Prediction" }}</th>
-                                <th>DrugBank Percentile</th>
-                                <th>Units</th>
+                                {% set value_name = "value" if category == "Physicochemical" else "prediction" %}
+                                <th data-toggle="tooltip" title="The {{ category.lower() }} property.">Property</th>
+                                <th data-toggle="tooltip"
+                                    title="{{ 'Value computed by RDKit.' if category == 'Physicochemical' else 'Prediction by ADMET-AI\'s Chemprop-RDKit graph neural network.' }}">
+                                    {{ "Value" if category == "Physicochemical" else "Prediction" }}
+                                </th>
+                                <th data-toggle="tooltip"
+                                    title="The percentile of the molecule's {{ value_name }} compared to the DrugBank reference of {{ '{:,}'.format(drugbank_size) }} {{ 'molecule' if num_molecules == 1 else 'molecules' }} with ATC code &quot;{{ atc_code }}&quot;.">
+                                    DrugBank Percentile
+                                </th>
+                                <th data-toggle="tooltip"
+                                    title="Units of the {{ value_name }}. &quot;-&quot; indicates that the {{ value_name }} is the probability that the molecule has that property.">
+                                    Units
+                                </th>
 
                             </tr>
                             </thead>
