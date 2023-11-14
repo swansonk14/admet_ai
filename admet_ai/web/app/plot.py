@@ -75,7 +75,7 @@ def plot_drugbank_reference(
         y=drugbank[y_property_id],
         kind="scatter",
         marginal_kws=dict(bins=50, fill=True),
-        label="DrugBank Approved" + (" (ATC filter)" if atc_code != "all" else ""),
+        label="DrugBank Reference",
     )
 
     # Scatter plot of new molecules

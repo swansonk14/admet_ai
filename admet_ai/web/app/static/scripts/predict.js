@@ -71,16 +71,17 @@ $(document).ready(function () {
     // ATC selection click
     function clickATC(atc_code) {
         $.ajax({
-            url: "/drugbank_plot?atc_code=" + atc_code,
-            type: "GET",
+            url: "/set_atc_code?atc_code=" + atc_code,
+            type: "POST",
             dataType: "json",
             success: function (response) {
-                if (response.svg) {
-                    document.getElementById("drugbank-plot-inner").innerHTML = response.svg;
+                if (response.atc_code && response.drugbank_size_string) {
+                    document.getElementById("atc-code").innerHTML = response.atc_code;
+                    document.getElementById("drugbank-size").innerHTML = response.drugbank_size_string;
                 }
             },
             error: function (error) {
-                console.error("Failed to fetch DrugBank SVG:", error);
+                console.error("Failed to fetch ATC code or DrugBank size:", error);
             }
         });
     }

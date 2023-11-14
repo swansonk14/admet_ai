@@ -16,7 +16,7 @@ def setup_web(
     session_lifetime: int = 5 * 60,
     heartbeat_frequency: int = 60,
     max_molecules: int = 1000,
-    max_visible_molecules: int = 25,
+    max_visible_molecules: int = 100,
     no_cache_molecules: bool = False,
 ) -> None:
     """Sets up the ADMET-AI website.

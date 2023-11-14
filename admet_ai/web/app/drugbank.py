@@ -53,6 +53,19 @@ def get_drugbank(atc_code: str | None = None) -> pd.DataFrame:
     return DRUGBANK_DF.loc[ATC_CODE_TO_DRUGBANK_INDICES[atc_code]]
 
 
+@lru_cache()
+def get_drugbank_size(atc_code: str | None = None) -> int:
+    """Get the number of molecules in the DrugBank reference set, optionally filtered by ATC code.
+
+    :param atc_code: The ATC code to filter by. If None or 'all', returns the entire DrugBank.
+    :return: The number of molecules in the DrugBank reference set, optionally filtered by ATC code.
+    """
+    # Get DrugBank reference, optionally filtered ATC code
+    drugbank = get_drugbank(atc_code=atc_code)
+
+    return len(drugbank)
+
+
 def compute_drugbank_percentile(
     property_name: str, predictions: np.ndarray, atc_code: str | None = None
 ) -> np.ndarray:

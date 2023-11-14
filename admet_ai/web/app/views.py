@@ -18,6 +18,7 @@ from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
     compute_drugbank_percentile,
+    get_drugbank_size,
     get_drugbank_task_names,
     get_drugbank_unique_atc_codes,
 )
@@ -43,7 +44,7 @@ DRUGBANK_APPROVED_PERCENTILE_SUFFIX = "drugbank_approved_percentile"
 
 
 def render(**kwargs) -> str:
-    """Renders the page with specified kwargs"""
+    """Renders the page with specified kwargs."""
     return render_template(
         "index.html",
         admet_info=get_admet_info(),
@@ -52,6 +53,8 @@ def render(**kwargs) -> str:
         max_molecules=app.config["MAX_MOLECULES"],
         low_performance_threshold=app.config["LOW_PERFORMANCE_THRESHOLD"],
         drugbank_approved_percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
+        drugbank_size=get_drugbank_size(session.get("atc_code")),
+        atc_code=session.get("atc_code"),
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         string_to_html_sup=string_to_html_sup,
         **kwargs,
@@ -59,7 +62,7 @@ def render(**kwargs) -> str:
 
 
 @app.route("/", methods=["GET", "POST"])
-def index():
+def index() -> str:
     """Renders the page and makes predictions if the method is POST."""
     # Set up warnings
     warnings = []
@@ -67,6 +70,10 @@ def index():
     # Assign user ID to session
     if "user_id" not in session:
         session["user_id"] = uuid4().hex
+
+    # Set up default ATC code
+    if "atc_code" not in session:
+        session["atc_code"] = "all"
 
     # If GET request, simply return the page; otherwise if POST request, make predictions
     if request.method == "GET":
@@ -188,13 +195,30 @@ def index():
     )
 
 
-@app.route("/drugbank_plot", methods=["GET"])
-def drugbank_plot():
-    # Get requested ATC code
-    session["atc_code"] = request.args.get(
-        "atc_code", default=session.get("atc_code"), type=str
+@app.route("/set_atc_code", methods=["POST"])
+def set_atc_code() -> Response:
+    """Sets the ATC code to filter the DrugBank reference set by.
+
+    :return: A JSON response containing the new DrugBank size.
+    """
+    # Get ATC code
+    session["atc_code"] = request.args.get("atc_code")
+
+    # Get new DrugBank size
+    drugbank_size = get_drugbank_size(session["atc_code"])
+
+    # Send new DrugBank size
+    return jsonify(
+        {"atc_code": session["atc_code"], "drugbank_size_string": f"{drugbank_size:,}"}
     )
 
+
+@app.route("/drugbank_plot", methods=["GET"])
+def drugbank_plot() -> Response:
+    """Creates a DrugBank reference plot.
+
+    :return: A JSON response containing the SVG of the plot.
+    """
     # Get requested X and Y axes
     session["drugbank_x_task_name"] = request.args.get(
         "x_task", default=session.get("drugbank_x_task_name"), type=str
@@ -217,7 +241,10 @@ def drugbank_plot():
 
 @app.route("/download_predictions")
 def download_predictions() -> Response:
-    """Downloads predictions as a CSV file."""
+    """Downloads predictions as a CSV file.
+
+    :return: A CSV file containing the predictions.
+    """
     # Create a temporary file to hold the predictions
     preds_file = NamedTemporaryFile()
 

@@ -18,8 +18,8 @@ body {
 }
 
 .header {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     width: 60%;
 }
 
@@ -52,6 +52,19 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin: 10px auto;
+}
+
+.predict-and-atc-input {
+    display: flex;
+    justify-content: space-around;
+}
+
+.predict-input {
+    width: 50%;
+}
+
+.atc-input {
+    width: 40%;
 }
 
 #text-smiles-input {
@@ -146,6 +159,11 @@ th, td {
 th {
     background-color: #9c9c9c;
     color: rgb(23, 23, 23);
+}
+
+.predict-download {
+    display: flex;
+    justify-content: space-between;
 }
 
 #drugbank-plot {

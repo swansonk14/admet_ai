@@ -141,76 +141,82 @@
 </div>
 
 <div class="container" id="predict-content">
-    <h2>Predict</h2>
+    <div class="predict-and-atc-input">
+        <div class="predict-input">
+            <h2>Predict</h2>
 
-    <form enctype="multipart/form-data" method="POST">
-        <!--SMILES upload type selector-->
-        <div class="btn-group" id="input-select" data-toggle="buttons">
-            <label id="text-button" class="btn btn-primary active">
-                <input type="radio" name="input-type" value="text" autocomplete="off"> Text Input
-            </label>
-            <label id="file-button" class="btn btn-primary">
-                <input type="radio" name="input-type" value="file" autocomplete="off"> Upload File
-            </label>
-            <label id="draw-button" class="btn btn-primary">
-                <input type="radio" name="input-type" value="button" autocomplete="off"> Draw Molecule
-            </label>
-            <label id="example-button" class="btn btn-primary">
-                <input type="radio" name="input-type" value="button" autocomplete="off"> Example
-            </label>
+            {% set max_molecules_text = " up to <strong>{:,}</strong> ".format(max_molecules) if max_molecules else " "
+            %}
+
+            <p>Input{{ max_molecules_text | safe }}molecules to make ADMET predictions.</p>
+
+            <form enctype="multipart/form-data" method="POST">
+                <!--SMILES upload type selector-->
+                <div class="btn-group" id="input-select" data-toggle="buttons">
+                    <label id="text-button" class="btn btn-primary active">
+                        <input type="radio" name="input-type" value="text" autocomplete="off"> Text Input
+                    </label>
+                    <label id="file-button" class="btn btn-primary">
+                        <input type="radio" name="input-type" value="file" autocomplete="off"> Upload File
+                    </label>
+                    <label id="draw-button" class="btn btn-primary">
+                        <input type="radio" name="input-type" value="button" autocomplete="off"> Draw Molecule
+                    </label>
+                    <label id="example-button" class="btn btn-primary">
+                        <input type="radio" name="input-type" value="button" autocomplete="off"> Example
+                    </label>
+                </div>
+
+                <!--SMILES input-->
+                <div id="text-input-form">
+                    <h5>SMILES (one per line)</h5>
+                    <textarea id="text-smiles-input" name="text-smiles" cols="100" rows="10" placeholder="SMILES"
+                              required></textarea>
+                </div>
+                <div id="file-input-form">
+                    <h5>CSV file containing SMILES in the provided column</h5>
+                    <div id="file-input">
+                        <input id="file-smiles-input" type="file" name="data" accept=".csv">
+                        <span id="smiles-column"><b>SMILES column: </b></span>
+                        <input id="file-smiles-column" name="smiles-column" placeholder="SMILES column" value="smiles">
+                    </div>
+                </div>
+                <div id="draw-input-form">
+                    <h5>Draw a molecule</h5>
+                    {{ chemdraw() }}
+                    <br>
+                    <button type="button" id="convert-to-smiles" class="btn btn-primary btn-xs">Convert to SMILES
+                    </button>
+                    <input id="draw-smiles-input" name="draw-smiles" placeholder="SMILES">
+                </div>
+
+                <br>
+
+                <div class="predict-download">
+                    <button id="predict-button" type="submit" class="btn btn-primary btn-md">Predict</button>
+
+                    {% if predicted %}
+                    <a href="{{ url_for('download_predictions') }}">
+                        <button class="btn btn-primary">Download Results</button>
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
         </div>
 
-        {% if max_molecules %}
-        <h5><b>Note:</b> Predictions can be made for at most {{ "{:,}".format(max_molecules) }} molecules at a time.
-        </h5>
-        {% endif %}
+        <div class="atc-input">
+            <h2>Drugbank Reference</h2>
+            <p>Create a DrugBank reference set to provide context for ADMET predictions.</p>
+            <p>Choose an
+                <a href="https://www.whocc.no/atc_ddd_index/">Anatomical
+                    Therapeutic Chemical (ATC)</a> code to select a subset of DrugBank approved drugs or choose "all"
+                for
+                all
+                approved drugs.</p>
+            <p>Selected ATC code "<strong id="atc-code">{{ atc_code }}</strong>" includes <strong id="drugbank-size">{{
+                "{:,}".format(drugbank_size)
+                }}</strong> molecules.</p>
 
-        <!--SMILES input-->
-        <div id="text-input-form">
-            <h5>SMILES (one per line)</h5>
-            <textarea id="text-smiles-input" name="text-smiles" cols="100" rows="10" placeholder="SMILES"
-                      required></textarea>
-        </div>
-        <div id="file-input-form">
-            <h5>CSV file containing SMILES in the provided column</h5>
-            <div id="file-input">
-                <input id="file-smiles-input" type="file" name="data" accept=".csv">
-                <span id="smiles-column"><b>SMILES column: </b></span>
-                <input id="file-smiles-column" name="smiles-column" placeholder="SMILES column" value="smiles">
-            </div>
-        </div>
-        <div id="draw-input-form">
-            <h5>Draw a molecule</h5>
-            {{ chemdraw() }}
-            <br>
-            <button type="button" id="convert-to-smiles" class="btn btn-primary btn-xs">Convert to SMILES</button>
-            <input id="draw-smiles-input" name="draw-smiles" placeholder="SMILES">
-        </div>
-
-        <br>
-
-        <button id="predict-button" type="submit" class="btn btn-primary btn-md">Predict</button>
-    </form>
-
-    {% if drugbank_plot %}
-    <br>
-    <br>
-
-    <button id="drugbank-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
-            data-target="#drugbank" aria-expanded="false" aria-controls="drugbank">
-        <strong class="dropdown-title">DrugBank Comparison Plot</strong>
-        <div id="drugbank-arrow" class="arrow arrow-down"></div>
-    </button>
-    <div id="drugbank" class="collapse">
-        <div id="drugbank-plot">
-            <div id="drugbank-plot-inner">
-                {{ drugbank_plot | safe }}
-            </div>
-        </div>
-
-        <br>
-
-        <div id="drugbank-plot-controls">
             <div class="dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     Select ATC Code
@@ -224,7 +230,41 @@
                     </li>
                 </div>
             </div>
+        </div>
+    </div>
 
+    {% if warnings %}
+    {% for warning in warnings %}
+    {{ warning_message(warning) }}
+    {% endfor %}
+    {% endif %}
+
+    {% if errors %}
+    {% for error in errors %}
+    {{ error_message(error) }}
+    {% endfor %}
+    {% endif %}
+
+    <hr>
+
+    {% if predicted %}
+
+    {% if drugbank_plot %}
+    <button id="drugbank-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
+            data-target="#drugbank" aria-expanded="false" aria-controls="drugbank">
+        <strong class="dropdown-title">DrugBank Reference Plot</strong>
+        <div id="drugbank-arrow" class="arrow arrow-down"></div>
+    </button>
+    <div id="drugbank" class="collapse">
+        <div id="drugbank-plot">
+            <div id="drugbank-plot-inner">
+                {{ drugbank_plot | safe }}
+            </div>
+        </div>
+
+        <br>
+
+        <div id="drugbank-plot-controls">
             {% for axis in ["y", "x"] %}
             <div class="dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -244,29 +284,9 @@
         </div>
     </div>
 
-    <br>
     {% endif %}
 
-    {% if warnings %}
-    {% for warning in warnings %}
-    {{ warning_message(warning) }}
-    {% endfor %}
-    {% endif %}
-
-    {% if errors %}
-    {% for error in errors %}
-    {{ error_message(error) }}
-    {% endfor %}
-    {% endif %}
-
-    {% if predicted %}
     <hr>
-
-    <a href="{{ url_for('download_predictions') }}">
-        <button class="btn btn-default btn-md">Download Results</button>
-    </a>
-
-    <br><br>
 
     <ul id="list">
         {% for smiles_index in range(num_display_molecules) %}
@@ -323,9 +343,7 @@
                             <tr>
                                 <th>Model</th>
                                 <th>{{ "Value" if category == "Physicochemical" else "Prediction" }}</th>
-                                <th>DrugBank Percentile{{ " (ATC filter)" if session.get("atc_code", "all") != "all"
-                                    else "" }}
-                                </th>
+                                <th>DrugBank Percentile</th>
                                 <th>Units</th>
 
                             </tr>
@@ -398,6 +416,9 @@
 
     {% if num_molecules > num_display_molecules %}
     <p>... and {{ num_molecules - num_display_molecules }} more. Download for full predictions.</p>
+    <a href="{{ url_for('download_predictions') }}">
+        <button class="btn btn-primary">Download Results</button>
+    </a>
     {% endif %}
     {% endif %}
 
