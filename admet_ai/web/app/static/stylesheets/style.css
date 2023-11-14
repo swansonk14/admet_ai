@@ -60,7 +60,7 @@ body {
 }
 
 .predict-input {
-    width: 50%;
+    width: 55%;
 }
 
 .atc-input {
@@ -121,6 +121,19 @@ a:hover {
     flex-wrap: wrap;
 }
 
+.atc-and-download {
+    display: flex;
+    align-items: center;
+}
+
+.atc-and-download p {
+    margin: 0;
+}
+
+.download-results {
+    margin-left: auto;
+}
+
 .prediction-category-container {
     flex: 1;
     width: 100%;
@@ -159,11 +172,6 @@ th, td {
 th {
     background-color: #9c9c9c;
     color: rgb(23, 23, 23);
-}
-
-.predict-download {
-    display: flex;
-    justify-content: space-between;
 }
 
 #drugbank-plot {

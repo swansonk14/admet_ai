@@ -192,15 +192,7 @@
 
                 <br>
 
-                <div class="predict-download">
-                    <button id="predict-button" type="submit" class="btn btn-primary btn-md">Predict</button>
-
-                    {% if predicted %}
-                    <a href="{{ url_for('download_predictions') }}">
-                        <button class="btn btn-primary">Download Results</button>
-                    </a>
-                    {% endif %}
-                </div>
+                <button id="predict-button" type="submit" class="btn btn-primary btn-md">Predict</button>
             </form>
         </div>
 
@@ -213,7 +205,8 @@
                 for
                 all
                 approved drugs.</p>
-            <p>Selected ATC code "<strong id="atc-code">{{ atc_code }}</strong>" includes <strong id="drugbank-size">{{
+            <p>Selected ATC code "<strong id="selected-atc-code">{{ atc_code }}</strong>" includes <strong
+                    id="drugbank-size">{{
                 "{:,}".format(drugbank_size)
                 }}</strong> molecules.</p>
 
@@ -224,8 +217,8 @@
                 <div class="dropdown-menu">
                     <input class="form-control" id="atc-selection" type="text" placeholder="Search..">
                     <li>
-                        {% for atc_code in drugbank_atc_codes %}
-                        <a class="dropdown-item atc-item">{{ atc_code }}</a>
+                        {% for drugbank_atc_code in drugbank_atc_codes %}
+                        <a class="dropdown-item atc-item">{{ drugbank_atc_code }}</a>
                         {% endfor %}
                     </li>
                 </div>
@@ -248,6 +241,28 @@
     <hr>
 
     {% if predicted %}
+
+    <h2>ADMET Predictions</h2>
+
+    <div class="atc-and-download">
+        {% set num_displayed_string = "first {:,}".format(num_display_molecules) if num_molecules >
+        num_display_molecules else "{:,}".format(num_molecules) %}
+        {% set molecule_string = "molecule" if num_molecules == 1 else "molecules" %}
+
+        <p><strong><u>Input:</u> {{ "{:,}".format(num_molecules) }}</strong> {{ "molecule" if num_molecules == 1 else
+            "molecules"
+            }}. <strong><u>DrugBank reference:</u> {{ "{:,}".format(drugbank_size) }}</strong> {{ "molecule" if drugbank_size
+            == 1 else "molecules"
+            }} with ATC code
+            "<strong
+                    id="applied-atc-code">{{ atc_code }}</strong>".</p>
+
+        <a href="{{ url_for('download_predictions') }}" class="download-results">
+            <button class="btn btn-primary">Download Results</button>
+        </a>
+    </div>
+
+    <hr>
 
     {% if drugbank_plot %}
     <button id="drugbank-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"

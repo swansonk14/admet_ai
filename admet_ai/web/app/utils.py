@@ -77,3 +77,14 @@ def string_to_latex_sup(string: str) -> str:
     :return: The string with an exponential in LaTeX superscript.
     """
     return re.sub(r"\^(\d+)", r"$^{\1}$", string)
+
+
+def get_drugbank_suffix(atc_code: str | None) -> str:
+    """Gets the DrugBank percentile suffix for the given ATC code.
+
+    :param atc_code: The ATC code.
+    """
+    if atc_code is None or atc_code == "all":
+        return "drugbank_approved_percentile"
+
+    return f"drugbank_approved_{atc_code}_percentile"

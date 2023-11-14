@@ -76,7 +76,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.atc_code && response.drugbank_size_string) {
-                    document.getElementById("atc-code").innerHTML = response.atc_code;
+                    document.getElementById("selected-atc-code").innerHTML = response.atc_code;
                     document.getElementById("drugbank-size").innerHTML = response.drugbank_size_string;
                 }
             },
@@ -94,8 +94,9 @@ $(document).ready(function () {
 
     // DrugBank selection click
     function clickDrugBank(task, axis) {
+        let atc_code = $("#applied-atc-code").text();
         $.ajax({
-            url: `/drugbank_plot?${axis}_task=` + task,
+            url: `/drugbank_plot?${axis}_task=${task}&atc_code=${atc_code}`,
             type: "GET",
             dataType: "json",
             success: function (response) {

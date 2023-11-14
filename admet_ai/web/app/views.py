@@ -34,13 +34,11 @@ from admet_ai.web.app.storage import (
     update_user_activity,
 )
 from admet_ai.web.app.utils import (
+    get_drugbank_suffix,
     get_smiles_from_request,
     smiles_to_mols,
     string_to_html_sup,
 )
-
-
-DRUGBANK_APPROVED_PERCENTILE_SUFFIX = "drugbank_approved_percentile"
 
 
 def render(**kwargs) -> str:
@@ -52,7 +50,9 @@ def render(**kwargs) -> str:
         drugbank_tasks=get_drugbank_task_names(),
         max_molecules=app.config["MAX_MOLECULES"],
         low_performance_threshold=app.config["LOW_PERFORMANCE_THRESHOLD"],
-        drugbank_approved_percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
+        drugbank_approved_percentile_suffix=get_drugbank_suffix(
+            session.get("atc_code")
+        ),
         drugbank_size=get_drugbank_size(session.get("atc_code")),
         atc_code=session.get("atc_code"),
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
@@ -131,7 +131,7 @@ def index() -> str:
     # Compute DrugBank percentiles
     drugbank_percentiles = pd.DataFrame(
         data={
-            f"{property_name}_{DRUGBANK_APPROVED_PERCENTILE_SUFFIX}": compute_drugbank_percentile(
+            f"{property_name}_{get_drugbank_suffix(session.get('atc_code'))}": compute_drugbank_percentile(
                 property_name=property_name,
                 predictions=all_preds[property_name].values,
                 atc_code=session.get("atc_code"),
@@ -177,7 +177,7 @@ def index() -> str:
     radial_svgs = [
         plot_radial_summary(
             property_id_to_percentile=smiles_to_property_id_to_pred[smiles],
-            percentile_suffix=DRUGBANK_APPROVED_PERCENTILE_SUFFIX,
+            percentile_suffix=get_drugbank_suffix(session.get("atc_code")),
         )
         for smiles in all_smiles[:num_display_molecules]
     ]
@@ -219,7 +219,10 @@ def drugbank_plot() -> Response:
 
     :return: A JSON response containing the SVG of the plot.
     """
-    # Get requested X and Y axes
+    # Get requested ATC code
+    atc_code = request.args.get("atc_code", default=session.get("atc_code"), type=str)
+
+    # Get requested X and Y axes and store in session
     session["drugbank_x_task_name"] = request.args.get(
         "x_task", default=session.get("drugbank_x_task_name"), type=str
     )
@@ -232,7 +235,7 @@ def drugbank_plot() -> Response:
         preds_df=get_user_preds(session["user_id"]),
         x_property_name=session["drugbank_x_task_name"],
         y_property_name=session["drugbank_y_task_name"],
-        atc_code=session["atc_code"],
+        atc_code=atc_code,
         max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"],
     )
 
@@ -255,7 +258,7 @@ def download_predictions() -> Response:
         return response
 
     # Save predictions to temporary file
-    get_user_preds(session["user_id"]).to_csv(preds_file.name)
+    get_user_preds(session["user_id"]).to_csv(preds_file.name, index_label="smiles")
     preds_file.seek(0)
 
     # Return the temporary file as a response
