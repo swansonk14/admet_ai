@@ -126,7 +126,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#predict-button").click(function () {
+    $("#predict-button").onsubmit(function () {
         $("#spinner-overlay").css("visibility", "visible");
     });
 });
