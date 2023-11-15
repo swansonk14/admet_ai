@@ -26,7 +26,8 @@ def update_user_activity(user_id: str) -> None:
 
 def cleanup_storage() -> None:
     """Clean up storage by removing data from users that are no longer active."""
-    print("STARTED CLEANUP")
+    print("Starting cleanup")
+
     while True:
         # Wait for cleanup_frequency minutes
         cleanup_frequency = app.config["SESSION_LIFETIME"]

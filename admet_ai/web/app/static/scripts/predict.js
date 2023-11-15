@@ -128,7 +128,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#predict-button").onsubmit(function () {
+    $("#molecule-form").on("submit", function () {
         $("#spinner-overlay").css("visibility", "visible");
     });
 });
