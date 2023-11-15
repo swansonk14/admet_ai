@@ -1,4 +1,6 @@
 """Runs the development web interface for ADMET-AI (Flask)."""
+import random
+import string
 from datetime import timedelta
 from threading import Thread
 
@@ -12,16 +14,18 @@ from admet_ai.web.app.storage import cleanup_storage
 
 
 def setup_web(
-    secret_key: str = "f*3^iWiue*maS35MgYAJ",
+    secret_key: str = "".join(
+        random.choices(string.ascii_letters + string.digits, k=20)
+    ),
     session_lifetime: int = 5 * 60,
     heartbeat_frequency: int = 60,
     max_molecules: int = 1000,
-    max_visible_molecules: int = 100,
+    max_visible_molecules: int = 25,
     no_cache_molecules: bool = False,
 ) -> None:
     """Sets up the ADMET-AI website.
 
-    :param secret_key: Secret key for Flask app. (TODO: do not use this default secret key in production.)
+    :param secret_key: Secret key for Flask app.
     :param session_lifetime: Session lifetime in seconds.
     :param heartbeat_frequency: Frequency of client heartbeat in seconds.
     :param max_molecules: Maximum number of molecules to allow predictions for.
