@@ -160,7 +160,7 @@ def plot_radial_summary(
             "percentile": max_percentile
             - property_id_to_percentile[f"BBB_Martins_{percentile_suffix}"],
         },
-        "Non\nToxic": {
+        "Non-\nToxic": {
             "percentile": max_percentile
             - max(
                 property_id_to_percentile[f"{toxicity_name}_{percentile_suffix}"]
