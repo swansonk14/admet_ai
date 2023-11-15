@@ -181,7 +181,7 @@ physchem_compute \
 
 ## Plot results
 
-Plot TDC ADMET results. First, download the results from [here](https://docs.google.com/spreadsheets/d/1bh9FEHqhbfHKF-Nxjad0Cpy2p5ztH__p0pijB43yc94/edit?usp=sharing) and save them to `results/TDC ADMET Results.xlsx`. Then run the following command.
+Plot TDC ADMET results. First, download the results from [here](https://docs.google.com/spreadsheets/d/1bh9FEHqhbfHKF-Nxjad0Cpy2p5ztH__p0pijB43yc94/edit?usp=sharing) and save them to `results/TDC ADMET Results.xlsx`. Then, run the following command.
 
 ```bash
 python scripts/plot_tdc_results.py \
@@ -195,4 +195,12 @@ Plot DrugBank statistics.
 python scripts/plot_drugbank_approved.py \
     --data_path data/drugbank/drugbank_approved.csv \
     --save_dir plots/drugbank_approved
+```
+
+Plot ADMET website speed. First, download the results from [here]() and save them to `results/ADMET Tools Comparison.xlsx`. Then, run the following command.
+
+```bash
+python scripts/plot_admet_speed.py \
+    --results_path results/ADMET\ Tools\ Comparison.xlsx \
+    --save_path plots/admet_speed.pdf
 ```
