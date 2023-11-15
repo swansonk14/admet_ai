@@ -129,12 +129,20 @@ a:hover {
     align-items: center;
 }
 
+.alert {
+    margin-top: 20px;
+}
+
 .atc-and-download p {
     margin: 0;
 }
 
 .download-results {
     margin-left: auto;
+}
+
+.download-remaining {
+    display: flex;
 }
 
 .prediction-category-container {

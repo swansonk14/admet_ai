@@ -482,10 +482,12 @@
     </ul>
 
     {% if num_molecules > num_display_molecules %}
-    <p>... and {{ num_molecules - num_display_molecules }} more. Download for full predictions.</p>
-    <a href="{{ url_for('download_predictions') }}">
-        <button class="btn btn-primary">Download Results</button>
-    </a>
+    <div class="download-remaining">
+        <p>... and {{ num_molecules - num_display_molecules }} more. Download for full predictions.</p>
+        <a class="download-results" href="{{ url_for('download_predictions') }}">
+            <button class="btn btn-primary">Download Results</button>
+        </a>
+    </div>
     {% endif %}
     {% endif %}
 
