@@ -258,7 +258,8 @@ ul {
 }
 
 .table-header {
-    color: #007bff
+    color: #007bff;
+    margin-left: 15px;
 }
 
 .data-link {
