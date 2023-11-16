@@ -174,15 +174,20 @@ class ADMETModel:
         else:
             self.drugbank_atc_filtered = self.drugbank
 
-    def predict(self, smiles: str | list[str]) -> pd.DataFrame:
+    def predict(self, smiles: str | list[str]) -> dict[str, float] | pd.DataFrame:
         """Make predictions on a list of SMILES strings.
 
         :param smiles: A SMILES string or a list of SMILES strings.
-        :return: A DataFrame containing the predictions with SMILES strings as the index.
+        :return: If smiles is a string, returns a dictionary mapping property name to prediction.
+                 If smiles is a list, returns a DataFrame containing the predictions with SMILES strings as the index
+                 and property names as the columns.
         """
         # Convert SMILES to list if needed
         if isinstance(smiles, str):
             smiles = [smiles]
+            smiles_type = str
+        else:
+            smiles_type = list
 
         # Convert SMILES to RDKit molecules and cache if desired
         mols = []
@@ -306,5 +311,9 @@ class ADMETModel:
 
             # Combine predictions and percentiles
             preds = pd.concat((preds, drugbank_percentiles), axis=1)
+
+        # Convert to dictionary if SMILES type is string
+        if smiles_type == str:
+            preds = preds.iloc[0].to_dict()
 
         return preds
