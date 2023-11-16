@@ -23,6 +23,8 @@ from scipy.stats import percentileofscore
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
+from admet_ai.physchem import compute_physicochemical_properties
+
 
 class ADMETModel:
     """ADMET-AI model class."""
@@ -31,6 +33,7 @@ class ADMETModel:
     def __init__(
         self,
         model_dirs: list[Path | str],
+        include_physchem: bool = True,
         drugbank_path: Path | None = None,
         atc_code: str | None = None,
         num_workers: int = 8,
@@ -41,6 +44,7 @@ class ADMETModel:
 
         :param model_dirs: List of paths to directories, where each directory contains
                            an ensemble of Chemprop-RDKit models.
+        :param include_physchem: Whether to include physicochemical properties in the predictions.
         :param drugbank_path: Path to a CSV file containing DrugBank approved molecules
                               with ADMET predictions and ATC codes.
         :param atc_code: The ATC code to filter the DrugBank reference set by.
@@ -57,6 +61,7 @@ class ADMETModel:
             )
 
         # Save parameters
+        self.include_physchem = include_physchem
         self.num_workers = num_workers
         self.cache_molecules = cache_molecules
         self.fingerprint_multiprocessing_min = fingerprint_multiprocessing_min
@@ -218,6 +223,11 @@ class ADMETModel:
                 smile for smile, invalid in zip(smiles, invalid_mols) if not invalid
             ]
 
+        # Compute physicochemical properties
+        physchem_preds = compute_physicochemical_properties(
+            all_smiles=smiles, mols=mols
+        )
+
         # Compute fingerprints if needed
         if self.use_features:
             # Select between multiprocessing and single processing
@@ -292,7 +302,10 @@ class ADMETModel:
                 task_to_preds[task] = preds[:, i]
 
         # Put preds in a DataFrame
-        preds = pd.DataFrame(task_to_preds, index=smiles)
+        admet_preds = pd.DataFrame(task_to_preds, index=smiles)
+
+        # Combine physicochemical and ADMET properties
+        preds = pd.concat((physchem_preds, admet_preds), axis=1)
 
         # Compute DrugBank percentiles if needed
         if self.drugbank is not None:

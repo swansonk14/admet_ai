@@ -13,7 +13,7 @@ from flask import (
     session,
 )
 
-from admet_ai.physchem_compute import compute_physicochemical_properties
+from admet_ai.physchem import compute_physicochemical_properties
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
