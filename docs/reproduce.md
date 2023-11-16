@@ -130,9 +130,30 @@ python scripts/get_drugbank_approved.py \
     --save_path data/drugbank/drugbank_approved.csv
 ```
 
+## Make predictions on DrugBank approved drugs
+
+Compute physicochemical properties on DrugBank approved drugs using RDKit.
+
+```bash
+physchem_compute \
+    --data_path data/drugbank/drugbank_approved.csv \
+    --save_path data/drugbank/drugbank_approved_physchem.csv \
+    --smiles_column smiles
+```
+
+Make ADMET predictions on DrugBank approved drugs using Chemprop-RDKit multitask predictor.
+
+```bash
+admet_predict \
+    --data_path data/drugbank/drugbank_approved_physchem.csv \
+    --save_path data/drugbank/drugbank_approved_physchem_admet.csv \
+    --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
+    --smiles_column smiles
+```
+
 ## Subsample approved drugs from DrugBank
 
-Subsample approved drugs from DrugBank for measuring ADMET website speed. Limit SMILES length to 200 for compatibility with SwissADME.
+Subsample approved drugs from DrugBank for measuring ADMET prediction speed. Limit SMILES length to 200 for compatibility with SwissADME.
 
 ```bash
 for NUM_MOLECULES in 1 10 100
@@ -158,25 +179,28 @@ Fluoride ion F-18 ==> Tetracaine
 Then, `drugbank_approved_1000.csv` was constructed by repeating `drugbank_approved_100.csv` ten times (in order to maintain compatibility with ADMETlab2.0).
 
 
-## Make predictions on DrugBank approved drugs
+## Time local ADMET-AI predictions
 
-Make predictions on DrugBank approved drugs using Chemprop-RDKit multitask predictor.
+Time local ADMET-AI predictions on DrugBank approved drugs. Run this command on an 8-core machine with and without a GPU.
 
 ```bash
-admet_predict \
-    --data_path data/drugbank/drugbank_approved.csv \
-    --save_path data/drugbank/drugbank_approved_admet.csv \
+for NUM_MOLECULES in 1 10 100 1000
+do
+for ITER in 1 2 3
+do
+echo "Timing ADMET-AI on ${NUM_MOLECULES} molecules, iteration ${ITER}"
+time physchem_compute \
+    --data_path data/drugbank/drugbank_approved_${NUM_MOLECULES}.csv \
+    --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_physchem.csv \
+    --smiles_column smiles
+
+time admet_predict \
+    --data_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_physchem.csv \
+    --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_physchem_admet.csv \
     --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --smiles_column smiles
-```
-
-Compute physicochemical properties on DrugBank approved drugs using RDKit.
-
-```bash
-physchem_compute \
-    --data_path data/drugbank/drugbank_approved_admet.csv \
-    --save_path data/drugbank/drugbank_approved_admet_physchem.csv \
-    --smiles_column smiles
+done
+done
 ```
 
 ## Plot results
