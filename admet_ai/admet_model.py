@@ -31,7 +31,7 @@ class ADMETModel:
     def __init__(
         self,
         model_dirs: list[Path | str],
-        drugbank_reference_path: Path | None = None,
+        drugbank_path: Path | None = None,
         atc_code: str | None = None,
         num_workers: int = 8,
         cache_molecules: bool = True,
@@ -41,8 +41,8 @@ class ADMETModel:
 
         :param model_dirs: List of paths to directories, where each directory contains
                            an ensemble of Chemprop-RDKit models.
-        :param drugbank_reference_path: Path to a CSV file containing DrugBank approved molecules
-                                        with ADMET predictions and ATC codes.
+        :param drugbank_path: Path to a CSV file containing DrugBank approved molecules
+                              with ADMET predictions and ATC codes.
         :param atc_code: The ATC code to filter the DrugBank reference set by.
                          If None, the entire DrugBank reference set will be used.
         :param num_workers: Number of workers for the data loader.
@@ -51,9 +51,9 @@ class ADMETModel:
                                                 fingerprint computation. Otherwise, single processing is used.
         """
         # Check parameters
-        if atc_code is not None and drugbank_reference_path is None:
+        if atc_code is not None and drugbank_path is None:
             raise ValueError(
-                "DrugBank reference path must be provided if ATC code is provided."
+                "DrugBank reference set must be provided to filter by ATC code."
             )
 
         # Save parameters
@@ -63,9 +63,9 @@ class ADMETModel:
         self._atc_code = atc_code
 
         # Load DrugBank reference set if needed
-        if drugbank_reference_path is not None:
+        if drugbank_path is not None:
             # Load DrugBank DataFrame
-            self.drugbank = pd.read_csv(drugbank_reference_path)
+            self.drugbank = pd.read_csv(drugbank_path)
 
             # Map ATC codes to all indices of the drugbank with that ATC code
             atc_code_to_drugbank_indices = defaultdict(set)
@@ -81,11 +81,16 @@ class ADMETModel:
                 atc_code: sorted(indices)
                 for atc_code, indices in atc_code_to_drugbank_indices.items()
             }
-        else:
-            self.drugbank = None
 
-        # Set ATC code (setting the code also filters the DrugBank by ATC code)
-        self.atc_code = self._atc_code
+            # Filter DrugBank by ATC code if needed
+            if self.atc_code is not None:
+                self.drugbank_atc_filtered = self.drugbank.loc[
+                    self.atc_code_to_drugbank_indices[self.atc_code]
+                ]
+            else:
+                self.drugbank_atc_filtered = self.drugbank
+        else:
+            self.drugbank = self.drugbank_atc_filtered = None
 
         # Set caching
         set_cache_graph(self.cache_molecules)
