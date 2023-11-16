@@ -12,6 +12,8 @@ def admet_predict(
     data_path: Path,
     model_dir: Path,  # TODO: set default model dir
     save_path: Path | None = None,
+    drugbank_reference_path: Path | None = None,  # TODO: set default DrugBank path
+    atc_code: str | None = None,
     smiles_column: str = "smiles",
     num_workers: int = 0,
     cache_molecules: bool = True,
@@ -21,10 +23,15 @@ def admet_predict(
     :param data_path: Path to a CSV file containing a dataset of molecules.
     :param model_dir: Path to a directory containing Chemprop or Chemprop-RDKit models.
     :param save_path: Path to a CSV file where predictions will be saved. If None, defaults to data_path.
+    :param drugbank_reference_path: Path to a CSV file containing DrugBank approved molecules
+                                    with ADMET predictions and ATC codes.
+    :param atc_code: The ATC code to filter the DrugBank reference set by.
+                     If None, the entire DrugBank reference set will be used.
     :param smiles_column: Name of the column containing SMILES strings.
     :param num_workers: Number of workers for the data loader. Zero workers (i.e., sequential data loading)
                         may be faster if not using a GPU.
     :param cache_molecules: Whether to cache molecules. Caching improves prediction speed but requires more memory.
+
     """
     # Load and preprocess data
     data = load_and_preprocess_data(data_path=data_path, smiles_column=smiles_column)
@@ -32,6 +39,8 @@ def admet_predict(
     # Build ADMETModel
     model = ADMETModel(
         model_dirs=sorted(path for path in model_dir.iterdir() if path.is_dir()),
+        drugbank_reference_path=drugbank_reference_path,
+        atc_code=atc_code,
         num_workers=num_workers,
         cache_molecules=cache_molecules,
     )

@@ -1,4 +1,5 @@
 """ADMET-AI class to contain ADMET model and prediction function."""
+from collections import defaultdict
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from chemprop.models import MoleculeModel
 from chemprop.train import predict
 from chemprop.utils import load_args, load_checkpoint, load_scalers
 from rdkit import Chem
+from scipy.stats import percentileofscore
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
@@ -25,10 +27,12 @@ from tqdm import tqdm
 class ADMETModel:
     """ADMET-AI model class."""
 
-    # TODO: set defaults for model paths in constants and include model files in git repo
+    # TODO: set defaults for model paths in constants and include model files in git repo; same for DrugBank
     def __init__(
         self,
         model_dirs: list[Path | str],
+        drugbank_reference_path: Path | None = None,
+        atc_code: str | None = None,
         num_workers: int = 8,
         cache_molecules: bool = True,
         fingerprint_multiprocessing_min: int = 100,
@@ -37,15 +41,51 @@ class ADMETModel:
 
         :param model_dirs: List of paths to directories, where each directory contains
                            an ensemble of Chemprop-RDKit models.
+        :param drugbank_reference_path: Path to a CSV file containing DrugBank approved molecules
+                                        with ADMET predictions and ATC codes.
+        :param atc_code: The ATC code to filter the DrugBank reference set by.
+                         If None, the entire DrugBank reference set will be used.
         :param num_workers: Number of workers for the data loader.
         :param cache_molecules: Whether to cache molecules. Caching improves prediction speed but requires more memory.
         :param fingerprint_multiprocessing_min: Minimum number of molecules for multiprocessing to be used for
                                                 fingerprint computation. Otherwise, single processing is used.
         """
+        # Check parameters
+        if atc_code is not None and drugbank_reference_path is None:
+            raise ValueError(
+                "DrugBank reference path must be provided if ATC code is provided."
+            )
+
         # Save parameters
         self.num_workers = num_workers
         self.cache_molecules = cache_molecules
         self.fingerprint_multiprocessing_min = fingerprint_multiprocessing_min
+        self._atc_code = atc_code
+
+        # Load DrugBank reference set if needed
+        if drugbank_reference_path is not None:
+            # Load DrugBank DataFrame
+            self.drugbank = pd.read_csv(drugbank_reference_path)
+
+            # Map ATC codes to all indices of the drugbank with that ATC code
+            atc_code_to_drugbank_indices = defaultdict(set)
+            for atc_column in [
+                column for column in self.drugbank.columns if column.startswith("atc_")
+            ]:
+                for index, atc_codes in self.drugbank[atc_column].dropna().items():
+                    for atc_code in atc_codes.split(";"):
+                        atc_code_to_drugbank_indices[atc_code.lower()].add(index)
+
+            # Save ATC code to indices mapping to global variable and convert set to sorted list
+            self.atc_code_to_drugbank_indices = {
+                atc_code: sorted(indices)
+                for atc_code, indices in atc_code_to_drugbank_indices.items()
+            }
+        else:
+            self.drugbank = None
+
+        # Set ATC code (setting the code also filters the DrugBank by ATC code)
+        self.atc_code = self._atc_code
 
         # Set caching
         set_cache_graph(self.cache_molecules)
@@ -100,6 +140,39 @@ class ADMETModel:
     def num_ensembles(self) -> int:
         """Get the number of ensembles."""
         return len(self.model_lists)
+
+    @property
+    def atc_code(self) -> str | None:
+        """Get the ATC code."""
+        return self._atc_code
+
+    @atc_code.setter
+    def atc_code(self, atc_code: str | None) -> None:
+        """Set the ATC code and filter DrugBank based on provided ATC code.
+
+        :param atc_code: The ATC code to filter the DrugBank reference set by.
+                         If None, the entire DrugBank reference set will be used.
+        """
+        # Handle case of no DrugBank
+        if self.drugbank is None:
+            raise ValueError(
+                "Cannot set ATC code if DrugBank reference is not provided."
+            )
+
+        # Validate ATC code
+        if atc_code is not None and atc_code not in self.atc_code_to_drugbank_indices:
+            raise ValueError(f"Invalid ATC code: {atc_code}")
+
+        # Save ATC code
+        self._atc_code = atc_code
+
+        # Filter DrugBank by ATC code if needed
+        if self.atc_code is not None:
+            self.drugbank_atc_filtered = self.drugbank.loc[
+                self.atc_code_to_drugbank_indices[self.atc_code]
+            ]
+        else:
+            self.drugbank_atc_filtered = self.drugbank
 
     def predict(self, smiles: str | list[str]) -> pd.DataFrame:
         """Make predictions on a list of SMILES strings.
@@ -210,5 +283,28 @@ class ADMETModel:
 
         # Put preds in a DataFrame
         preds = pd.DataFrame(task_to_preds, index=smiles)
+
+        # Compute DrugBank percentiles if needed
+        if self.drugbank is not None:
+            # Set DrugBank suffix
+            if self.atc_code is None:
+                drugbank_suffix = "drugbank_approved_percentile"
+            else:
+                drugbank_suffix = f"drugbank_approved_{self.atc_code}_percentile"
+
+            # Compute DrugBank percentiles
+            drugbank_percentiles = pd.DataFrame(
+                data={
+                    f"{property_name}_{drugbank_suffix}": percentileofscore(
+                        self.drugbank_atc_filtered[property_name],
+                        preds[property_name].values,
+                    )
+                    for property_name in preds.columns
+                },
+                index=smiles,
+            )
+
+            # Combine predictions and percentiles
+            preds = pd.concat((preds, drugbank_percentiles), axis=1)
 
         return preds
