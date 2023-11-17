@@ -176,7 +176,7 @@ Perboric acid ==> Methazolamide
 
 Fluoride ion F-18 ==> Tetracaine
 
-Then, `drugbank_approved_1000.csv` was constructed by repeating `drugbank_approved_100.csv` ten times (in order to maintain compatibility with ADMETlab2.0).
+Then, `drugbank_approved_1000.csv` was constructed by repeating `drugbank_approved_100.csv` ten times (in order to maintain compatibility with ADMETlab2.0). Similarly, `drugbank_approved_1M.csv` was constructed by repeating `drugbank_approved_1000.csv` 1000 times.
 
 
 ## Time local ADMET-AI predictions
@@ -184,19 +184,14 @@ Then, `drugbank_approved_1000.csv` was constructed by repeating `drugbank_approv
 Time local ADMET-AI predictions on DrugBank approved drugs. Run this command on an 8-core machine with and without a GPU.
 
 ```bash
-for NUM_MOLECULES in 1 10 100 1000
+for NUM_MOLECULES in 1 10 100 1000 1M
 do
 for ITER in 1 2 3
 do
 echo "Timing ADMET-AI on ${NUM_MOLECULES} molecules, iteration ${ITER}"
-time physchem_compute \
-    --data_path data/drugbank/drugbank_approved_${NUM_MOLECULES}.csv \
-    --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_physchem.csv \
-    --smiles_column smiles
-
 time admet_predict \
-    --data_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_physchem.csv \
-    --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_physchem_admet.csv \
+    --data_path data/drugbank/drugbank_approved_${NUM_MOLECULES}.csv \
+    --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_admet_${ITER}.csv \
     --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --smiles_column smiles
 done

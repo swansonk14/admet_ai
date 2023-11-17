@@ -16,7 +16,7 @@ def admet_predict(
     drugbank_path: Path | None = None,  # TODO: set default DrugBank path
     atc_code: str | None = None,
     smiles_column: str = "smiles",
-    num_workers: int = 0,
+    num_workers: int | None = None,
     cache_molecules: bool = True,
 ) -> None:
     """Make predictions on a dataset using Chemprop-RDKit models trained on TDC ADMET data.
@@ -31,7 +31,8 @@ def admet_predict(
                      If None, the entire DrugBank reference set will be used.
     :param smiles_column: Name of the column containing SMILES strings.
     :param num_workers: Number of workers for the data loader. Zero workers (i.e., sequential data loading)
-                        may be faster if not using a GPU.
+                        may be faster if not using a GPU, while multiple workers (e.g., 8) are faster with a GPU.
+                        If None, defaults to 0 if no GPU is available and 8 if a GPU is available.
     :param cache_molecules: Whether to cache molecules. Caching improves prediction speed but requires more memory.
 
     """

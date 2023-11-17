@@ -36,7 +36,7 @@ class ADMETModel:
         include_physchem: bool = True,
         drugbank_path: Path | None = None,
         atc_code: str | None = None,
-        num_workers: int = 8,
+        num_workers: int | None = None,
         cache_molecules: bool = True,
         fingerprint_multiprocessing_min: int = 100,
     ) -> None:
@@ -49,7 +49,9 @@ class ADMETModel:
                               with ADMET predictions and ATC codes.
         :param atc_code: The ATC code to filter the DrugBank reference set by.
                          If None, the entire DrugBank reference set will be used.
-        :param num_workers: Number of workers for the data loader.
+        :param num_workers: Number of workers for the data loader. Zero workers (i.e., sequential data loading)
+                            may be faster if not using a GPU, while multiple workers (e.g., 8) are faster with a GPU.
+                            If None, defaults to 0 if no GPU is available and 8 if a GPU is available.
         :param cache_molecules: Whether to cache molecules. Caching improves prediction speed but requires more memory.
         :param fingerprint_multiprocessing_min: Minimum number of molecules for multiprocessing to be used for
                                                 fingerprint computation. Otherwise, single processing is used.
@@ -59,6 +61,10 @@ class ADMETModel:
             raise ValueError(
                 "DrugBank reference set must be provided to filter by ATC code."
             )
+
+        # Set default num_workers
+        if num_workers is None:
+            num_workers = 8 if torch.cuda.is_available() else 0
 
         # Save parameters
         self.include_physchem = include_physchem
