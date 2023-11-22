@@ -13,7 +13,6 @@ from flask import (
     session,
 )
 
-from admet_ai.physchem import compute_physicochemical_properties
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
@@ -117,17 +116,9 @@ def index() -> str:
     if len(all_smiles) == 0:
         return render(errors=["No valid SMILES strings given."])
 
-    # Compute physicochemical properties
-    physchem_preds = compute_physicochemical_properties(
-        all_smiles=all_smiles, mols=mols
-    )
-
-    # Make ADMET predictions
+    # Make physicochemical and ADMET predictions
     admet_model = get_admet_model()
-    admet_preds = admet_model.predict(smiles=all_smiles)
-
-    # Combine physicochemical and ADMET properties
-    all_preds = pd.concat((physchem_preds, admet_preds), axis=1)
+    all_preds = admet_model.predict(smiles=all_smiles)
 
     # Compute DrugBank percentiles
     drugbank_percentiles = pd.DataFrame(
