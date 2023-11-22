@@ -216,10 +216,16 @@ python scripts/plot_drugbank_approved.py \
     --save_dir plots/drugbank_approved
 ```
 
-Plot ADMET website speed. First, download the results from [here]() and save them to `results/ADMET Tools Comparison.xlsx`. Then, run the following command.
+Plot ADMET website speed. First, download the results from [here](https://docs.google.com/spreadsheets/d/1_bvDO73MvYb7wl7_kH6Vagonyi-EJ6H-u8KpwQQ9Srg/edit?usp=sharing) and save them to `results/ADMET Tools Comparison.xlsx`. Then, run the following command.
 
 ```bash
 python scripts/plot_admet_speed.py \
     --results_path results/ADMET\ Tools\ Comparison.xlsx \
     --save_path plots/admet_speed.pdf
+```
+
+```bash
+python scripts/plot_admet_speed_large_scale.py \
+    --results_path results/ADMET\ Tools\ Comparison.xlsx \
+    --save_path plots/admet_speed_large_scale.pdf
 ```
