@@ -220,12 +220,12 @@ Plot ADMET website speed. First, download the results from [here](https://docs.g
 
 ```bash
 python scripts/plot_admet_speed.py \
-    --results_path results/ADMET\ Tools\ Comparison.xlsx \
+    --results_path results/ADMET\ Speed\ Comparison.xlsx \
     --save_path plots/admet_speed.pdf
 ```
 
 ```bash
 python scripts/plot_admet_speed_large_scale.py \
-    --results_path results/ADMET\ Tools\ Comparison.xlsx \
+    --results_path results/ADMET\ Speed\ Comparison.xlsx \
     --save_path plots/admet_speed_large_scale.pdf
 ```

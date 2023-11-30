@@ -9,7 +9,9 @@ import pandas as pd
 import seaborn as sns
 
 FIGSIZE = (14, 10)
-matplotlib.rcParams["font.size"] = 16
+matplotlib.rcParams["font.size"] = 18
+plt.rcParams["font.weight"] = "bold"
+plt.rcParams["axes.labelweight"] = "bold"
 SCATTER_SIZE = 150
 
 
@@ -53,6 +55,9 @@ def plot_tdc_leaderboard_ranks(
     :param datasets: List of datasets. Must be in the same order as the ranks in model_to_ranks.
     :param save_dir: Path to a directory where the plots will be saved.
     """
+    # Adjust font size
+    matplotlib.rcParams["font.size"] = 28
+
     # Create save directory
     save_dir.mkdir(parents=True, exist_ok=True)
 
@@ -70,10 +75,22 @@ def plot_tdc_leaderboard_ranks(
     # Melt dataframe for plotting
     model_ranks = dataset_model_ranks.melt(var_name="Model", value_name="Rank")
 
+    # Rename models
+    model_to_new_name = {
+        "Chemprop-RDKit": "ADMET-AI",
+        "RDKit2D + MLP (DeepPurpose)": "RDKit2D + MLP",
+        "Morgan + MLP (DeepPurpose)": "Morgan + MLP",
+        "CNN (DeepPurpose)": "CNN",
+    }
+
+    model_ranks["Model"] = model_ranks["Model"].apply(
+        lambda model: model_to_new_name.get(model, model)
+    )
+
     # Plot the ranks for each model that is evaluated on all datasets
     fig, ax = plt.subplots(figsize=FIGSIZE)
     sns.barplot(
-        x="Rank", y="Model", data=model_ranks, hue="Model", ax=ax, errorbar="se"
+        x="Rank", y="Model", data=model_ranks, hue="Model", ax=ax, errorbar="se",
     )
     ax.set_ylabel("")
     plt.tight_layout()
@@ -94,6 +111,9 @@ def plot_tdc_group_results(
     :param all_dataset_models: List of models evaluated on all datasets.
     :param save_dir: Path to a directory where the plots will be saved.
     """
+    # Adjust font size
+    matplotlib.rcParams["font.size"] = 18
+
     # Create save directory
     save_dir.mkdir(parents=True, exist_ok=True)
 
@@ -175,7 +195,7 @@ def plot_tdc_group_results(
             axes[0].set_xlim(0.0, 1.5)
             axes[1].set_xlim(6.5, 13.5)
 
-            fig.text(0.6, 0.05, metric, ha="center")
+            fig.text(0.63, 0.04, metric, ha="center")
         else:
             axes[0].set_xlim(val_min, val_max)
             axes[0].set_ylabel("")
@@ -195,6 +215,9 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
     :param results: Excel file containing results.
     :param save_dir: Path to a directory where the plots will be saved.
     """
+    # Adjust font size
+    matplotlib.rcParams["font.size"] = 18
+
     # Create save directory
     save_dir.mkdir(parents=True, exist_ok=True)
 
@@ -283,7 +306,7 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
             split_axes(axes)
 
             fig.text(
-                0.6, 0.05, f"{metric} Mean", ha="center",
+                0.65, 0.04, f"{metric} Mean", ha="center",
             )
         else:
             axes[0].set_ylabel("")

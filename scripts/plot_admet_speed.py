@@ -7,7 +7,9 @@ import pandas as pd
 import seaborn as sns
 
 FIGSIZE = (14, 10)
-matplotlib.rcParams["font.size"] = 16
+matplotlib.rcParams["font.size"] = 28
+plt.rcParams["font.weight"] = "bold"
+plt.rcParams["axes.labelweight"] = "bold"
 
 
 def plot_admet_speed(
@@ -31,30 +33,33 @@ def plot_admet_speed(
         id_vars="Website", var_name="Number of Molecules", value_name="Time (s)"
     )
 
+    # Reformat number of molecules (e.g., "1,000 molecules" -> "1,000")
+    results["Number of Molecules"] = results["Number of Molecules"].apply(
+        lambda num: num.split(" ")[0]
+    )
+
     # Plot results
     fig, ax = plt.subplots(figsize=FIGSIZE)
     sns.barplot(
-        x="Time (s)", y="Number of Molecules", hue="Website", data=results,
+        x="Number of Molecules", y="Time (s)", hue="Website", data=results,
     )
 
-    # Limit x-axis
-    plt.xlim(0, max_time)
+    # Limit y-axis
+    plt.ylim(0, max_time)
 
     # Label any bars that extend beyond maximum
     for bar in ax.patches:
-        time = bar.get_width()
+        time = bar.get_height()
         if time > max_time:
             ax.text(
-                max_time * 0.94,
-                bar.get_y() + bar.get_height() / 2.0,
+                bar.get_x() + bar.get_width() / 2.0,
+                max_time * 0.89,
                 f"{round(time):,}",
-                va="center",
-                color="white",
-                fontsize=14,
+                ha="center",
+                color="black",
+                fontsize=20,
+                rotation=90,
             )
-
-    # Hide y label
-    plt.ylabel("")
 
     # Save plot
     save_path.parent.mkdir(parents=True, exist_ok=True)

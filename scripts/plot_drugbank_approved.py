@@ -2,12 +2,18 @@
 from collections import Counter
 from pathlib import Path
 
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from tqdm import trange
 
 from tdc_constants import DRUGBANK_ATC_DELIMITER, DRUGBANK_ATC_PREFIX
+
+FIGSIZE = (14, 10)
+matplotlib.rcParams["font.size"] = 28
+plt.rcParams["font.weight"] = "bold"
+plt.rcParams["axes.labelweight"] = "bold"
 
 
 def plot_drugbank_approved(
@@ -38,24 +44,21 @@ def plot_drugbank_approved(
             atc_code_counts, orient="index", columns=["count"]
         )
         atc_code_df.sort_values("count", ascending=False, inplace=True)
-        num_atc_codes = len(atc_code_df)
 
         # Create a Seaborn barplot with ATC code counts
-        plt.figure(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=FIGSIZE)
         sns.barplot(
             x=atc_code_df["count"].values[:top_k_atc_codes],
             y=atc_code_df.index[:top_k_atc_codes].str.upper(),
             palette="viridis",
         )
-        plt.xlabel("Count")
-        plt.ylabel("")
 
-        if num_atc_codes <= top_k_atc_codes:
-            plt.title(f"All {num_atc_codes:,} ATC Codes at Level {level}")
-        else:
-            plt.title(
-                f"Top {top_k_atc_codes:,} of {num_atc_codes:,} ATC Codes at Level {level}"
-            )
+        # Remove y-axis label and change font size of y-axis tick labels
+        ax.set_ylabel("")
+        ax.set_yticklabels(ax.get_yticklabels(), fontsize=12)
+
+        # Add x-axis label
+        ax.set_xlabel("Count")
 
         plt.savefig(
             save_dir / f"atc_level_{level}_distribution.pdf", bbox_inches="tight"

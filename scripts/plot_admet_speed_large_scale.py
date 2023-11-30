@@ -7,7 +7,9 @@ import pandas as pd
 import seaborn as sns
 
 FIGSIZE = (14, 10)
-matplotlib.rcParams["font.size"] = 16
+matplotlib.rcParams["font.size"] = 28
+plt.rcParams["font.weight"] = "bold"
+plt.rcParams["axes.labelweight"] = "bold"
 
 
 def plot_admet_speed(
@@ -22,14 +24,24 @@ def plot_admet_speed(
     # Load speed results
     results = pd.read_excel(results_path, sheet_name=sheet_name)
 
-    # Plot results
-    plt.subplots(figsize=FIGSIZE)
-    sns.barplot(
-        x="Time (h)", y="Version", hue="Version", data=results,
+    # Reformat ADMET-AI Version
+    results["ADMET-AI Version"] = results["ADMET-AI Version"].apply(
+        lambda version: version.replace(", ", "\n")
     )
 
-    # Hide y label
-    plt.ylabel("")
+    # Plot results
+    plt.subplots(figsize=FIGSIZE)
+    sns.lineplot(
+        x="ADMET-AI Version",
+        y="Time (h)",
+        data=results,
+        marker="o",
+        markersize=20,
+        linewidth=5,
+    )
+
+    # Turn off x-axis label
+    plt.xlabel("")
 
     # Save plot
     save_path.parent.mkdir(parents=True, exist_ok=True)
