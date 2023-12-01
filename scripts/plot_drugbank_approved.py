@@ -10,7 +10,7 @@ from tqdm import trange
 
 from tdc_constants import DRUGBANK_ATC_DELIMITER, DRUGBANK_ATC_PREFIX
 
-FIGSIZE = (14, 10)
+FIGSIZE = (18, 14)
 matplotlib.rcParams["font.size"] = 28
 plt.rcParams["font.weight"] = "bold"
 plt.rcParams["axes.labelweight"] = "bold"
@@ -55,7 +55,7 @@ def plot_drugbank_approved(
 
         # Remove y-axis label and change font size of y-axis tick labels
         ax.set_ylabel("")
-        ax.set_yticklabels(ax.get_yticklabels(), fontsize=12)
+        # ax.set_yticklabels(ax.get_yticklabels(), fontsize=12)
 
         # Add x-axis label
         ax.set_xlabel("Count")
