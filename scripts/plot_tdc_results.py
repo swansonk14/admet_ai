@@ -1,4 +1,4 @@
-"""Plot results from TDC ADMET Group and TDC ADMET All."""
+"""Plot results from TDC Leaderboard and TDC Single-Task and Multi-Task."""
 from collections import defaultdict
 from pathlib import Path
 
@@ -48,7 +48,7 @@ def plot_tdc_leaderboard_ranks(
     datasets: list[str],
     save_dir: Path,
 ) -> None:
-    """Plot the ranks for each model that is evaluated on all datasets on the TDC ADMET group leaderboard.
+    """Plot the ranks for each model that is evaluated on all datasets on the TDC Leaderboard.
 
     :param model_to_ranks: Dictionary mapping each model to its list of ranks.
     :param all_dataset_models: List of models evaluated on all datasets.
@@ -98,16 +98,16 @@ def plot_tdc_leaderboard_ranks(
     plt.close()
 
 
-def plot_tdc_group_results(
+def plot_tdc_leaderboard_results(
     results: pd.ExcelFile,
-    group_results: pd.DataFrame,
+    leaderboard_results: pd.DataFrame,
     all_dataset_models: list[str],
     save_dir: Path,
 ) -> None:
-    """Plot results from TDC ADMET Group.
+    """Plot results from TDC Leaderboard.
 
     :param results: Excel file containing results.
-    :param group_results: DataFrame containing results from TDC ADMET Group.
+    :param leaderboard_results: DataFrame containing results from TDC Leaderboard.
     :param all_dataset_models: List of models evaluated on all datasets.
     :param save_dir: Path to a directory where the plots will be saved.
     """
@@ -117,7 +117,7 @@ def plot_tdc_group_results(
     # Create save directory
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    # Plot TDC ADMET Group results
+    # Plot TDC Leaderboard results
     for i, (metric, val_min, val_max) in enumerate(
         [
             ("AUROC", 0.5, 1.0),
@@ -133,9 +133,9 @@ def plot_tdc_group_results(
             fig, ax = plt.subplots(figsize=FIGSIZE)
             axes = [ax]
 
-        metric_dataset_names = group_results[
-            group_results["Leaderboard Metric"] == metric
-        ]["Dataset"]
+        metric_dataset_names = leaderboard_results[
+            leaderboard_results["Leaderboard Metric"] == metric
+            ]["Dataset"]
 
         for j, metric_dataset_name in enumerate(metric_dataset_names):
             dataset_results = results.parse(metric_dataset_name)
@@ -209,8 +209,8 @@ def plot_tdc_group_results(
         plt.close()
 
 
-def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
-    """Plot results from TDC ADMET All.
+def plot_tdc_single_task_vs_multi_task_results(results: pd.ExcelFile, save_dir: Path) -> None:
+    """Plot results from TDC Single-Task and Multi-Task.
 
     :param results: Excel file containing results.
     :param save_dir: Path to a directory where the plots will be saved.
@@ -222,8 +222,8 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
     save_dir.mkdir(parents=True, exist_ok=True)
 
     # Get regression and classification results
-    regression_all = results.parse("TDC ADMET All Regression")
-    classification_all = results.parse("TDC ADMET All Classification")
+    regression_all = results.parse("TDC Single-Multi Regression")
+    classification_all = results.parse("TDC Single-Multi Classification")
 
     # Create a seaborn barplot comparing single task and multitask performance for each dataset
     for results_all, metric in [
@@ -325,7 +325,7 @@ def plot_tdc_all_results(results: pd.ExcelFile, save_dir: Path) -> None:
 
 
 def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
-    """Plot results from TDC ADMET Group and TDC ADMET All.
+    """Plot results from TDC Leaderboard and TDC Single-Task and Multi-Task.
 
     :param results_path: Path to an Excel file containing results.
     :param save_dir: Path to a directory where the plots will be saved.
@@ -336,14 +336,14 @@ def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
     # Load results
     results = pd.ExcelFile(results_path)
 
-    # Get TDC ADMET group results
-    regression_group = results.parse("TDC ADMET Group Regression")
-    classification_group = results.parse("TDC ADMET Group Classification")
-    group_results = pd.concat([regression_group, classification_group])
+    # Get TDC Leaderboard results
+    regression_leaderboard = results.parse("TDC Leaderboard Regression")
+    classification_leaderboard = results.parse("TDC Leaderboard Classification")
+    leaderboard_results = pd.concat([regression_leaderboard, classification_leaderboard])
 
     # Map each model to its set of ranks
     model_to_ranks = defaultdict(list)
-    datasets = sorted(set(group_results["Dataset"]))
+    datasets = sorted(set(leaderboard_results["Dataset"]))
     for dataset in datasets:
         data = results.parse(dataset)
         for index, model in enumerate(data["Model"]):
@@ -360,7 +360,7 @@ def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
     print(f"Number of models: {len(model_to_ranks):,}")
     print(f"Number of models evaluated on all datasets: {len(all_dataset_models):,}")
 
-    # Plot TDC ADMET Group leaderboard ranks
+    # Plot TDC Leaderboard leaderboard ranks
     plot_tdc_leaderboard_ranks(
         model_to_ranks=model_to_ranks,
         all_dataset_models=all_dataset_models,
@@ -368,16 +368,16 @@ def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
         save_dir=save_dir,
     )
 
-    # Plot TDC ADMET Group results
-    plot_tdc_group_results(
+    # Plot TDC Leaderboard results
+    plot_tdc_leaderboard_results(
         results=results,
-        group_results=group_results,
+        leaderboard_results=leaderboard_results,
         all_dataset_models=all_dataset_models,
         save_dir=save_dir,
     )
 
-    # Plot TDC ADMET All results
-    plot_tdc_all_results(results=results, save_dir=save_dir)
+    # Plot TDC Single-Task vs Multi-Task results
+    plot_tdc_single_task_vs_multi_task_results(results=results, save_dir=save_dir)
 
 
 if __name__ == "__main__":
