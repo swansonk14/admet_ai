@@ -1,4 +1,4 @@
-"""Contains the version information for synthemol."""
+"""Contains the version information for ADMET-AI."""
 # major, minor, patch
 version_info = 1, 0, 0
 
