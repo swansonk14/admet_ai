@@ -2,9 +2,9 @@
 
 This git repo contains the code for ADMET-AI, an ADMET prediction platform that uses [Chemprop-RDKit]((https://github.com/chemprop/chemprop)) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET predictions on new molecules via the command line, via the Python API, or via a web server. A live web server hosting ADMET-AI is at [admet.ai.greenstonebio.com](https://admet.ai.greenstonebio.com)
 
-Instructions to reproduce the results in our paper are in [docs/reproduce.md](docs/reproduce.md).
+ADMET-AI will be described in a forthcoming paper.
 
-TODO: cite paper
+Instructions to reproduce the results in our paper are in [docs/reproduce.md](docs/reproduce.md).
 
 - [Installation](#installation)
 - [Predicting ADMET properties](#predicting-admet-properties)
@@ -14,7 +14,7 @@ TODO: cite paper
 
 ## Installation
 
-ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment).
+ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment). If a GPU is available, it will be used by default, but the code can also run on CPUs only.
 
 Optionally, create a conda environment.
 
@@ -54,7 +54,7 @@ ADMET-AI can be used to make ADMET predictions in three ways: (1) as a command l
 
 ### Command line tool
 
-ADMET predictions can be made on the command line with the `admet_predict` command, as illustrated below. Note: A GPU is used by default if available.
+ADMET predictions can be made on the command line with the `admet_predict` command, as illustrated below.
 
 ```bash
 admet_predict \
@@ -67,7 +67,7 @@ This command assumes that there exists a file called `data.csv` with SMILES stri
 
 ### Python module
 
-ADMET predictions can be made using the `predict` function in the `admet_ai` Python module, as illustrated below. Note: A GPU is used by default if available.
+ADMET predictions can be made using the `predict` function in the `admet_ai` Python module, as illustrated below.
 
 ```python
 from admet_ai import ADMETModel
@@ -80,13 +80,7 @@ If a SMILES string is provided, then `preds` is a dictionary mapping property na
 
 ### Web server
 
-TODO: check if a GPU is used here
-
-TODO: additional options and gunicorn
-
-ADMET predictions can be made using the ADMET-AI web server, as illustrated below. Note: A GPU is used by default if available.
-
-Note: Running the below command requires the additional web dependencies (i.e., `pip install admet_ai[web]`).
+ADMET predictions can be made using the ADMET-AI web server, as illustrated below. Note: Running the following command requires additional web dependencies (i.e., `pip install admet_ai[web]`).
 
 ```bash
 admet_web
