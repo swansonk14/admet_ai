@@ -2,7 +2,6 @@
 from uuid import uuid4
 from tempfile import NamedTemporaryFile
 
-import pandas as pd
 from flask import (
     after_this_request,
     jsonify,
@@ -16,7 +15,6 @@ from flask import (
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
-    compute_drugbank_percentile,
     get_drugbank_size,
     get_drugbank_task_names,
     get_drugbank_unique_atc_codes,
@@ -54,7 +52,7 @@ def render(**kwargs) -> str:
             session.get("atc_code")
         ),
         drugbank_size=get_drugbank_size(session.get("atc_code")),
-        atc_code=session.get("atc_code"),
+        atc_code=session.get("atc_code") or "all",
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         string_to_html_sup=string_to_html_sup,
         **kwargs,
@@ -70,10 +68,6 @@ def index() -> str:
     # Assign user ID to session
     if "user_id" not in session:
         session["user_id"] = uuid4().hex
-
-    # Set up default ATC code
-    if "atc_code" not in session:
-        session["atc_code"] = "all"
 
     # If GET request, simply return the page; otherwise if POST request, make predictions
     if request.method == "GET":
@@ -116,43 +110,22 @@ def index() -> str:
     if len(all_smiles) == 0:
         return render(errors=["No valid SMILES strings given."])
 
-    # Make physicochemical and ADMET predictions
+    # Make physicochemical and ADMET predictions (with DrugBank percentiles)
     admet_model = get_admet_model()
+    admet_model.atc_code = session.get("atc_code")
     all_preds = admet_model.predict(smiles=all_smiles)
 
-    # Compute DrugBank percentiles
-    drugbank_percentiles = pd.DataFrame(
-        data={
-            f"{property_name}_{get_drugbank_suffix(session.get('atc_code'))}": compute_drugbank_percentile(
-                property_name=property_name,
-                predictions=all_preds[property_name].values,
-                atc_code=session.get("atc_code"),
-            )
-            for property_name in all_preds.columns
-        },
-        index=all_smiles,
-    )
-
-    # Combine predictions and percentiles
-    all_preds_with_drugbank = pd.concat((all_preds, drugbank_percentiles), axis=1)
-
     # Convert predictions to a dictionary mapping SMILES to property name to value
-    smiles_to_property_id_to_pred: dict[
-        str, dict[str, float]
-    ] = all_preds_with_drugbank[
-        ~all_preds_with_drugbank.index.duplicated(
-            keep="first"
-        )  # drop duplicate SMILES indices
-    ].to_dict(
-        orient="index"
-    )
+    smiles_to_property_id_to_pred: dict[str, dict[str, float]] = all_preds[
+        ~all_preds.index.duplicated(keep="first")  # drop duplicate SMILES indices
+    ].to_dict(orient="index")
 
     # Store predictions in memory
-    set_user_preds(user_id=session["user_id"], preds_df=all_preds_with_drugbank)
+    set_user_preds(user_id=session["user_id"], preds_df=all_preds)
 
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
-        preds_df=all_preds_with_drugbank,
+        preds_df=all_preds,
         x_property_name=session.get("drugbank_x_task_name"),
         y_property_name=session.get("drugbank_y_task_name"),
         atc_code=session.get("atc_code"),
@@ -194,14 +167,24 @@ def set_atc_code() -> Response:
     :return: A JSON response containing the new DrugBank size.
     """
     # Get ATC code
-    session["atc_code"] = request.args.get("atc_code")
+    atc_code = request.args.get("atc_code")
+
+    # Handle "all" ATC code
+    if atc_code == "all":
+        atc_code = None
+
+    # Store ATC code in session
+    session["atc_code"] = atc_code
 
     # Get new DrugBank size
-    drugbank_size = get_drugbank_size(session["atc_code"])
+    drugbank_size = get_drugbank_size(session.get("atc_code"))
 
     # Send new DrugBank size
     return jsonify(
-        {"atc_code": session["atc_code"], "drugbank_size_string": f"{drugbank_size:,}"}
+        {
+            "atc_code": session.get("atc_code"),
+            "drugbank_size_string": f"{drugbank_size:,}",
+        }
     )
 
 

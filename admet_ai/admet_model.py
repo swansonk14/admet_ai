@@ -2,6 +2,7 @@
 from collections import defaultdict
 from multiprocessing import Pool
 from pathlib import Path
+from typing import Iterable
 
 import numpy as np
 import pandas as pd
@@ -23,18 +24,18 @@ from scipy.stats import percentileofscore
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
+from admet_ai.constants import DEFAULT_DRUGBANK_PATH, DEFAULT_MODELS_DIR
 from admet_ai.physchem import compute_physicochemical_properties
 
 
 class ADMETModel:
     """ADMET-AI model class."""
 
-    # TODO: set defaults for model paths in constants and include model files in git repo; same for DrugBank
     def __init__(
         self,
-        model_dirs: list[Path | str],
+        models_dir: Path | str = DEFAULT_MODELS_DIR,
         include_physchem: bool = True,
-        drugbank_path: Path | None = None,
+        drugbank_path: Path | str | None = DEFAULT_DRUGBANK_PATH,
         atc_code: str | None = None,
         num_workers: int | None = None,
         cache_molecules: bool = True,
@@ -42,8 +43,8 @@ class ADMETModel:
     ) -> None:
         """Initialize the ADMET-AI model.
 
-        :param model_dirs: List of paths to directories, where each directory contains
-                           an ensemble of Chemprop-RDKit models.
+        :param models_dir: Path to a directory containing subdirectories, each of which contains an ensemble
+                           of Chemprop-RDKit models.
         :param include_physchem: Whether to include physicochemical properties in the predictions.
         :param drugbank_path: Path to a CSV file containing DrugBank approved molecules
                               with ADMET predictions and ATC codes.
@@ -112,12 +113,16 @@ class ADMETModel:
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
 
-        # Load each ensemble of models
+        # Prepare lists to contain model details
         self.task_lists: list[list[str]] = []
         self.use_features_list: list[bool] = []
         self.model_lists: list[list[MoleculeModel]] = []
         self.scaler_lists: list[list[StandardScaler | None]] = []
 
+        # Get model ensemble directories
+        model_dirs = sorted(models_dir.iterdir())
+
+        # Load each ensemble of models
         for model_dir in model_dirs:
             # Get model paths for the ensemble in the directory
             model_paths = sorted(Path(model_dir).glob("**/*.pt"))

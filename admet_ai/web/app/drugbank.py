@@ -47,7 +47,7 @@ def get_drugbank(atc_code: str | None = None) -> pd.DataFrame:
     :param atc_code: The ATC code to filter by. If None or 'all', returns the entire DrugBank.
     :return: A DataFrame containing the DrugBank reference set, optionally filtered by ATC code.
     """
-    if atc_code is None or atc_code == "all":
+    if atc_code is None:
         return DRUGBANK_DF
 
     return DRUGBANK_DF.loc[ATC_CODE_TO_DRUGBANK_INDICES[atc_code]]
@@ -64,23 +64,6 @@ def get_drugbank_size(atc_code: str | None = None) -> int:
     drugbank = get_drugbank(atc_code=atc_code)
 
     return len(drugbank)
-
-
-def compute_drugbank_percentile(
-    property_name: str, predictions: np.ndarray, atc_code: str | None = None
-) -> np.ndarray:
-    """Computes the percentile of the predictions compared to the DrugBank approved molecules.
-
-    :param property_name: The name of the property that is predicted.
-    :param predictions: A 1D numpy array of predictions.
-    :param atc_code: The ATC code to filter by. If None or 'all', returns the entire DrugBank.
-    :return: A 1D numpy array of percentiles of the predictions compared to the DrugBank approved molecules.
-    """
-    # Get DrugBank reference, optionally filtered ATC code
-    drugbank = get_drugbank(atc_code=atc_code)
-
-    # Compute percentiles
-    return percentileofscore(drugbank[property_name], predictions)
 
 
 @lru_cache()

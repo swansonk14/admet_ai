@@ -58,9 +58,6 @@ def plot_drugbank_reference(
     if y_property_name is None:
         y_property_name = "Clinical Toxicity"
 
-    if atc_code is None:
-        atc_code = "all"
-
     # Get DrugBank reference, optionally filtered ATC code
     drugbank = get_drugbank(atc_code=atc_code)
 

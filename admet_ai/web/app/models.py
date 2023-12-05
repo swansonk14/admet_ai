@@ -11,13 +11,14 @@ def load_admet_model() -> None:
     global ADMET_MODEL
 
     ADMET_MODEL = ADMETModel(
-        model_dirs=list(app.config["MODEL_DIR"].iterdir()),
+        models_dir=app.config["MODELS_DIR"],
+        drugbank_path=app.config["DRUGBANK_PATH"],
         num_workers=app.config["NUM_WORKERS"],
         cache_molecules=app.config["CACHE_MOLECULES"],
     )
 
 
-def get_admet_model() -> ADMET_MODEL:
+def get_admet_model() -> ADMETModel:
     """Get the ADMET-AI model.
 
     :return: The ADMET-AI model.

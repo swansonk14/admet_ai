@@ -84,7 +84,7 @@ def get_drugbank_suffix(atc_code: str | None) -> str:
 
     :param atc_code: The ATC code.
     """
-    if atc_code is None or atc_code == "all":
+    if atc_code is None:
         return "drugbank_approved_percentile"
 
     return f"drugbank_approved_{atc_code}_percentile"

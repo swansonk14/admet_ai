@@ -5,15 +5,16 @@ import pandas as pd
 from tap import tapify
 
 from admet_ai import ADMETModel
+from admet_ai.constants import DEFAULT_DRUGBANK_PATH, DEFAULT_MODELS_DIR
 from admet_ai.utils import load_and_preprocess_data
 
 
 def admet_predict(
     data_path: Path,
-    model_dir: Path,  # TODO: set default model dir
+    models_dir: Path = DEFAULT_MODELS_DIR,
     save_path: Path | None = None,
     include_physchem: bool = True,
-    drugbank_path: Path | None = None,  # TODO: set default DrugBank path
+    drugbank_path: Path | None = DEFAULT_DRUGBANK_PATH,
     atc_code: str | None = None,
     smiles_column: str = "smiles",
     num_workers: int | None = None,
@@ -22,7 +23,8 @@ def admet_predict(
     """Make predictions on a dataset using Chemprop-RDKit models trained on TDC ADMET data.
 
     :param data_path: Path to a CSV file containing a dataset of molecules.
-    :param model_dir: Path to a directory containing Chemprop or Chemprop-RDKit models.
+    :param models_dir: Path to a directory containing subdirectories, each of which contains an ensemble
+                       of Chemprop-RDKit models.
     :param save_path: Path to a CSV file where predictions will be saved. If None, defaults to data_path.
     :param include_physchem: Whether to include physicochemical properties in the predictions.
     :param drugbank_path: Path to a CSV file containing DrugBank approved molecules
@@ -41,7 +43,7 @@ def admet_predict(
 
     # Build ADMETModel
     model = ADMETModel(
-        model_dirs=sorted(path for path in model_dir.iterdir() if path.is_dir()),
+        models_dir=models_dir,
         include_physchem=include_physchem,
         drugbank_path=drugbank_path,
         atc_code=atc_code,
