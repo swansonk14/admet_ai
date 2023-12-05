@@ -24,7 +24,7 @@ setup(
     download_url=f"https://github.com/swansonk14/admet_ai/archive/refs/tags/v_{__version__}.tar.gz",
     license="MIT",
     packages=find_packages(),
-    package_data={"admet_ai": ["py.typed"]},
+    package_data={"admet_ai": ["py.typed", "resources/**/*"]},
     entry_points={
         "console_scripts": [
             "admet_predict=admet_ai.admet_predict:admet_predict_command_line",
