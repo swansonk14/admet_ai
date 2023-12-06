@@ -9,6 +9,7 @@ body {
 .navbar-header {
     display: flex;
     align-items: center;
+    text-wrap: nowrap;
 }
 
 .navbar.navbar-inverse {
@@ -21,6 +22,8 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
     width: 60%;
+    display: flex;
+    align-items: center;
 }
 
 #header-logo {
@@ -40,6 +43,7 @@ body {
 
 #intro-text {
     font-size: 18px;
+    margin: 0;
 }
 
 .dropdown-title {
