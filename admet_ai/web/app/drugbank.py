@@ -3,10 +3,9 @@ from collections import defaultdict
 from functools import lru_cache
 
 import matplotlib
-import numpy as np
 import pandas as pd
-from scipy.stats import percentileofscore
 
+from admet_ai.constants import DRUGBANK_ATC_NAME_PREFIX, DRUGBANK_DELIMITER
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_id_to_name
 
@@ -28,10 +27,12 @@ def load_drugbank() -> None:
     # Map ATC codes to all indices of the DRUGBANK_DF with that ATC code
     atc_code_to_drugbank_indices = defaultdict(set)
     for atc_column in [
-        column for column in DRUGBANK_DF.columns if column.startswith("atc_")
+        column
+        for column in DRUGBANK_DF.columns
+        if column.startswith(DRUGBANK_ATC_NAME_PREFIX)
     ]:
         for index, atc_codes in DRUGBANK_DF[atc_column].dropna().items():
-            for atc_code in atc_codes.split(";"):
+            for atc_code in atc_codes.split(DRUGBANK_DELIMITER):
                 atc_code_to_drugbank_indices[atc_code.lower()].add(index)
 
     # Save ATC code to indices mapping to global variable and convert set to sorted list
@@ -76,9 +77,13 @@ def get_drugbank_unique_atc_codes() -> list[str]:
         {
             atc_code.lower()
             for atc_column in [
-                column for column in DRUGBANK_DF.columns if column.startswith("atc_")
+                column
+                for column in DRUGBANK_DF.columns
+                if column.startswith(DRUGBANK_ATC_NAME_PREFIX)
             ]
-            for atc_codes in DRUGBANK_DF[atc_column].dropna().str.split(";")
+            for atc_codes in DRUGBANK_DF[atc_column]
+            .dropna()
+            .str.split(DRUGBANK_DELIMITER)
             for atc_code in atc_codes
         }
     )

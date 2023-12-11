@@ -2,7 +2,6 @@
 from collections import defaultdict
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Iterable
 
 import numpy as np
 import pandas as pd
@@ -24,7 +23,12 @@ from scipy.stats import percentileofscore
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
-from admet_ai.constants import DEFAULT_DRUGBANK_PATH, DEFAULT_MODELS_DIR
+from admet_ai.constants import (
+    DEFAULT_DRUGBANK_PATH,
+    DEFAULT_MODELS_DIR,
+    DRUGBANK_ATC_NAME_PREFIX,
+    DRUGBANK_DELIMITER,
+)
 from admet_ai.physchem import compute_physicochemical_properties
 
 
@@ -82,10 +86,10 @@ class ADMETModel:
             # Map ATC codes to all indices of the drugbank with that ATC code
             atc_code_to_drugbank_indices = defaultdict(set)
             for atc_column in [
-                column for column in self.drugbank.columns if column.startswith("atc_")
+                column for column in self.drugbank.columns if column.startswith(DRUGBANK_ATC_NAME_PREFIX)
             ]:
                 for index, atc_codes in self.drugbank[atc_column].dropna().items():
-                    for atc_code in atc_codes.split(";"):
+                    for atc_code in atc_codes.split(DRUGBANK_DELIMITER):
                         atc_code_to_drugbank_indices[atc_code.lower()].add(index)
 
             # Save ATC code to indices mapping to global variable and convert set to sorted list

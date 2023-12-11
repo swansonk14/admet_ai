@@ -8,7 +8,7 @@ import pandas as pd
 import seaborn as sns
 from tqdm import trange
 
-from tdc_constants import DRUGBANK_ATC_DELIMITER, DRUGBANK_ATC_PREFIX
+from admet_ai.constants import DRUGBANK_ATC_NAME_PREFIX, DRUGBANK_DELIMITER
 
 FIGSIZE = (18, 14)
 matplotlib.rcParams["font.size"] = 28
@@ -34,11 +34,11 @@ def plot_drugbank_approved(
     # Plot distribution of ATC codes at each level
     for level in trange(1, 5, desc="ATC levels"):
         # Compute ATC code counts at this level and keep only the top k
-        atc_column = f"{DRUGBANK_ATC_PREFIX}_{level}"
+        atc_column = f"{DRUGBANK_ATC_NAME_PREFIX}_{level}"
         atc_code_counts = Counter(
             atc_code
             for atc_list in data[atc_column].dropna()
-            for atc_code in atc_list.split(DRUGBANK_ATC_DELIMITER)
+            for atc_code in atc_list.split(DRUGBANK_DELIMITER)
         )
         atc_code_df = pd.DataFrame.from_dict(
             atc_code_counts, orient="index", columns=["count"]
@@ -55,7 +55,6 @@ def plot_drugbank_approved(
 
         # Remove y-axis label and change font size of y-axis tick labels
         ax.set_ylabel("")
-        # ax.set_yticklabels(ax.get_yticklabels(), fontsize=12)
 
         # Add x-axis label
         ax.set_xlabel("Count")

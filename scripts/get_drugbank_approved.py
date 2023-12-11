@@ -6,9 +6,10 @@ import pandas as pd
 from rdkit import Chem
 from tqdm import tqdm
 
+from admet_ai.constants import DRUGBANK_ATC_NAME_PREFIX, DRUGBANK_DELIMITER
 from tdc_constants import (
-    DRUGBANK_ATC_DELIMITER,
-    DRUGBANK_ATC_PREFIX,
+    DRUGBANK_ATC_CODE_COLUMN,
+    DRUGBANK_ID_COLUMN,
     DRUGBANK_NAME_COLUMN,
     DRUGBANK_SMILES_COLUMN,
 )
@@ -27,12 +28,26 @@ def get_approved_smiles_from_drugbank(data_path: Path, save_path: Path) -> None:
     drugbank = ET.parse(data_path).getroot()
     drugs = list(drugbank)
 
-    approved_smiles = []
     approved_names = []
-    approved_atcs = []
+    approved_ids = []
+    approved_smiles = []
+    approved_atc_codes = []
+    approved_atc_names = []
 
     # Loop through drugs to find approved drugs and get their SMILES
     for drug in tqdm(drugs):
+        # Get DrugBank ID
+        drugbank_ids = drug.findall("db:drugbank-id", DRUGBANK_NAMESPACES)
+        drugbank_ids = tuple(
+            drugbank_id.text
+            for drugbank_id in drugbank_ids
+            if drugbank_id.text.startswith("DB")
+        )
+
+        # DrugBank ID length validation
+        if len(drugbank_ids) == 0:
+            raise ValueError("DrugBank ID missing")
+
         # Get groups to determine approval status
         groups_list = drug.findall("db:groups", DRUGBANK_NAMESPACES)
 
@@ -104,32 +119,43 @@ def get_approved_smiles_from_drugbank(data_path: Path, save_path: Path) -> None:
             # Get ATC codes
             atc_codes = atcs_list[0].findall("db:atc-code", DRUGBANK_NAMESPACES)
 
-        # Get unique ATC codes
-        unique_atc_codes = set()
+        # Get unique ATC info
+        drug_unique_atc_codes = set()
+        drug_level_to_unique_atc_names = {level: set() for level in range(1, 5)}
         for atc_code in atc_codes:
-            atc_levels = atc_code.findall("db:level", DRUGBANK_NAMESPACES)
+            atc_levels = atc_code.findall("db:level", DRUGBANK_NAMESPACES)[::-1]
 
             if len(atc_levels) != 4:
                 raise ValueError("ATC code does not have 4 levels")
 
-            unique_atc_codes.add(tuple(atc_levels[-i].text for i in range(1, 5)))
+            drug_unique_atc_codes.add(atc_levels[-1].get("code"))
+
+            for level in range(1, 5):
+                drug_level_to_unique_atc_names[level].add(atc_levels[level - 1].text)
 
         # Add info for approved drug
-        approved_smiles.append(smiles)
         approved_names.append(name)
-        approved_atcs.append(sorted(unique_atc_codes))
+        approved_ids.append(drugbank_ids)
+        approved_smiles.append(smiles)
+        approved_atc_codes.append(drug_unique_atc_codes)
+        approved_atc_names.append(drug_level_to_unique_atc_names)
 
     # Create dataset of approved drugs, drop duplicates, and sort
     data = pd.DataFrame(
         {
             DRUGBANK_NAME_COLUMN: approved_names,
+            DRUGBANK_ID_COLUMN: [DRUGBANK_DELIMITER.join(ids) for ids in approved_ids],
             DRUGBANK_SMILES_COLUMN: approved_smiles,
+            DRUGBANK_ATC_CODE_COLUMN: [
+                DRUGBANK_DELIMITER.join(sorted(atc_codes))
+                for atc_codes in approved_atc_codes
+            ],
             **{
-                f"{DRUGBANK_ATC_PREFIX}_{i + 1}": [
-                    DRUGBANK_ATC_DELIMITER.join(atc_code[i] for atc_code in atc_codes)
-                    for atc_codes in approved_atcs
+                f"{DRUGBANK_ATC_NAME_PREFIX}_{level}": [
+                    DRUGBANK_DELIMITER.join(sorted(level_to_atc_names[level]))
+                    for level_to_atc_names in approved_atc_names
                 ]
-                for i in range(4)
+                for level in range(1, 5)
             },
         }
     )
