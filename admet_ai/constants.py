@@ -9,5 +9,10 @@ with resources.path("admet_ai", "resources") as resources_dir:
     DEFAULT_MODELS_DIR = resources_dir / "models"
 
 # DrugBank columns
+DRUGBANK_ID_COLUMN = "id"
+DRUGBANK_NAME_COLUMN = "name"
+DRUGBANK_SMILES_COLUMN = "smiles"
+DRUGBANK_ATC_PREFIX = "atc"
 DRUGBANK_ATC_NAME_PREFIX = "atc_name"
+DRUGBANK_ATC_CODE_COLUMN = DRUGBANK_ATC_PREFIX
 DRUGBANK_DELIMITER = ";"

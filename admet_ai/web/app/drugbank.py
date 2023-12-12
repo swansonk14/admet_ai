@@ -5,7 +5,14 @@ from functools import lru_cache
 import matplotlib
 import pandas as pd
 
-from admet_ai.constants import DRUGBANK_ATC_NAME_PREFIX, DRUGBANK_DELIMITER
+from admet_ai.constants import (
+    DRUGBANK_ATC_NAME_PREFIX,
+    DRUGBANK_ATC_PREFIX,
+    DRUGBANK_DELIMITER,
+    DRUGBANK_ID_COLUMN,
+    DRUGBANK_NAME_COLUMN,
+    DRUGBANK_SMILES_COLUMN,
+)
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_id_to_name
 
@@ -95,8 +102,14 @@ def get_drugbank_tasks_ids() -> list[str]:
 
     :return: A list of tasks (properties) predicted in the DrugBank reference set.
     """
-    non_task_columns = ["name", "smiles"] + [
-        column for column in DRUGBANK_DF.columns if column.startswith("atc_")
+    non_task_columns = [
+        DRUGBANK_ID_COLUMN,
+        DRUGBANK_NAME_COLUMN,
+        DRUGBANK_SMILES_COLUMN,
+    ] + [
+        column
+        for column in DRUGBANK_DF.columns
+        if column.startswith(DRUGBANK_ATC_PREFIX)
     ]
     task_columns = set(DRUGBANK_DF.columns) - set(non_task_columns)
     drugbank_task_ids = sorted(task_columns)
