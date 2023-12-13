@@ -74,8 +74,8 @@ def lookup_in_tdc(
     """Look up molecules by SMILES in the TDC to identify their ADMET properties.
 
     :param data_path: Path to a CSV file containing molecules to look up.
-    :param smiles_column: Column in data_path containing SMILES.
     :param tdc_all_path: Path to a CSV file containing all TDC molecules and their ADMET properties.
+    :param smiles_column: Column in data_path containing SMILES.
     :param tdc_smiles_column: Column in tdc_all_path containing SMILES.
     :param save_path: Path to a CSV file where the data will be saved. If None, overwrites data_path.
     """
