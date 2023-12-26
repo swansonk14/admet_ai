@@ -72,15 +72,13 @@ radial_description_tooltip %}
             <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (<strong>ADMET</strong>) properties.
         </p>
         <p>
-            <strong><u>Models:</u></strong> ADMET-AI uses a graph neural network called <strong>Chemprop-RDKit</strong>,
-            which was trained on 41 ADMET datasets from
+            <strong><u>Models:</u></strong> ADMET-AI predicts ADMET properties using a graph neural network architecture
+            called <strong>Chemprop-RDKit</strong> (see the <a href="https://github.com/chemprop/chemprop">Chemprop</a>
+            package for details). ADMET-AI's Chemprop-RDKit models were trained on 41 ADMET datasets from
             the <a href="https://tdcommons.ai/" target="_blank">Therapeutics Data Commons (TDC)</a>.
-            ADMET-AI’s
-            Chemprop-RDKit model has
-            the
-            <strong>highest average rank</strong> on the
+            ADMET-AI’s Chemprop-RDKit models have the <strong>highest average rank</strong> on the
             <a href="https://tdcommons.ai/benchmark/admet_group/overview/" target="_blank">TDC ADMET Benchmark Group
-                leaderboard</a> and, it is also currently the fastest web-based ADMET predictor.
+                leaderboard</a>. ADMET-AI is also currently the fastest web-based ADMET predictor.
         </p>
         <p>
             <strong><u>References:</u></strong> Details regarding the training and evaluation of the model will be
@@ -130,7 +128,7 @@ radial_description_tooltip %}
             <strong><u>ADMET Predictions:</u></strong> Clicking on each displayed molecule will show the molecule’s
             ADMET predictions in tabular form. For each molecule, ADMET-AI computes 8 physicochemical properties
             using <a href="https://www.rdkit.org/docs/index.html" target="_blank">RDKit</a> and predicts 41 ADMET
-            properties using its Chemprop-RDKit graph neural network.
+            properties using its Chemprop-RDKit graph neural networks.
             For regression properties, the property is directly predicted with the units shown. For
             classification properties, the predicted value is the probability that the molecule has the
             property (e.g., probability of blood-brain barrier penetration).
