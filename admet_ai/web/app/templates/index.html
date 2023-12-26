@@ -59,8 +59,8 @@ radial_description_tooltip %}
 
     <button id="background-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#background-text" aria-expanded="false" aria-controls="background-text">
-        <strong class="dropdown-title">Background</strong>
         <div id="background-arrow" class="arrow arrow-down"></div>
+        <strong class="dropdown-title">Background</strong>
     </button>
     <div id="background-text" class="collapse">
         <p>
@@ -90,8 +90,8 @@ radial_description_tooltip %}
 
     <button id="use-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#use-text" aria-expanded="false" aria-controls="use-text">
-        <strong class="dropdown-title">Use</strong>
         <div id="use-arrow" class="arrow arrow-down"></div>
+        <strong class="dropdown-title">Use</strong>
     </button>
     <div id="use-text" class="collapse">
         <h3>Input</h3>
@@ -151,8 +151,8 @@ radial_description_tooltip %}
 
     <button id="local-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#local-text" aria-expanded="false" aria-controls="local-text">
-        <strong class="dropdown-title">Local Prediction</strong>
         <div id="local-arrow" class="arrow arrow-down"></div>
+        <strong class="dropdown-title">Local Prediction</strong>
     </button>
     <div id="local-text" class="collapse">
         <p>ADMET-AI can be run locally as a <strong>command line tool</strong> for large-scale batch prediction or as a
@@ -285,8 +285,8 @@ radial_description_tooltip %}
     {% if drugbank_plot %}
     <button id="drugbank-collapse-button" class="btn btn-link2 collapse-button" type="button" data-toggle="collapse"
             data-target="#drugbank" aria-expanded="false" aria-controls="drugbank">
-        <strong class="dropdown-title">Summary Plot</strong>
         <div id="drugbank-arrow" class="arrow arrow-down"></div>
+        <strong class="dropdown-title">Summary Plot</strong>
     </button>
     <div id="drugbank" class="collapse">
         <div id="drugbank-plot">
@@ -327,11 +327,12 @@ radial_description_tooltip %}
 
         <li class="index molecule-prediction">
             <button id="molecule-{{ smiles_index }}-collapse-button"
-                    class="btn btn-link2 collapse-button molecule-button"
+                    class="btn btn-link2 collapse-button"
                     type="button"
                     data-toggle="collapse"
                     data-target="#collapse-info-{{ smiles_index }}" aria-expanded="false"
                     aria-controls="collapse-info-{{ smiles_index }}">
+                <div id="molecule-{{ smiles_index }}-arrow" class="arrow arrow-down mol-arrow"></div>
                 <div class="smiles-and-svg-container">
                     <div class="smiles-container">
                         <strong>Molecule
@@ -348,7 +349,6 @@ radial_description_tooltip %}
                         </div>
                     </div>
                 </div>
-                <div id="molecule-{{ smiles_index }}-arrow" class="arrow arrow-down mol-arrow"></div>
                 <script>
                     $(document).ready(function () {
                         let buttonName = `molecule-{{ smiles_index }}`;
