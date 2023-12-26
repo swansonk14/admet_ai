@@ -55,6 +55,7 @@ def render(**kwargs) -> str:
         atc_code=session.get("atc_code") or "all",
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         string_to_html_sup=string_to_html_sup,
+        text_smiles=session.get("text_smiles", ""),
         **kwargs,
     )
 
@@ -72,6 +73,9 @@ def index() -> str:
     # If GET request, simply return the page; otherwise if POST request, make predictions
     if request.method == "GET":
         return render()
+
+    # Save the user's text box input
+    session["text_smiles"] = request.form["text-smiles"]
 
     # Get the SMILES from the request
     all_smiles, error = get_smiles_from_request()
