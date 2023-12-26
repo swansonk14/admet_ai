@@ -94,13 +94,10 @@ def index() -> str:
     # Convert SMILES to RDKit molecules
     mols = smiles_to_mols(all_smiles)
 
-    # Warn if any molecules are invalid
-    num_invalid_mols = sum(mol is None for mol in mols)
-    if num_invalid_mols > 0:
-        ending = "s" if num_invalid_mols > 1 else ""
-        warnings.append(
-            f"Input contains {num_invalid_mols:,} invalid SMILES string{ending}."
-        )
+    # Warn about invalid SMILES
+    for smiles, mol in zip(all_smiles, mols):
+        if mol is None:
+            warnings.append(f"Invalid SMILES string: {smiles}")
 
     # Remove invalid molecules
     all_smiles = [smile for smile, mol in zip(all_smiles, mols) if mol is not None]
