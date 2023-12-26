@@ -24,8 +24,6 @@ $(document).ready(function () {
         $("#file-input-form").hide();
         $("#file-smiles-input").prop('required', false);
         $("#draw-input-form").hide();
-        $("#draw-smiles-input").prop('required', false);
-        $("#draw-smiles-input").val('');
     });
     $("#file-button").click(function () {
         $("#text-input-form").hide();
@@ -34,8 +32,6 @@ $(document).ready(function () {
         $("#file-input-form").show();
         $("#file-smiles-input").prop('required', true);
         $("#draw-input-form").hide();
-        $("#draw-smiles-input").prop('required', false);
-        $("#draw-smiles-input").val('');
     });
     $("#draw-button").click(function () {
         $("#text-input-form").hide();
@@ -44,7 +40,6 @@ $(document).ready(function () {
         $("#file-input-form").hide();
         $("#file-smiles-input").prop('required', false);
         $("#draw-input-form").show();
-        $("#draw-smiles-input").prop('required', true);
     });
     $("#example-button").click(function () {
         $("#text-input-form").show();
@@ -53,12 +48,10 @@ $(document).ready(function () {
         $("#file-input-form").hide();
         $("#file-smiles-input").prop('required', false);
         $("#draw-input-form").hide();
-        $("#draw-smiles-input").prop('required', false);
-        $("#draw-smiles-input").val('');
     });
 
     // Convert molecule drawing to SMILES
-    $("#convert-to-smiles").click(function () {
+    $("#predict-button").click(function () {
         $("#draw-smiles-input").val(jsmeApplet.smiles());
     });
 
