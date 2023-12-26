@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-{% from 'macros.html' import chemdraw, error_message, warning_message %}
+{% from 'macros.html' import chemdraw, error_message, warning_message, radial_description_list,
+radial_description_tooltip %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -124,27 +125,7 @@
             <strong><u>Radial Plot:</u></strong> For each input molecule, a radial plot is shown summarizing
             five key ADMET properties in terms of their DrugBank percentile:
         </p>
-        <ol>
-            <li><strong>Blood-Brain Barrier Safe:</strong>
-                The probability that the molecule does not cross the
-                blood-brain barrier (i.e., 1 - Blood-Brain Barrier Penetration percentile).
-            </li>
-            <li><strong>hERG Safe:</strong>
-                The probability that the molecule does not block the human ether-a-go-go
-                (hERG) channel (i.e., 1 - hERG Blocking percentile).
-            </li>
-            <li><strong>Bioavailable:</strong>
-                The probability that the molecule is orally bioavailable
-                (i.e., Oral Bioavailability percentile).
-            </li>
-            <li><strong>Soluble:</strong>
-                The aqueous solubility of the molecule (i.e., Aqueous Solubility percentile).
-            </li>
-            <li><strong>Non-Toxic:</strong>
-                The probability that the molecule is not toxic across
-                all toxicity properties (i.e., 1 - maximum Toxicity percentile).
-            </li>
-        </ol>
+        {{ radial_description_list() }}
         <p>
             <strong><u>ADMET Predictions:</u></strong> Clicking on each displayed molecule will show the molecule’s
             ADMET predictions in tabular form. For each molecule, ADMET-AI computes 8 physicochemical properties
@@ -360,7 +341,8 @@
                             smiles }}</strong>
                     </div>
                     <div class="molecule-svg-container">
-                        <div id="radial-plot-{{ smiles_index }}" class="radial-plot">
+                        <div id="radial-plot-{{ smiles_index }}" class="radial-plot" data-toggle="tooltip"
+                             data-html="true" title="{{ radial_description_tooltip() }}">
                             {{ radial_svgs[smiles_index] | safe }}
                         </div>
                         <div id="molecule-image-{{ smiles_index }}" class="mol-image">

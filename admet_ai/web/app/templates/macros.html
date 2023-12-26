@@ -29,3 +29,54 @@
 </div>
 {% endif %}
 {% endmacro %}
+
+{% macro blood_brain_barrier_safe() %}
+<strong>Blood-Brain Barrier Safe:</strong>
+The probability that the molecule does not cross the
+blood-brain barrier (i.e., 1 - Blood-Brain Barrier Penetration percentile).
+{% endmacro %}
+
+{% macro hERG_safe() %}
+<strong>hERG Safe:</strong>
+The probability that the molecule does not block the human ether-a-go-go
+(hERG) channel (i.e., 1 - hERG Blocking percentile).
+{% endmacro %}
+
+{% macro bioavailable() %}
+<strong>Bioavailable:</strong>
+The probability that the molecule is orally bioavailable
+(i.e., Oral Bioavailability percentile).
+{% endmacro %}
+
+{% macro soluble() %}
+<strong>Soluble:</strong>
+The aqueous solubility of the molecule (i.e., Aqueous Solubility percentile).
+{% endmacro %}
+
+{% macro non_toxic() %}
+<strong>Non-Toxic:</strong>
+The probability that the molecule is not toxic across
+all toxicity properties (i.e., 1 - maximum Toxicity percentile).
+{% endmacro %}
+
+{% macro radial_description_list() %}
+<ol>
+    <li>{{ blood_brain_barrier_safe() }}</li>
+    <li>{{ hERG_safe() }}</li>
+    <li>{{ bioavailable() }}</li>
+    <li>{{ soluble() }}</li>
+    <li>{{ non_toxic() }}</li>
+</ol>
+{% endmacro %}
+
+{% macro radial_description_tooltip() %}
+{{ blood_brain_barrier_safe() }}
+<br><br>
+{{ hERG_safe() }}
+<br><br>
+{{ bioavailable() }}
+<br><br>
+{{ soluble() }}
+<br><br>
+{{ non_toxic() }}
+{% endmacro %}
