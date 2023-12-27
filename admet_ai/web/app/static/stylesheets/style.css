@@ -8,8 +8,20 @@ body {
 .navbar-header {
     display: flex;
     align-items: center;
-    text-wrap: nowrap;
+    white-space: nowrap;
 }
+
+.logo-and-title {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .logo-and-title {
+        flex-direction: row;
+    }
+}
+
 
 .navbar-fixed-top {
     position: relative;
@@ -211,8 +223,7 @@ th {
 }
 
 #drugbank-plot-inner {
-    max-width: 60%;
-    min-width: 330px; /*400px - 70px (width of padding around it)*/
+    width: 80%;
     display: inline-block;
 }
 
@@ -242,7 +253,6 @@ th {
 .collapse-button {
     display: flex;
     align-items: center;
-    text-wrap: wrap;
 }
 
 .collapse, .collapsing {

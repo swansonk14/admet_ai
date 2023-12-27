@@ -87,8 +87,8 @@ $(document).ready(function () {
             type: "POST",
             dataType: "json",
             success: function (response) {
-                if (response.atc_code && response.drugbank_size_string) {
-                    document.getElementById("selected-atc-code").innerHTML = response.atc_code;
+                if (response.drugbank_size_string) {
+                    document.getElementById("selected-atc-code").innerHTML = atc_code;
                     document.getElementById("drugbank-size").innerHTML = response.drugbank_size_string;
                 }
             },
