@@ -17,6 +17,22 @@ $(document).ready(function () {
         }
     );
 
+    // Resize JSME applet
+    function resizeJSME() {
+        // Get the new container dimensions
+        var container = document.getElementById("jsme_container");
+        var width = container.offsetWidth;
+        var height = container.offsetHeight;
+
+        // Update JSME applet size
+        jsmeApplet.setSize(width + "px", height + "px");
+    }
+
+    // Resize JSME applet on window size change
+    window.addEventListener("resize", function () {
+        resizeJSME();
+    });
+
     // Selection of SMILES input type
     $("#text-button").click(function () {
         $("#text-input-form").show();
@@ -40,6 +56,7 @@ $(document).ready(function () {
         $("#file-input-form").hide();
         $("#file-smiles-input").prop('required', false);
         $("#draw-input-form").show();
+        resizeJSME();
     });
     $("#example-button").click(function () {
         $("#text-input-form").show();
