@@ -1,5 +1,4 @@
 body {
-    padding-top: 100px;
     padding-bottom: 100px;
     background-size: cover;
     background-repeat: no-repeat;
@@ -10,6 +9,10 @@ body {
     display: flex;
     align-items: center;
     text-wrap: nowrap;
+}
+
+.navbar-fixed-top {
+    position: relative;
 }
 
 .navbar.navbar-inverse {
@@ -73,6 +76,7 @@ body {
 
 #text-smiles-input {
     width: 100%;
+    resize: none;
 }
 
 #file-input-form {
