@@ -17,8 +17,9 @@ def get_smiles_from_request() -> tuple[list[str] | None, str | None]:
 
     :return: A tuple with a list of SMILES or None and an error message or None.
     """
+    # Get SMILES from request
     if request.form["text-smiles"] != "":
-        smiles = request.form["text-smiles"].split()
+        smiles = request.form["text-smiles"].split("\n")
     elif request.form["draw-smiles"] != "":
         smiles = [request.form["draw-smiles"]]
     else:
@@ -36,6 +37,12 @@ def get_smiles_from_request() -> tuple[list[str] | None, str | None]:
                 smiles = df[smiles_column].astype(str).tolist()
             else:
                 return None, f"SMILES column '{smiles_column}' not found in data file."
+
+    # Strip SMILES of whitespace
+    smiles = [smile.strip() for smile in smiles]
+
+    # Skip empty lines
+    smiles = [smile for smile in smiles if smile != ""]
 
     return smiles, None
 

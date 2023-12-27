@@ -42,10 +42,8 @@ radial_description_tooltip %}
         <p id="intro-text">
             <b>ADMET-AI</b> is a simple, fast, and accurate web interface for predicting the <b>A</b>bsorption,
             <b>D</b>istribution,
-            <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (<strong>ADMET</strong>) properties of molecules
-            using
-            machine learning
-            models.
+            <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (<strong>ADMET</strong>)
+            properties of molecules using machine learning models.
         </p>
     </div>
 </nav>
@@ -70,6 +68,10 @@ radial_description_tooltip %}
             filtered to a tractable number for synthesis and experimental validation. An effective primary filter
             is to evaluate candidate compounds based on their <b>A</b>bsorption, <b>D</b>istribution,
             <b>M</b>etabolism, <b>E</b>xcretion, and <b>T</b>oxicity (<strong>ADMET</strong>) properties.
+        </p>
+        <p>
+            <strong><u>ADMET-AI:</u></strong> ADMET-AI is a simple, fast, and accurate web interface for predicting
+            the ADMET properties of molecules using machine learning models.
         </p>
         <p>
             <strong><u>Models:</u></strong> ADMET-AI predicts ADMET properties using a graph neural network architecture
@@ -103,8 +105,9 @@ radial_description_tooltip %}
         </p>
         <p>
             <strong><u>DrugBank Reference:</u></strong> To provide relevant context, ADMET predictions on input
-            molecules are compared to predictions on approved drugs from the <a href="https://go.drugbank.com/"
-                                                                                target="_blank">DrugBank</a>. This
+            molecules are compared to predictions on {{ "{:,}".format(drugbank_total_size) }} approved drugs from the <a
+                href="https://go.drugbank.com/"
+                target="_blank">DrugBank</a>. This
             reference set can be filtered to a specific category of drugs for a more relevant comparison by selecting an
             <a href="https://www.whocc.no/atc_ddd_index/" target="_blank">Anatomical
                 Therapeutic Chemical (ATC)</a> code.
@@ -440,7 +443,13 @@ radial_description_tooltip %}
                                     "{:.2f}".format(smiles_to_property_id_to_pred[smiles][row["id"] + "_" +
                                     drugbank_approved_percentile_suffix])
                                     }}%
+                                </td>
+                                {% if row["units"] == "-" %}
+                                <td data-toggle="tooltip"
+                                    title="&quot;-&quot; indicates that the {{ value_name }} is the probability that the molecule has that property.">
+                                    {% else %}
                                 <td>
+                                    {% endif %}
                                     {{ string_to_html_sup(row["units"]) | safe }}
                                 </td>
 

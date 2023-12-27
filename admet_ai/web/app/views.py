@@ -52,6 +52,7 @@ def render(**kwargs) -> str:
             session.get("atc_code")
         ),
         drugbank_size=get_drugbank_size(session.get("atc_code")),
+        drugbank_total_size=get_drugbank_size(),
         atc_code=session.get("atc_code") or "all",
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         string_to_html_sup=string_to_html_sup,
@@ -100,7 +101,7 @@ def index() -> str:
 
     # Warn about invalid SMILES
     for smiles, mol in zip(all_smiles, mols):
-        if mol is None:
+        if mol is None or " " in smiles:
             warnings.append(f"Invalid SMILES string: {smiles}")
 
     # Remove invalid molecules
