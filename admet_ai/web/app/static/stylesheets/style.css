@@ -102,6 +102,11 @@ body {
     display: none;
 }
 
+#jsme_container {
+    width: 100%;
+    height: 400px;
+}
+
 h1 {
     font-size: 36px;
     margin-bottom: 10px;
@@ -207,7 +212,7 @@ th {
 
 #drugbank-plot-inner {
     max-width: 60%;
-    min-width: 330px;  /*400px - 70px (width of padding around it)*/
+    min-width: 330px; /*400px - 70px (width of padding around it)*/
     display: inline-block;
 }
 
@@ -224,6 +229,10 @@ th {
     background-color: #f8f4f4;
     float: right;
     height: 100%;
+}
+
+.tooltip-inner {
+    max-width: 250px;
 }
 
 .dropdown-item {
@@ -289,10 +298,6 @@ ul {
     border-right: 15px solid transparent;
     margin-left: 5px;
     margin-right: 15px;
-}
-
-.arrow.mol-arrow {
-    margin-left: auto;
 }
 
 .arrow-down {

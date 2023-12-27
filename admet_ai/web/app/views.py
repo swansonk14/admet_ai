@@ -195,9 +195,6 @@ def drugbank_plot() -> Response:
 
     :return: A JSON response containing the SVG of the plot.
     """
-    # Get requested ATC code
-    atc_code = request.args.get("atc_code", default=session.get("atc_code"), type=str)
-
     # Get requested X and Y axes and store in session
     session["drugbank_x_task_name"] = request.args.get(
         "x_task", default=session.get("drugbank_x_task_name"), type=str
@@ -211,7 +208,7 @@ def drugbank_plot() -> Response:
         preds_df=get_user_preds(session["user_id"]),
         x_property_name=session["drugbank_x_task_name"],
         y_property_name=session["drugbank_y_task_name"],
-        atc_code=atc_code,
+        atc_code=session.get("atc_code"),
         max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"],
     )
 
