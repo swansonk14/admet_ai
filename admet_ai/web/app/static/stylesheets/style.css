@@ -24,7 +24,8 @@ body {
 .header {
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 60%;
+    max-width: 60%;
+    min-width: 400px;
     display: flex;
     align-items: center;
 }
@@ -41,7 +42,8 @@ body {
 }
 
 .container {
-    width: 60%;
+    max-width: 60%;
+    min-width: 400px;
 }
 
 #intro-text {
@@ -204,7 +206,8 @@ th {
 }
 
 #drugbank-plot-inner {
-    width: 60%;
+    max-width: 60%;
+    min-width: 330px;  /*400px - 70px (width of padding around it)*/
     display: inline-block;
 }
 
@@ -230,6 +233,7 @@ th {
 .collapse-button {
     display: flex;
     align-items: center;
+    text-wrap: wrap;
 }
 
 .collapse, .collapsing {
@@ -309,7 +313,7 @@ ul {
 }
 
 .smiles-and-svg-container {
-    width: 95%;
+    width: 90%;
 }
 
 .smiles-container {
