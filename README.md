@@ -2,7 +2,7 @@
 
 This git repo contains the code for ADMET-AI, an ADMET prediction platform that uses [Chemprop-RDKit]((https://github.com/chemprop/chemprop)) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET predictions on new molecules via the command line, via the Python API, or via a web server. A live web server hosting ADMET-AI is at [admet.ai.greenstonebio.com](https://admet.ai.greenstonebio.com)
 
-ADMET-AI will be described in a forthcoming paper.
+ADMET-AI is described in detail in this paper: https://www.biorxiv.org/content/10.1101/2023.12.28.573531v1
 
 Instructions to reproduce the results in our paper are in [docs/reproduce.md](docs/reproduce.md).
 
