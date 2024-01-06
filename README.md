@@ -1,20 +1,28 @@
 # ADMET-AI
 
-This git repo contains the code for ADMET-AI, an ADMET prediction platform that uses [Chemprop-RDKit]((https://github.com/chemprop/chemprop)) models trained on ADMET datasets from the Therapeutics Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET predictions on new molecules via the command line, via the Python API, or via a web server. A live web server hosting ADMET-AI is at [admet.ai.greenstonebio.com](https://admet.ai.greenstonebio.com)
+This git repo contains the code for ADMET-AI, an ADMET prediction platform that
+uses [Chemprop-RDKit]((https://github.com/chemprop/chemprop)) models trained on ADMET datasets from the Therapeutics
+Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET predictions on new molecules via the
+command line, via the Python API, or via a web server. A live web server hosting ADMET-AI is
+at [admet.ai.greenstonebio.com](https://admet.ai.greenstonebio.com)
 
-ADMET-AI is described in detail in this paper: https://www.biorxiv.org/content/10.1101/2023.12.28.573531v1
+Please see the following paper for more
+details, and please cite us if ADMET-AI is useful in your work. Instructions to reproduce the results in our paper are in [docs/reproduce.md](docs/reproduce.md).
 
-Instructions to reproduce the results in our paper are in [docs/reproduce.md](docs/reproduce.md).
+[ADMET-AI: A machine learning ADMET platform for evaluation of large-scale chemical libraries](https://www.biorxiv.org/content/10.1101/2023.12.28.573531v1)
+
+## Table of Contents
 
 - [Installation](#installation)
 - [Predicting ADMET properties](#predicting-admet-properties)
-  * [Command line tool](#command-line-tool)
-  * [Python module](#python-module)
-  * [Web server](#web-server)
+    * [Command line tool](#command-line-tool)
+    * [Python module](#python-module)
+    * [Web server](#web-server)
 
 ## Installation
 
-ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment). If a GPU is available, it will be used by default, but the code can also run on CPUs only.
+ADMET-AI can be installed in a few minutes on any operating system using pip (optionally within a conda environment). If
+a GPU is available, it will be used by default, but the code can also run on CPUs only.
 
 Optionally, create a conda environment.
 
@@ -37,20 +45,26 @@ cd admet_ai
 pip install -e .
 ```
 
-By default, the pip installation only includes dependencies required for making ADMET predictions, either via the command line or via the Python API. To install dependencies required for processing TDC data or plotting TDC results, run `pip install admet_ai[tdc]`. To install dependencies required for hosting the ADMET-AI web server, run `pip install admet_ai[web]`.
+By default, the pip installation only includes dependencies required for making ADMET predictions, either via the
+command line or via the Python API. To install dependencies required for processing TDC data or plotting TDC results,
+run `pip install admet_ai[tdc]`. To install dependencies required for hosting the ADMET-AI web server,
+run `pip install admet_ai[web]`.
 
-If there are version issues with the required packages, create a conda environment with specific working versions of the packages as follows.
+If there are version issues with the required packages, create a conda environment with specific working versions of the
+packages as follows.
 
 ```bash
 pip install -r requirements.txt
 pip install -e .
 ```
 
-Note: If you get the issue `ImportError: libXrender.so.1: cannot open shared object file: No such file or directory`, run `conda install -c conda-forge xorg-libxrender`.
+Note: If you get the issue `ImportError: libXrender.so.1: cannot open shared object file: No such file or directory`,
+run `conda install -c conda-forge xorg-libxrender`.
 
 ## Predicting ADMET properties
 
-ADMET-AI can be used to make ADMET predictions in three ways: (1) as a command line tool, (2) as a Python module, or (3) as a web server.
+ADMET-AI can be used to make ADMET predictions in three ways: (1) as a command line tool, (2) as a Python module, or (3)
+as a web server.
 
 ### Command line tool
 
@@ -63,7 +77,8 @@ admet_predict \
     --smiles_column smiles
 ```
 
-This command assumes that there exists a file called `data.csv` with SMILES strings in the column `smiles`. The predictions will be saved to a file called `preds.csv`.
+This command assumes that there exists a file called `data.csv` with SMILES strings in the column `smiles`. The
+predictions will be saved to a file called `preds.csv`.
 
 ### Python module
 
@@ -76,11 +91,14 @@ model = ADMETModel()
 preds = model.predict(smiles="O(c1ccc(cc1)CCOC)CC(O)CNC(C)C")
 ```
 
-If a SMILES string is provided, then `preds` is a dictionary mapping property names to values. If a list of SMILES strings is provided, then `preds` is a Pandas DataFrame where the index is the SMILES and the columns are the properties.
+If a SMILES string is provided, then `preds` is a dictionary mapping property names to values. If a list of SMILES
+strings is provided, then `preds` is a Pandas DataFrame where the index is the SMILES and the columns are the
+properties.
 
 ### Web server
 
-ADMET predictions can be made using the ADMET-AI web server, as illustrated below. Note: Running the following command requires additional web dependencies (i.e., `pip install admet_ai[web]`).
+ADMET predictions can be made using the ADMET-AI web server, as illustrated below. Note: Running the following command
+requires additional web dependencies (i.e., `pip install admet_ai[web]`).
 
 ```bash
 admet_web
