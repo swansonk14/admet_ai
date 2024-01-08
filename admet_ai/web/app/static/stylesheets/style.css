@@ -33,6 +33,11 @@ body {
     color: white;
 }
 
+.footer-text {
+    margin-top: 15px;
+    text-align: center;
+}
+
 .header {
     margin-top: 10px;
     margin-bottom: 10px;
