@@ -1,6 +1,7 @@
 """Evaluate predictions from TDC ADMET Benchmark Group models."""
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from tdc.benchmark_group import admet_group
 
@@ -36,11 +37,21 @@ def tdc_admet_group_evaluate(data_dir: Path, preds_dir: Path) -> None:
 
         predictions_list.append(predictions)
 
-    # Evaluate predictions
-    results = group.evaluate_many(predictions_list)
+    # Evaluate predictions of single models across all folds
+    single_results = group.evaluate_many(predictions_list)
+    print(f"Results for single models across {len(predictions_list)} folds")
+    print(single_results)
+    print()
 
-    # Print results
-    print(results)
+    # Evaluate predictions for ensemble of all folds
+    ensemble_predictions = {
+        name: np.mean(np.stack([preds[name] for preds in predictions_list]), axis=0)
+        for name in names
+    }
+    ensemble_results = group.evaluate(ensemble_predictions)
+    print(f"Results for ensemble model of all {len(predictions_list)} folds")
+    print(ensemble_results)
+    print()
 
 
 if __name__ == "__main__":

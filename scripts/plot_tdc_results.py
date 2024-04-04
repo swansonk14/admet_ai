@@ -135,7 +135,7 @@ def plot_tdc_leaderboard_results(
 
         metric_dataset_names = leaderboard_results[
             leaderboard_results["Leaderboard Metric"] == metric
-            ]["Dataset"]
+        ]["Dataset"]
 
         for j, metric_dataset_name in enumerate(metric_dataset_names):
             dataset_results = results.parse(metric_dataset_name)
@@ -209,7 +209,107 @@ def plot_tdc_leaderboard_results(
         plt.close()
 
 
-def plot_tdc_single_task_vs_multi_task_results(results: pd.ExcelFile, save_dir: Path) -> None:
+def plot_tdc_leaderboard_single_vs_ensemble(
+    results: pd.ExcelFile, save_dir: Path
+) -> None:
+    """Plot results from TDC Leaderboard single model vs ensemble model.
+
+    :param results: Excel file containing results.
+    :param save_dir: Path to a directory where the plots will be saved.
+    """
+    # Adjust font size
+    matplotlib.rcParams["font.size"] = 18
+
+    # Create save directory
+    save_dir.mkdir(parents=True, exist_ok=True)
+
+    # Get regression and classification results
+    regression = results.parse("TDC Leaderboard Regression")
+    classification = results.parse("TDC Leaderboard Classification")
+
+    # Create a seaborn barplot comparing single model and ensemble model performance for each dataset
+    for i, (metric, val_min, val_max) in enumerate(
+        [
+            ("AUROC", 0.5, 1.0),
+            ("AUPRC", 0.0, 1.0),
+            ("Spearman", 0.0, 1.0),
+            ("MAE", None, None),
+        ]
+    ):
+        # Adapt plot based on metric
+        if metric == "MAE":
+            fig, axes = plt.subplots(1, 2, sharey=True, figsize=FIGSIZE)
+            fig.subplots_adjust(wspace=0.05)
+        else:
+            fig, ax = plt.subplots(figsize=FIGSIZE)
+            axes = [ax]
+
+        # Select results based on metric
+        results = classification if metric in {"AUROC", "AUPRC"} else regression
+        results = results[results["Leaderboard Metric"] == metric]
+
+        # Reformat results
+        results = results.rename(
+            columns={
+                "Leaderboard Mean": "Single",
+                "Leaderboard Standard Deviation": "Single Std",
+                "Leaderboard Ensemble": "Ensemble",
+            },
+        )
+        means = results.melt(
+            id_vars="Dataset",
+            value_vars=["Single", "Ensemble",],
+            var_name="Model Type",
+            value_name=metric,
+        )
+
+        # Plot results
+        for ax in axes:
+            # Add mean bars
+            sns.barplot(
+                x=metric, y="Dataset", hue="Model Type", data=means, ax=ax,
+            )
+
+            # Add standard deviation for single model
+            for i, dataset in enumerate(results["Dataset"]):
+                ax.errorbar(
+                    x=results.iloc[i]["Single"],
+                    y=[i - 0.2],
+                    xerr=results.iloc[i]["Single Std"],
+                    fmt="none",
+                    c="black",
+                    capsize=3,
+                )
+
+        # Adapt plot limits
+        if metric == "MAE":
+            axes[0].set_xlim(0.0, 1.0)
+            axes[1].set_xlim(3.0, 10.0)
+
+            axes[0].legend().remove()
+
+            split_axes(axes)
+
+            fig.text(
+                0.625, 0.04, metric, ha="center",
+            )
+        else:
+            axes[0].set_ylabel("")
+
+        plt.tight_layout()
+
+        if metric == "MAE":
+            fig.subplots_adjust(bottom=0.1)
+
+        plt.savefig(
+            save_dir / f"single_vs_ensemble_{metric.lower()}.pdf", bbox_inches="tight"
+        )
+        plt.close()
+
+
+def plot_tdc_single_task_vs_multi_task_results(
+    results: pd.ExcelFile, save_dir: Path
+) -> None:
     """Plot results from TDC Single-Task and Multi-Task.
 
     :param results: Excel file containing results.
@@ -339,7 +439,9 @@ def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
     # Get TDC Leaderboard results
     regression_leaderboard = results.parse("TDC Leaderboard Regression")
     classification_leaderboard = results.parse("TDC Leaderboard Classification")
-    leaderboard_results = pd.concat([regression_leaderboard, classification_leaderboard])
+    leaderboard_results = pd.concat(
+        [regression_leaderboard, classification_leaderboard]
+    )
 
     # Map each model to its set of ranks
     model_to_ranks = defaultdict(list)
@@ -375,6 +477,9 @@ def plot_tdc_results(results_path: Path, save_dir: Path) -> None:
         all_dataset_models=all_dataset_models,
         save_dir=save_dir,
     )
+
+    # Plot TDC Leaderboard single vs ensemble
+    plot_tdc_leaderboard_single_vs_ensemble(results=results, save_dir=save_dir)
 
     # Plot TDC Single-Task vs Multi-Task results
     plot_tdc_single_task_vs_multi_task_results(results=results, save_dir=save_dir)

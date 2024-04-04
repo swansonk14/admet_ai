@@ -198,7 +198,7 @@ def plot_radial_summary(
     percentiles += percentiles[:1]
     angles += angles[:1]
 
-    # Step 3: Create a plot
+    # Create a plot
     fig, ax = plt.subplots(figsize=(3, 3), subplot_kw=dict(polar=True))
 
     # Plot the data
