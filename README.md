@@ -6,10 +6,11 @@ Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET 
 command line, via the Python API, or via a web server. A live web server hosting ADMET-AI is
 at [admet.ai.greenstonebio.com](https://admet.ai.greenstonebio.com)
 
-Please see the following paper for more
+Please see the following paper and [this blog post](https://portal.valencelabs.com/blogs/post/admet-ai-a-machine-learning-admet-platform-for-evaluation-of-large-scale-QPEa0j5OTYYHTaA) for more
 details, and please cite us if ADMET-AI is useful in your work. Instructions to reproduce the results in our paper are in [docs/reproduce.md](docs/reproduce.md).
 
 [ADMET-AI: A machine learning ADMET platform for evaluation of large-scale chemical libraries](https://www.biorxiv.org/content/10.1101/2023.12.28.573531v1)
+
 
 ## Table of Contents
 
@@ -34,7 +35,7 @@ conda activate admet_ai
 Install ADMET-AI via pip.
 
 ```bash
-pip install admet_ai
+pip install admet-ai
 ```
 
 Alternatively, clone the repo and install ADMET-AI locally.

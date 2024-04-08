@@ -12,6 +12,7 @@ from flask import (
     session,
 )
 
+from admet_ai._version import __version__
 from admet_ai.web.app import app
 from admet_ai.web.app.admet_info import get_admet_info
 from admet_ai.web.app.drugbank import (
@@ -57,6 +58,7 @@ def render(**kwargs) -> str:
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         string_to_html_sup=string_to_html_sup,
         text_smiles=session.get("text_smiles", ""),
+        version=__version__,
         **kwargs,
     )
 
