@@ -12,7 +12,6 @@ from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 from admet_ai.web.app.admet_info import (
     get_admet_id_to_units,
     get_admet_name_to_id,
-    get_toxicity_ids,
 )
 from admet_ai.web.app.drugbank import get_drugbank
 from admet_ai.web.app.utils import string_to_latex_sup
@@ -159,10 +158,7 @@ def plot_radial_summary(
         },
         "Non-\nToxic": {
             "percentile": max_percentile
-            - max(
-                property_id_to_percentile[f"{toxicity_name}_{percentile_suffix}"]
-                for toxicity_name in get_toxicity_ids()
-            ),
+            - property_id_to_percentile[f"ClinTox_{percentile_suffix}"],
             "vertical_alignment": "bottom",
         },
         "Soluble": {

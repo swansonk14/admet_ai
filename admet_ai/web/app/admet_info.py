@@ -8,13 +8,12 @@ ADMET_DF = pd.DataFrame()
 ADMET_ID_TO_NAME: dict[str, str] = {}
 ADMET_NAME_TO_ID: dict[str, str] = {}
 ADMET_ID_TO_UNITS: dict[str, str] = {}
-TOXICITY_IDS: list[str] = []
 
 
 def load_admet_info() -> None:
     """Loads the ADMET info."""
     # Set up global variables
-    global ADMET_DF, ADMET_ID_TO_NAME, ADMET_ID_TO_UNITS, ADMET_NAME_TO_ID, TOXICITY_IDS
+    global ADMET_DF, ADMET_ID_TO_NAME, ADMET_ID_TO_UNITS, ADMET_NAME_TO_ID
 
     # Load ADMET info DataFrame
     ADMET_DF = pd.read_csv(app.config["ADMET_PATH"])
@@ -25,9 +24,6 @@ def load_admet_info() -> None:
 
     # Map ADMET IDs to units
     ADMET_ID_TO_UNITS = dict(zip(ADMET_DF["id"], ADMET_DF["units"]))
-
-    # Get toxicity IDs
-    TOXICITY_IDS = ADMET_DF[ADMET_DF["category"] == "Toxicity"]["id"].tolist()
 
 
 def get_admet_info() -> pd.DataFrame:
@@ -60,11 +56,3 @@ def get_admet_id_to_units() -> dict[str, str]:
     :return: A dictionary mapping ADMET IDs to units.
     """
     return ADMET_ID_TO_UNITS
-
-
-def get_toxicity_ids() -> list[str]:
-    """Get the property IDs of all toxicity properties.
-
-    :return: A list of property IDs of all toxicity properties.
-    """
-    return TOXICITY_IDS
