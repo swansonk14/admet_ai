@@ -33,7 +33,7 @@ setup(
     },
     install_requires=[
         "chemfunc>=1.0.4",
-        "chemprop>=1.6.1",
+        "chemprop==1.6.1",
         "numpy",
         "pandas",
         "rdkit>=2023.3.3",

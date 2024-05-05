@@ -1,4 +1,4 @@
-"""Defines functions for plotting for the ADMET-AI website."""
+"""Defines functions for ADMET-AI plots."""
 import re
 from io import BytesIO
 
@@ -13,12 +13,19 @@ from admet_ai.web.app.admet_info import (
     get_admet_id_to_units,
     get_admet_name_to_id,
 )
-from admet_ai.web.app.drugbank import get_drugbank
-from admet_ai.web.app.utils import string_to_latex_sup
 
 
 SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
 SVG_HEIGHT_PATTERN = re.compile(r"height=['\"]\d+(\.\d+)?[a-z]+['\"]")
+
+
+def string_to_latex_sup(string: str) -> str:
+    """Converts a string with an exponential to LaTeX superscript.
+
+    :param string: A string.
+    :return: The string with an exponential in LaTeX superscript.
+    """
+    return re.sub(r"\^(\d+)", r"$^{\1}$", string)
 
 
 def replace_svg_dimensions(svg_content: str) -> str:
@@ -36,17 +43,17 @@ def replace_svg_dimensions(svg_content: str) -> str:
 
 def plot_drugbank_reference(
     preds_df: pd.DataFrame,
+    drugbank_df: pd.DataFrame,
     x_property_name: str | None = None,
     y_property_name: str | None = None,
-    atc_code: str | None = None,
     max_molecule_num: int | None = None,
 ) -> str:
     """Creates a 2D scatter plot of the DrugBank reference set vs the new set of molecules on two properties.
 
     :param preds_df: A DataFrame containing the predictions on the new molecules.
+    :param drugbank_df: A DataFrame containing the DrugBank reference set.
     :param x_property_name: The name of the property to plot on the x-axis.
     :param y_property_name: The name of the property to plot on the y-axis.
-    :param atc_code: The ATC code to filter the DrugBank reference set by.
     :param max_molecule_num: If provided, will display molecule numbers up to this number.
     :return: A string containing the SVG of the plot.
     """
@@ -57,9 +64,6 @@ def plot_drugbank_reference(
     if y_property_name is None:
         y_property_name = "Clinical Toxicity"
 
-    # Get DrugBank reference, optionally filtered ATC code
-    drugbank = get_drugbank(atc_code=atc_code)
-
     # Map property names to IDs
     admet_name_to_id = get_admet_name_to_id()
     x_property_id = admet_name_to_id[x_property_name]
@@ -67,8 +71,8 @@ def plot_drugbank_reference(
 
     # Scatter plot of DrugBank molecules with histogram marginals
     sns.jointplot(
-        x=drugbank[x_property_id],
-        y=drugbank[y_property_id],
+        x=drugbank_df[x_property_id],
+        y=drugbank_df[y_property_id],
         kind="scatter",
         marginal_kws=dict(bins=50, fill=True),
         label="DrugBank Reference",

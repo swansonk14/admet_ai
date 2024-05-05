@@ -1,11 +1,13 @@
 """Defines functions for the DrugBank approved reference set."""
 from collections import defaultdict
 from functools import lru_cache
+from pathlib import Path
 
-import matplotlib
 import pandas as pd
 
+from admet_ai.admet_info import get_admet_id_to_name
 from admet_ai.constants import (
+    DEFAULT_DRUGBANK_PATH,
     DRUGBANK_ATC_NAME_PREFIX,
     DRUGBANK_ATC_PREFIX,
     DRUGBANK_DELIMITER,
@@ -13,23 +15,22 @@ from admet_ai.constants import (
     DRUGBANK_NAME_COLUMN,
     DRUGBANK_SMILES_COLUMN,
 )
-from admet_ai.web.app import app
-from admet_ai.web.app.admet_info import get_admet_id_to_name
-
-matplotlib.use("Agg")
 
 
 DRUGBANK_DF = pd.DataFrame()
 ATC_CODE_TO_DRUGBANK_INDICES: dict[str, list[int]] = {}
 
 
-def load_drugbank() -> None:
-    """Loads the reference set of DrugBank approved molecules with their model predictions."""
+def load_drugbank(drugbank_path: Path = DEFAULT_DRUGBANK_PATH) -> None:
+    """Loads the reference set of DrugBank approved molecules with their model predictions.
+
+    :param drugbank_path: The path to the DrugBank reference set.
+    """
     # Set up global variables
     global DRUGBANK_DF, ATC_CODE_TO_DRUGBANK_INDICES
 
     # Load DrugBank DataFrame
-    DRUGBANK_DF = pd.read_csv(app.config["DRUGBANK_PATH"])
+    DRUGBANK_DF = pd.read_csv(drugbank_path)
 
     # Map ATC codes to all indices of the DRUGBANK_DF with that ATC code
     atc_code_to_drugbank_indices = defaultdict(set)
@@ -55,6 +56,9 @@ def get_drugbank(atc_code: str | None = None) -> pd.DataFrame:
     :param atc_code: The ATC code to filter by. If None or 'all', returns the entire DrugBank.
     :return: A DataFrame containing the DrugBank reference set, optionally filtered by ATC code.
     """
+    if DRUGBANK_DF.empty:
+        load_drugbank()
+
     if atc_code is None:
         return DRUGBANK_DF
 
@@ -80,17 +84,17 @@ def get_drugbank_unique_atc_codes() -> list[str]:
 
     :return: A list of unique ATC codes in the DrugBank reference set.
     """
+    drugbank = get_drugbank()
+
     return sorted(
         {
             atc_code.lower()
             for atc_column in [
                 column
-                for column in DRUGBANK_DF.columns
+                for column in drugbank.columns
                 if column.startswith(DRUGBANK_ATC_NAME_PREFIX)
             ]
-            for atc_codes in DRUGBANK_DF[atc_column]
-            .dropna()
-            .str.split(DRUGBANK_DELIMITER)
+            for atc_codes in drugbank[atc_column].dropna().str.split(DRUGBANK_DELIMITER)
             for atc_code in atc_codes
         }
     )
@@ -102,16 +106,16 @@ def get_drugbank_tasks_ids() -> list[str]:
 
     :return: A list of tasks (properties) predicted in the DrugBank reference set.
     """
+    drugbank = get_drugbank()
+
     non_task_columns = [
         DRUGBANK_ID_COLUMN,
         DRUGBANK_NAME_COLUMN,
         DRUGBANK_SMILES_COLUMN,
     ] + [
-        column
-        for column in DRUGBANK_DF.columns
-        if column.startswith(DRUGBANK_ATC_PREFIX)
+        column for column in drugbank.columns if column.startswith(DRUGBANK_ATC_PREFIX)
     ]
-    task_columns = set(DRUGBANK_DF.columns) - set(non_task_columns)
+    task_columns = set(drugbank.columns) - set(non_task_columns)
     drugbank_task_ids = sorted(task_columns)
 
     return drugbank_task_ids
