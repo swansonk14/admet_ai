@@ -4,13 +4,16 @@ import string
 from datetime import timedelta
 from threading import Thread
 
+import matplotlib
 from tap import tapify
 
+from admet_ai.admet_info import load_admet_info
+from admet_ai.drugbank import load_drugbank
 from admet_ai.web.app import app
-from admet_ai.web.app.admet_info import load_admet_info
-from admet_ai.web.app.drugbank import load_drugbank
 from admet_ai.web.app.models import load_admet_model
 from admet_ai.web.app.storage import cleanup_storage
+
+matplotlib.use("Agg")
 
 
 def setup_web(

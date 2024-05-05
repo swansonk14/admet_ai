@@ -12,6 +12,10 @@ from werkzeug.utils import secure_filename
 from admet_ai.web.app import app
 
 
+SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
+SVG_HEIGHT_PATTERN = re.compile(r"height=['\"]\d+(\.\d+)?[a-z]+['\"]")
+
+
 def get_smiles_from_request() -> tuple[list[str] | None, str | None]:
     """Gets SMILES from a request.
 
@@ -77,21 +81,14 @@ def string_to_html_sup(string: str) -> str:
     return re.sub(r"\^(-?\d+)", r"<sup>\1</sup>", string)
 
 
-def string_to_latex_sup(string: str) -> str:
-    """Converts a string with an exponential to LaTeX superscript.
+def replace_svg_dimensions(svg_content: str) -> str:
+    """Replace the SVG width and height with 100%.
 
-    :param string: A string.
-    :return: The string with an exponential in LaTeX superscript.
+    :param svg_content: The SVG content.
+    :return: The SVG content with the width and height replaced with 100%.
     """
-    return re.sub(r"\^(\d+)", r"$^{\1}$", string)
+    # Replacing the width and height with 100%
+    svg_content = SVG_WIDTH_PATTERN.sub('width="100%"', svg_content)
+    svg_content = SVG_HEIGHT_PATTERN.sub('height="100%"', svg_content)
 
-
-def get_drugbank_suffix(atc_code: str | None) -> str:
-    """Gets the DrugBank percentile suffix for the given ATC code.
-
-    :param atc_code: The ATC code.
-    """
-    if atc_code is None:
-        return "drugbank_approved_percentile"
-
-    return f"drugbank_approved_{atc_code}_percentile"
+    return svg_content

@@ -106,3 +106,9 @@ admet_web
 ```
 
 Then navigate to http://127.0.0.1:5000 to view the website.
+
+### Analysis plots
+
+The DrugBank reference plot and radial plots displayed on the ADMET-AI website can be generated locally using the
+`scripts/plot_drugbank_reference.py` and `scripts/plot_radial_summaries.py` scripts, respectively. Both scripts
+take as input a CSV file with ADMET-AI predictions along with other parameters.

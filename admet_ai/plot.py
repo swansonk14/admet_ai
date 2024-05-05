@@ -9,14 +9,10 @@ import seaborn as sns
 from rdkit import Chem
 from rdkit.Chem.Draw.rdMolDraw2D import MolDraw2DSVG
 
-from admet_ai.web.app.admet_info import (
+from admet_ai.admet_info import (
     get_admet_id_to_units,
     get_admet_name_to_id,
 )
-
-
-SVG_WIDTH_PATTERN = re.compile(r"width=['\"]\d+(\.\d+)?[a-z]+['\"]")
-SVG_HEIGHT_PATTERN = re.compile(r"height=['\"]\d+(\.\d+)?[a-z]+['\"]")
 
 
 def string_to_latex_sup(string: str) -> str:
@@ -28,26 +24,14 @@ def string_to_latex_sup(string: str) -> str:
     return re.sub(r"\^(\d+)", r"$^{\1}$", string)
 
 
-def replace_svg_dimensions(svg_content: str) -> str:
-    """Replace the SVG width and height with 100%.
-
-    :param svg_content: The SVG content.
-    :return: The SVG content with the width and height replaced with 100%.
-    """
-    # Replacing the width and height with 100%
-    svg_content = SVG_WIDTH_PATTERN.sub('width="100%"', svg_content)
-    svg_content = SVG_HEIGHT_PATTERN.sub('height="100%"', svg_content)
-
-    return svg_content
-
-
 def plot_drugbank_reference(
     preds_df: pd.DataFrame,
     drugbank_df: pd.DataFrame,
     x_property_name: str | None = None,
     y_property_name: str | None = None,
     max_molecule_num: int | None = None,
-) -> str:
+    image_type: str = "svg",
+) -> bytes:
     """Creates a 2D scatter plot of the DrugBank reference set vs the new set of molecules on two properties.
 
     :param preds_df: A DataFrame containing the predictions on the new molecules.
@@ -55,7 +39,8 @@ def plot_drugbank_reference(
     :param x_property_name: The name of the property to plot on the x-axis.
     :param y_property_name: The name of the property to plot on the y-axis.
     :param max_molecule_num: If provided, will display molecule numbers up to this number.
-    :return: A string containing the SVG of the plot.
+    :param image_type: The image type for the plot (e.g., svg).
+    :return: Bytes containing the plot.
     """
     # Set default values
     if x_property_name is None:
@@ -130,26 +115,26 @@ def plot_drugbank_reference(
 
     # Save plot as svg to pass to frontend
     buf = BytesIO()
-    plt.savefig(buf, format="svg", bbox_inches="tight")
+    plt.savefig(buf, format=image_type, bbox_inches="tight")
     plt.close()
     buf.seek(0)
-    drugbank_svg = buf.getvalue().decode("utf-8")
+    plot = buf.getvalue()
 
-    # Set the SVG width and height to 100%
-    drugbank_svg = replace_svg_dimensions(drugbank_svg)
-
-    return drugbank_svg
+    return plot
 
 
 def plot_radial_summary(
-    property_id_to_percentile: dict[str, float], percentile_suffix: str = "",
-) -> str:
+    property_id_to_percentile: dict[str, float],
+    percentile_suffix: str = "",
+    image_type: str = "svg",
+) -> bytes:
     """Creates a radial plot summary of important properties of a molecule in terms of DrugBank approved percentiles.
 
     :param property_id_to_percentile: A dictionary mapping property IDs to their DrugBank approved percentiles.
                                       Keys are the property name along with the percentile_suffix.
     :param percentile_suffix: The suffix to add to the property names to get the DrugBank approved percentiles.
-    :return: A string containing the SVG of the plot.
+    :param image_type: The image type for the plot (e.g., svg).
+    :return: Bytes containing the plot.
     """
     # Set max percentile
     max_percentile = 100
@@ -230,17 +215,14 @@ def plot_radial_summary(
     # Ensure no text labels are cut off
     plt.tight_layout()
 
-    # Save plot as svg to pass to frontend
+    # Save plot
     buf = BytesIO()
-    plt.savefig(buf, format="svg")
+    plt.savefig(buf, format=image_type)
     plt.close()
     buf.seek(0)
-    radial_svg = buf.getvalue().decode("utf-8")
+    plot = buf.getvalue()
 
-    # Set the SVG width and height to 100%
-    radial_svg = replace_svg_dimensions(radial_svg)
-
-    return radial_svg
+    return plot
 
 
 def plot_molecule_svg(mol: str | Chem.Mol) -> str:
@@ -258,8 +240,5 @@ def plot_molecule_svg(mol: str | Chem.Mol) -> str:
     d.DrawMolecule(mol)
     d.FinishDrawing()
     smiles_svg = d.GetDrawingText()
-
-    # Set the SVG width and height to 100%
-    smiles_svg = replace_svg_dimensions(smiles_svg)
 
     return smiles_svg

@@ -1,7 +1,9 @@
 """Defines functions for ADMET info."""
+from pathlib import Path
+
 import pandas as pd
 
-from admet_ai.web.app import app
+from admet_ai.constants import DEFAULT_ADMET_PATH
 
 
 ADMET_DF = pd.DataFrame()
@@ -10,13 +12,13 @@ ADMET_NAME_TO_ID: dict[str, str] = {}
 ADMET_ID_TO_UNITS: dict[str, str] = {}
 
 
-def load_admet_info() -> None:
+def load_admet_info(admet_path: Path = DEFAULT_ADMET_PATH) -> None:
     """Loads the ADMET info."""
     # Set up global variables
     global ADMET_DF, ADMET_ID_TO_NAME, ADMET_ID_TO_UNITS, ADMET_NAME_TO_ID
 
     # Load ADMET info DataFrame
-    ADMET_DF = pd.read_csv(app.config["ADMET_PATH"])
+    ADMET_DF = pd.read_csv(admet_path)
 
     # Map ADMET IDs to names and vice versa
     ADMET_ID_TO_NAME = dict(zip(ADMET_DF["id"], ADMET_DF["name"]))
@@ -26,6 +28,19 @@ def load_admet_info() -> None:
     ADMET_ID_TO_UNITS = dict(zip(ADMET_DF["id"], ADMET_DF["units"]))
 
 
+def lazy_load_admet_info(func: callable) -> callable:
+    """Decorator to lazily load the ADMET info."""
+
+    def wrapper(*args, **kwargs):
+        if ADMET_DF.empty:
+            load_admet_info()
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@lazy_load_admet_info
 def get_admet_info() -> pd.DataFrame:
     """Get the ADMET info.
 
@@ -34,6 +49,7 @@ def get_admet_info() -> pd.DataFrame:
     return ADMET_DF
 
 
+@lazy_load_admet_info
 def get_admet_id_to_name() -> dict[str, str]:
     """Get the ADMET ID to name mapping.
 
@@ -42,6 +58,7 @@ def get_admet_id_to_name() -> dict[str, str]:
     return ADMET_ID_TO_NAME
 
 
+@lazy_load_admet_info
 def get_admet_name_to_id() -> dict[str, str]:
     """Get the ADMET name to ID mapping.
 
@@ -50,6 +67,7 @@ def get_admet_name_to_id() -> dict[str, str]:
     return ADMET_NAME_TO_ID
 
 
+@lazy_load_admet_info
 def get_admet_id_to_units() -> dict[str, str]:
     """Get the ADMET ID to units mapping.
 

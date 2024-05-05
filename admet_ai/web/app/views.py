@@ -13,27 +13,29 @@ from flask import (
 )
 
 from admet_ai._version import __version__
-from admet_ai.web.app import app
-from admet_ai.web.app.admet_info import get_admet_info
-from admet_ai.web.app.drugbank import (
+from admet_ai.admet_info import get_admet_info
+from admet_ai.drugbank import (
+    get_drugbank,
     get_drugbank_size,
     get_drugbank_task_names,
     get_drugbank_unique_atc_codes,
 )
-from admet_ai.web.app.models import get_admet_model
-from admet_ai.web.app.plot import (
+from admet_ai.plot import (
     plot_drugbank_reference,
     plot_molecule_svg,
     plot_radial_summary,
 )
+from admet_ai.utils import get_drugbank_suffix
+from admet_ai.web.app import app
+from admet_ai.web.app.models import get_admet_model
 from admet_ai.web.app.storage import (
     get_user_preds,
     set_user_preds,
     update_user_activity,
 )
 from admet_ai.web.app.utils import (
-    get_drugbank_suffix,
     get_smiles_from_request,
+    replace_svg_dimensions,
     smiles_to_mols,
     string_to_html_sup,
 )
@@ -132,26 +134,29 @@ def index() -> str:
     # Create DrugBank reference plot
     drugbank_plot_svg = plot_drugbank_reference(
         preds_df=all_preds,
+        drugbank_df=get_drugbank(atc_code=session.get("atc_code")),
         x_property_name=session.get("drugbank_x_task_name"),
         y_property_name=session.get("drugbank_y_task_name"),
-        atc_code=session.get("atc_code"),
         max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"],
-    )
+    ).decode("utf-8")
+    drugbank_plot_svg = replace_svg_dimensions(drugbank_plot_svg)
 
     # Get maximum number of molecules to display
     num_display_molecules = min(len(all_smiles), app.config["MAX_VISIBLE_MOLECULES"])
 
     # Create molecule SVG images
     mol_svgs = [plot_molecule_svg(mol) for mol in mols[:num_display_molecules]]
+    mol_svgs = [replace_svg_dimensions(plot) for plot in mol_svgs]
 
     # Create molecule radial plots for DrugBank approved percentiles
     radial_svgs = [
         plot_radial_summary(
             property_id_to_percentile=smiles_to_property_id_to_pred[smiles],
             percentile_suffix=get_drugbank_suffix(session.get("atc_code")),
-        )
+        ).decode("utf-8")
         for smiles in all_smiles[:num_display_molecules]
     ]
+    radial_svgs = [replace_svg_dimensions(plot) for plot in radial_svgs]
 
     return render(
         predicted=True,
@@ -206,11 +211,12 @@ def drugbank_plot() -> Response:
     # Create DrugBank reference plot with ATC code
     drugbank_plot_svg = plot_drugbank_reference(
         preds_df=get_user_preds(session["user_id"]),
+        drugbank_df=get_drugbank(atc_code=session.get("atc_code")),
         x_property_name=session["drugbank_x_task_name"],
         y_property_name=session["drugbank_y_task_name"],
-        atc_code=session.get("atc_code"),
         max_molecule_num=app.config["MAX_VISIBLE_MOLECULES"],
-    )
+    ).decode("utf-8")
+    drugbank_plot_svg = replace_svg_dimensions(drugbank_plot_svg)
 
     return jsonify({"svg": drugbank_plot_svg})
 
