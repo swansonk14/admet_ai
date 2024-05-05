@@ -74,7 +74,7 @@ def string_to_html_sup(string: str) -> str:
     :param string: A string.
     :return: The string with an exponential in HTML superscript.
     """
-    return re.sub(r"\^(\d+)", r"<sup>\1</sup>", string)
+    return re.sub(r"\^(-?\d+)", r"<sup>\1</sup>", string)
 
 
 def string_to_latex_sup(string: str) -> str:

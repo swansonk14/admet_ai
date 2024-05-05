@@ -13,7 +13,7 @@ Absorption,Solubility_AqSolDB,Aqueous Solubility,9982,regression,log(mol/L),-,1,
 Absorption,Lipophilicity_AstraZeneca,Lipophilicity,4200,regression,log-ratio,-,1,,,0.746047462,0.430572678,https://tdcommons.ai/single_pred_tasks/adme/#lipophilicity-astrazeneca
 Absorption,HydrationFreeEnergy_FreeSolv,Hydration Free Energy,642,regression,kcal/mol,-,-,,,0.919245,0.71341,https://tdcommons.ai/single_pred_tasks/adme/#hydration-free-energy-freesolv
 Absorption,Caco2_Wang,Cell Effective Permeability,906,regression,log(10^-6 cm/s),human,5,,,0.744364201,0.300075312,https://tdcommons.ai/single_pred_tasks/adme/#caco-2-cell-effective-permeability-wang-et-al
-Absorption,PAMPA_NCATS,PAMPA Permeability,2034,classification,-,artificial,-,0.94826615,0.798405536,,,https://tdcommons.ai/single_pred_tasks/adme/#pampa-permeability-ncats
+Absorption,PAMPA_NCATS,PAMPA Permeability,2034,classification,-,artificial membrane,-,0.94826615,0.798405536,,,https://tdcommons.ai/single_pred_tasks/adme/#pampa-permeability-ncats
 Absorption,Pgp_Broccatelli,P-glycoprotein Inhibition,1212,classification,-,human pgp / mouse cells,10,0.959242927,0.945843699,,,https://tdcommons.ai/single_pred_tasks/adme/#pgp-p-glycoprotein-inhibition-broccatelli-et-al
 Distribution,BBB_Martins,Blood-Brain Barrier Penetration,1975,classification,-,human,11,0.978083609,0.93934044,,,https://tdcommons.ai/single_pred_tasks/adme/#bbb-blood-brain-barrier-martins-et-al
 Distribution,PPBR_AZ,Plasma Protein Binding Rate,1614,regression,%,human,3,,,0.462089051,7.754102431,https://tdcommons.ai/single_pred_tasks/adme/#ppbr-plasma-protein-binding-rate-astrazeneca

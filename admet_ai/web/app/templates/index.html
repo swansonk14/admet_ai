@@ -422,6 +422,7 @@ radial_description_tooltip %}
                                             data-html="true"
                                             data-placement="right"
                                             title="Dataset Size: {{ '{:,.0f}'.format(row['size']) }}<br>
+                                            {{ 'Species: {}<br>'.format(row['species']) if row['species'] != '-' else '' }}
                                             {{ string_to_html_sup('{}: {:.2f}'.format(first_metric, row[first_metric])) | safe }}<br>
                                             {{ string_to_html_sup('{}: {:.2f}'.format(second_metric, row[second_metric])) | safe }}
                                             {{ '<br>TDC Leaderboard Rank: {}'.format(row['tdc_rank']) if row['tdc_rank'] != '-' else '' }}">
