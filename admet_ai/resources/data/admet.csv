@@ -23,12 +23,12 @@ Excretion,Clearance_Hepatocyte_AZ,Drug Clearance (Hepatocyte),1020,regression,uL
 Excretion,Clearance_Microsome_AZ,Drug Clearance (Microsome),1102,regression,uL/min/mg,human,2,,,0.300325493,25.2952124,https://tdcommons.ai/single_pred_tasks/adme/#clearance-astrazeneca
 Metabolism,CYP1A2_Veith,CYP1A2 Inhibition,12579,classification,-,human,-,0.934630479,0.941599044,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp-p450-1a2-inhibition-veith-et-al
 Metabolism,CYP2C19_Veith,CYP2C19 Inhibition,12665,classification,-,human,-,0.882382711,0.907060295,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp-p450-2c19-inhibition-veith-et-al
-Metabolism,CYP2C9_Substrate_CarbonMangels,CYP2C9 Substrate,666,classification,-,human,4,0.3002083,0.695313349,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp2c9-substrate-carbon-mangels-et-al
 Metabolism,CYP2C9_Veith,CYP2C9 Inhibition,12092,classification,-,human,4,0.809011378,0.905095011,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp-p450-2c9-inhibition-veith-et-al
-Metabolism,CYP2D6_Substrate_CarbonMangels,CYP2D6 Substrate,664,classification,-,human,3,0.573863564,0.768020178,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp2d6-substrate-carbon-mangels-et-al
 Metabolism,CYP2D6_Veith,CYP2D6 Inhibition,13130,classification,-,human,3,0.734222423,0.887889936,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp-p450-2d6-inhibition-veith-et-al
-Metabolism,CYP3A4_Substrate_CarbonMangels,CYP3A4 Substrate,667,classification,-,human,7,0.701417532,0.714367012,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp3a4-substrate-carbon-mangels-et-al
 Metabolism,CYP3A4_Veith,CYP3A4 Inhibition,12328,classification,-,human,3,0.881595257,0.914678766,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp-p450-3a4-inhibition-veith-et-al
+Metabolism,CYP2C9_Substrate_CarbonMangels,CYP2C9 Substrate,666,classification,-,human,4,0.3002083,0.695313349,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp2c9-substrate-carbon-mangels-et-al
+Metabolism,CYP2D6_Substrate_CarbonMangels,CYP2D6 Substrate,664,classification,-,human,3,0.573863564,0.768020178,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp2d6-substrate-carbon-mangels-et-al
+Metabolism,CYP3A4_Substrate_CarbonMangels,CYP3A4 Substrate,667,classification,-,human,7,0.701417532,0.714367012,,,https://tdcommons.ai/single_pred_tasks/adme/#cyp3a4-substrate-carbon-mangels-et-al
 Toxicity,hERG,hERG Blocking,648,classification,-,human,4,0.925968621,0.858940863,,,https://tdcommons.ai/single_pred_tasks/tox/#herg-blockers
 Toxicity,ClinTox,Clinical Toxicity,1459,classification,-,human,-,0.425390242,0.869768917,,,https://tdcommons.ai/single_pred_tasks/tox/#clintox
 Toxicity,AMES,Mutagenicity,7255,classification,-,salmonella typhimurium,2,0.912265988,0.892359338,,,https://tdcommons.ai/single_pred_tasks/tox/#ames-mutagenicity
