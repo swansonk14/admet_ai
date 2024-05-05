@@ -57,6 +57,8 @@ def render(**kwargs) -> str:
         atc_code=session.get("atc_code") or "all",
         heartbeat_frequency=app.config["HEARTBEAT_FREQUENCY"],
         string_to_html_sup=string_to_html_sup,
+        min=min,
+        max=max,
         text_smiles=session.get("text_smiles", ""),
         version=__version__,
         **kwargs,

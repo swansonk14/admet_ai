@@ -139,7 +139,9 @@ radial_description_tooltip %}
             For regression properties, the property is directly predicted with the units shown. For
             classification properties, the predicted value is the probability that the molecule has the
             property (e.g., probability of blood-brain barrier penetration).
-            Additionally, the percentile of the molecule’s property compared to the DrugBank reference is shown.
+            Additionally, the percentile of the molecule’s property compared to the DrugBank reference is shown. Note:
+            For regression properties, the displayed value is clipped to a valid range (e.g., &#8805;0 for half life)
+            while the downloaded results contain the original value.
         </p>
         <p>
             <strong><u>Download Predictions:</u></strong> Predictions for the first <strong>{{
@@ -440,7 +442,8 @@ radial_description_tooltip %}
 
                                 <td>
                                     {% set pred = smiles_to_property_id_to_pred[smiles][row["id"]] %}
-                                    {{ ("{:.2f}" if pred > 0.005 or pred < -0.005 else "{:.2e}").format(pred) }}
+                                    {% set pred = min(max(pred, row["minimum"]), row["maximum"]) %}
+                                    {{ ("{:.2f}" if pred == 0 or pred > 0.005 or pred < -0.005 else "{:.2e}").format(pred) }}
                                 </td>
 
                                 <td>
