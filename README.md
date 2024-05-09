@@ -48,8 +48,8 @@ pip install -e .
 
 By default, the pip installation only includes dependencies required for making ADMET predictions, either via the
 command line or via the Python API. To install dependencies required for processing TDC data or plotting TDC results,
-run `pip install admet_ai[tdc]`. To install dependencies required for hosting the ADMET-AI web server,
-run `pip install admet_ai[web]`.
+run `pip install admet-ai[tdc]`. To install dependencies required for hosting the ADMET-AI web server,
+run `pip install admet-ai[web]`.
 
 If there are version issues with the required packages, create a conda environment with specific working versions of the
 packages as follows.
@@ -99,7 +99,7 @@ properties.
 ### Web server
 
 ADMET predictions can be made using the ADMET-AI web server, as illustrated below. Note: Running the following command
-requires additional web dependencies (i.e., `pip install admet_ai[web]`).
+requires additional web dependencies (i.e., `pip install admet-ai[web]`).
 
 ```bash
 admet_web
