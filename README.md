@@ -1,5 +1,10 @@
 # ADMET-AI
 
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/admet_ai)](https://badge.fury.io/py/admet_ai)
+[![PyPI version](https://badge.fury.io/py/admet_ai.svg)](https://badge.fury.io/py/admet_ai)
+[![Downloads](https://pepy.tech/badge/admet_ai)](https://pepy.tech/project/admet_ai)
+[![license](https://img.shields.io/github/license/swansonk14/admet_ai.svg)](https://github.com/swansonk14/admet_ai/blob/main/LICENSE.txt)
+
 This git repo contains the code for ADMET-AI, an ADMET prediction platform that
 uses [Chemprop-RDKit]((https://github.com/chemprop/chemprop)) models trained on ADMET datasets from the Therapeutics
 Data Commons ([TDC](https://tdcommons.ai/)). ADMET-AI can be used to make ADMET predictions on new molecules via the
