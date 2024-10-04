@@ -132,20 +132,11 @@ python scripts/get_drugbank_approved.py \
 
 ## Make predictions on DrugBank approved drugs
 
-Compute physicochemical properties on DrugBank approved drugs using RDKit.
-
-```bash
-physchem_compute \
-    --data_path data/drugbank/drugbank_approved.csv \
-    --save_path data/drugbank/drugbank_approved_physchem.csv \
-    --smiles_column smiles
-```
-
-Make ADMET predictions on DrugBank approved drugs using Chemprop-RDKit multitask predictor.
+Make ADMET predictions on DrugBank approved drugs using Chemprop-RDKit multitask predictor (and compute physicochemical properties).
 
 ```bash
 admet_predict \
-    --data_path data/drugbank/drugbank_approved_physchem.csv \
+    --data_path data/drugbank/drugbank_approved.csv \
     --save_path data/drugbank/drugbank_approved_physchem_admet.csv \
     --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --smiles_column smiles
