@@ -138,7 +138,7 @@ Make ADMET predictions on DrugBank approved drugs using Chemprop-RDKit multitask
 admet_predict \
     --data_path data/drugbank/drugbank_approved.csv \
     --save_path data/drugbank/drugbank_approved_physchem_admet.csv \
-    --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
+    --models_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --smiles_column smiles
 ```
 
@@ -183,7 +183,7 @@ echo "Timing ADMET-AI on ${NUM_MOLECULES} molecules, iteration ${ITER}"
 time admet_predict \
     --data_path data/drugbank/drugbank_approved_${NUM_MOLECULES}.csv \
     --save_path data/drugbank/drugbank_approved_${NUM_MOLECULES}_admet_${ITER}.csv \
-    --model_dir models/tdc_admet_all_multitask/chemprop_rdkit \
+    --models_dir models/tdc_admet_all_multitask/chemprop_rdkit \
     --smiles_column smiles
 done
 done
