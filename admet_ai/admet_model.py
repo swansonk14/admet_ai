@@ -88,9 +88,7 @@ class ADMETModel:
         )
 
         # Set device based on GPU availability
-        self.device = (
-            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        )
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # Prepare lists to contain model details
         self.task_lists: list[list[str]] = []
@@ -258,7 +256,10 @@ class ADMETModel:
         ):
             with torch.inference_mode():
                 trainer = pl.Trainer(
-                    logger=None, enable_progress_bar=True, accelerator="cpu", devices=1
+                    logger=None,
+                    enable_progress_bar=True,
+                    accelerator=self.device,
+                    devices=1,
                 )
 
                 # Shape of preds: (models x dataloaders x molecules x tasks [ADMET predictions])
