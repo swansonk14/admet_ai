@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Training
+data/
+models/
+
+# Pytorch
+**/lightning_logs/
+
 # Distribution / packaging
 .Python
 build/
