@@ -33,7 +33,7 @@ setup(
     },
     install_requires=[
         "chemfunc>=1.0.4",
-        "chemprop==1.6.1",
+        "chemprop==2.1.0",
         "numpy",
         "pandas>=2.0.0,<2.2.0",  # remove this limit once rdkit implements a fix to PandasTools
         "rdkit>=2023.3.3",
