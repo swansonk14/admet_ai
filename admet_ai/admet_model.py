@@ -21,7 +21,6 @@ from chemprop.data.dataloader import build_dataloader
 from chemprop.models import MPNN
 from chemprop.models.utils import load_output_columns
 
-# from chemprop.utils import load_args, load_scalers
 from rdkit import Chem
 from scipy.stats import percentileofscore
 from sklearn.preprocessing import StandardScaler
@@ -34,6 +33,7 @@ from admet_ai.constants import (
     DRUGBANK_DELIMITER,
 )
 from admet_ai.physchem import compute_fingerprints, compute_physicochemical_properties
+from admet_ai.utils import get_drugbank_suffix
 
 
 class ADMETModel:
@@ -175,28 +175,9 @@ class ADMETModel:
                  and property names as the columns.
         """
         # Convert SMILES to list if needed
-        if isinstance(smiles, str):
-            smiles = [smiles]
-            smiles_type = str
-        else:
-            smiles_type = list
+        smiles, smiles_type = self._prepare_smiles(smiles=smiles)
 
-        # Convert SMILES to RDKit molecules and cache if desired
-        mols = []
-        for smile in tqdm(smiles, desc="SMILES to Mol"):
-            mol = Chem.MolFromSmiles(smile)
-            mols.append(mol)
-
-        # Remove invalid molecules
-        invalid_mols = [mol is None for mol in mols]
-
-        if any(invalid_mols):
-            print(f"Warning: {sum(invalid_mols):,} invalid molecules will be removed")
-
-            mols = [mol for mol in mols if mol is not None]
-            smiles = [
-                smile for smile, invalid in zip(smiles, invalid_mols) if not invalid
-            ]
+        mols, smiles = self._filter_valid_molecules(smiles)
 
         # Compute physicochemical properties
         physchem_preds = compute_physicochemical_properties(
@@ -207,20 +188,7 @@ class ADMETModel:
             mols, self.use_features, self.fingerprint_multiprocessing_min
         )
 
-        # Build data loader
-        data_points = [
-            MoleculeDatapoint(
-                mol=mol,
-                x_d=fingerprint,
-            )
-            for mol, fingerprint in zip(mols, fingerprints)
-        ]
-        dataset = MoleculeDataset(data=data_points)
-        data_loader = build_dataloader(
-            dataset=dataset,
-            num_workers=self.num_workers,
-            shuffle=False,
-        )
+        data_loader = self._build_dataloader(mols, fingerprints)
 
         task_to_preds = self._make_ensemble_predictions(data_loader)
 
@@ -239,6 +207,41 @@ class ADMETModel:
             final_predictions = final_predictions.iloc[0].to_dict()
 
         return final_predictions
+
+    def _prepare_smiles(self, smiles: list[str]):
+        """Ensure SMILES is a list and identify its type."""
+        if isinstance(smiles, str):
+            return [smiles], str
+        return smiles, list
+
+    def _filter_valid_molecules(self, smiles: list[str]):
+        """Convert SMILES to RDKit molecules and filter out invalid ones."""
+        valid_mols_smiles = [
+            (Chem.MolFromSmiles(smile), smile)
+            for smile in tqdm(smiles, desc="SMILES to Mol")
+        ]
+        valid_mols_smiles = [(mol, smile) for mol, smile in valid_mols_smiles if mol]
+
+        if len(valid_mols_smiles) < len(smiles):
+            print(
+                f"Warning: {len(smiles) - len(valid_mols_smiles):,} invalid molecules removed."
+            )
+
+        mols, filtered_smiles = (
+            zip(*valid_mols_smiles) if valid_mols_smiles else ([], [])
+        )
+        return mols, filtered_smiles
+
+    def _build_dataloader(self, mols, fingerprints):
+        """Create a DataLoader for model predictions."""
+        data_points = [
+            MoleculeDatapoint(mol=mol, x_d=fingerprint)
+            for mol, fingerprint in zip(mols, fingerprints)
+        ]
+        dataset = MoleculeDataset(data=data_points)
+        return build_dataloader(
+            dataset=dataset, num_workers=self.num_workers, shuffle=False
+        )
 
     def _make_ensemble_predictions(self, data_loader):
         """Run predictions across model ensembles."""
@@ -280,11 +283,8 @@ class ADMETModel:
         if self.drugbank is None:
             return preds
 
-        drugbank_suffix = (
-            f"drugbank_approved_{self.atc_code}_percentile"
-            if self.atc_code
-            else "drugbank_approved_percentile"
-        )
+        drugbank_suffix = get_drugbank_suffix(self.atc_code)
+
         drugbank_percentiles = {
             f"{property_name}_{drugbank_suffix}": [
                 percentileofscore(self.drugbank_atc_filtered[property_name], value)
