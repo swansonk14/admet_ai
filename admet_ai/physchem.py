@@ -1,5 +1,8 @@
 """Compute physicochemical properties using RDKit."""
+
+from multiprocessing import Pool
 import pandas as pd
+import numpy as np
 from rdkit import Chem
 from rdkit.Chem.Crippen import MolLogP
 from rdkit.Chem.Descriptors import MolWt
@@ -10,6 +13,8 @@ from rdkit.Chem.rdMolDescriptors import (
     CalcNumHBD,
     CalcTPSA,
 )
+
+from chemfunc.molecular_fingerprints import compute_rdkit_fingerprint
 from tqdm import tqdm
 
 
@@ -71,3 +76,27 @@ def compute_physicochemical_properties(
     )
 
     return physchem_properties
+
+
+def compute_fingerprints(
+    mols: list[Chem.Mol], use_features: bool, min_parallel: int = 100
+) -> np.array:
+    """Compute RDKit fingerprints if required using multiprocessing.
+
+    If not using rdkit features, returns a list of None"""
+    if not use_features:
+        return np.array([None] * len(mols))
+
+    compute_func = Pool().imap if len(mols) >= min_parallel else map
+    with Pool() as pool:
+        fingerprints = np.array(
+            list(
+                tqdm(
+                    compute_func(compute_rdkit_fingerprint, mols),
+                    total=len(mols),
+                    desc="RDKit fingerprints",
+                )
+            )
+        )
+
+    return fingerprints

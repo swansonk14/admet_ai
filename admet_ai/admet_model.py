@@ -12,7 +12,6 @@ from admet_ai.drugbank import (
 import numpy as np
 import pandas as pd
 import torch
-from chemfunc.molecular_fingerprints import compute_rdkit_fingerprint
 from chemprop.data import (
     MoleculeDataLoader,
     MoleculeDatapoint,
@@ -35,7 +34,7 @@ from admet_ai.constants import (
     DRUGBANK_ATC_NAME_PREFIX,
     DRUGBANK_DELIMITER,
 )
-from admet_ai.physchem import compute_physicochemical_properties
+from admet_ai.physchem import compute_fingerprints, compute_physicochemical_properties
 
 
 class ADMETModel:
@@ -232,32 +231,9 @@ class ADMETModel:
             all_smiles=smiles, mols=mols
         )
 
-        # Compute fingerprints if needed
-        if self.use_features:
-            # Select between multiprocessing and single processing
-            if len(mols) >= self.fingerprint_multiprocessing_min:
-                pool = Pool()
-                map_fn = pool.imap
-            else:
-                pool = None
-                map_fn = map
-
-            # Compute fingerprints
-            fingerprints = np.array(
-                list(
-                    tqdm(
-                        map_fn(compute_rdkit_fingerprint, mols),
-                        total=len(mols),
-                        desc=f"RDKit fingerprints",
-                    )
-                )
-            )
-
-            # Close pool if needed
-            if pool is not None:
-                pool.close()
-        else:
-            fingerprints = [None] * len(smiles)
+        fingerprints = compute_fingerprints(
+            mols, self.use_features, self.fingerprint_multiprocessing_min
+        )
 
         # Build data loader
         data_loader = MoleculeDataLoader(
