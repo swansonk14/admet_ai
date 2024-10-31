@@ -1,8 +1,14 @@
 """ADMET-AI class to contain ADMET model and prediction function."""
+
 from collections import defaultdict
 from multiprocessing import Pool
 from pathlib import Path
 
+from admet_ai.drugbank import (
+    create_atc_code_mapping,
+    filter_drugbank_by_atc,
+    read_drugbank_data,
+)
 import numpy as np
 import pandas as pd
 import torch
@@ -79,34 +85,7 @@ class ADMETModel:
         self._atc_code = atc_code
 
         # Load DrugBank reference set if needed
-        if drugbank_path is not None:
-            # Load DrugBank DataFrame
-            self.drugbank = pd.read_csv(drugbank_path)
-
-            # Map ATC codes to all indices of the drugbank with that ATC code
-            atc_code_to_drugbank_indices = defaultdict(set)
-            for atc_column in [
-                column for column in self.drugbank.columns if column.startswith(DRUGBANK_ATC_NAME_PREFIX)
-            ]:
-                for index, atc_codes in self.drugbank[atc_column].dropna().items():
-                    for atc_code in atc_codes.split(DRUGBANK_DELIMITER):
-                        atc_code_to_drugbank_indices[atc_code.lower()].add(index)
-
-            # Save ATC code to indices mapping to global variable and convert set to sorted list
-            self.atc_code_to_drugbank_indices = {
-                atc_code: sorted(indices)
-                for atc_code, indices in atc_code_to_drugbank_indices.items()
-            }
-
-            # Filter DrugBank by ATC code if needed
-            if self.atc_code is not None:
-                self.drugbank_atc_filtered = self.drugbank.loc[
-                    self.atc_code_to_drugbank_indices[self.atc_code]
-                ]
-            else:
-                self.drugbank_atc_filtered = self.drugbank
-        else:
-            self.drugbank = self.drugbank_atc_filtered = None
+        self.drugbank = self._load_drugbank_data(drugbank_path)
 
         # Set caching
         set_cache_graph(self.cache_molecules)
@@ -161,6 +140,20 @@ class ADMETModel:
 
         self.use_features = self.use_features_list[0]
 
+    def _load_drugbank_data(self, drugbank_path):
+        """Load the drugbank data and map ATC codes to each drugbank index
+
+        Sets instance variables drugbank"""
+        if not drugbank_path:
+            self.drugbank = self.drugbank_atc_filtered = None
+            return
+
+        self.drugbank = read_drugbank_data(drugbank_path)
+
+        self.drugbank_atc_filtered = filter_drugbank_by_atc(
+            self.atc_code, self.drugbank
+        )
+
     @property
     def num_ensembles(self) -> int:
         """Get the number of ensembles."""
@@ -185,19 +178,15 @@ class ADMETModel:
             )
 
         # Validate ATC code
-        if atc_code is not None and atc_code not in self.atc_code_to_drugbank_indices:
+        if atc_code is not None and atc_code not in create_atc_code_mapping(
+            self.drugbank
+        ):
             raise ValueError(f"Invalid ATC code: {atc_code}")
 
         # Save ATC code
         self._atc_code = atc_code
 
-        # Filter DrugBank by ATC code if needed
-        if self.atc_code is not None:
-            self.drugbank_atc_filtered = self.drugbank.loc[
-                self.atc_code_to_drugbank_indices[self.atc_code]
-            ]
-        else:
-            self.drugbank_atc_filtered = self.drugbank
+        self.drugbank_atc_filtered = self._filter_drugbank_by_atc(atc_code)
 
     def predict(self, smiles: str | list[str]) -> dict[str, float] | pd.DataFrame:
         """Make predictions on a list of SMILES strings.
@@ -274,7 +263,10 @@ class ADMETModel:
         data_loader = MoleculeDataLoader(
             dataset=MoleculeDataset(
                 [
-                    MoleculeDatapoint(smiles=[smile], features=fingerprint,)
+                    MoleculeDatapoint(
+                        smiles=[smile],
+                        features=fingerprint,
+                    )
                     for smile, fingerprint in zip(smiles, fingerprints)
                 ]
             ),
