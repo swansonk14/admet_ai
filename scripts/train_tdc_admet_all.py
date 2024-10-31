@@ -1,4 +1,5 @@
 """Train Chemprop models on all the Therapeutics Data Commons (TDC) ADMET datasets"""
+
 import subprocess
 from pathlib import Path
 from typing import Literal
@@ -16,7 +17,7 @@ def train_tdc_admet_all(
     data_dir: Path,
     save_dir: Path,
     model_type: Literal["chemprop", "chemprop_rdkit"],
-    num_folds: int = 5,
+    num_replicates: int = 5,
 ) -> None:
     """Train Chemprop models on all the Therapeutics Data Commons (TDC) ADMET datasets.
 
@@ -34,27 +35,28 @@ def train_tdc_admet_all(
         dataset_type = DATASET_TO_TYPE[data_name]
 
         command = [
-            "chemprop_train",
-            "--data_path",
+            "chemprop",
+            "train",
+            "-i",
             str(data_path),
-            "--dataset_type",
+            "--task-type",
             dataset_type,
-            "--smiles_column",
+            "--smiles-column",
             ADMET_ALL_SMILES_COLUMN,
             *DATASET_TYPE_TO_METRICS_COMMAND_LINE[dataset_type],
-            "--num_folds",
-            str(num_folds),
-            "--save_dir",
+            "--num-replicates",
+            str(num_replicates),
+            "--save-dir",
             save_dir / model_type / data_name,
-            "--save_preds",
-            "--quiet",
+            # "--save_preds",
+            # "--quiet",
         ]
 
         if model_type == "chemprop_rdkit":
             command += [
-                "--features_path",
+                "--descriptors-path",
                 str(data_path.with_suffix(".npz")),
-                "--no_features_scaling",
+                "--no-descriptor-scaling",
             ]
 
         subprocess.run(command)
