@@ -1,4 +1,5 @@
 """Contains constants used for the Therapeutics Data Commons Data."""
+
 from tdc.single_pred import ADME, Tox
 from tdc.utils import retrieve_label_name_list
 
@@ -91,8 +92,8 @@ DATASET_TO_TYPE_LOWER = {
     dataset.lower(): dataset_type for dataset, dataset_type in DATASET_TO_TYPE.items()
 }
 DATASET_TYPE_TO_METRICS_COMMAND_LINE = {
-    "classification": ["--metric", "auc", "--extra_metrics", "prc-auc"],
-    "regression": ["--metric", "mae", "--extra_metrics", "r2"],
+    "classification": ["--metric", "binary-mcc"],
+    "regression": ["--metric", "mae"],
 }
 DATASET_TO_LABEL_NAMES = {
     "herg_central": ["hERG_inhib"],

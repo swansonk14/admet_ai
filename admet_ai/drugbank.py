@@ -1,4 +1,5 @@
 """Defines functions for the DrugBank approved reference set."""
+
 from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
@@ -30,24 +31,50 @@ def load_drugbank(drugbank_path: Path = DEFAULT_DRUGBANK_PATH) -> None:
     global DRUGBANK_DF, ATC_CODE_TO_DRUGBANK_INDICES
 
     # Load DrugBank DataFrame
-    DRUGBANK_DF = pd.read_csv(drugbank_path)
-
-    # Map ATC codes to all indices of the DRUGBANK_DF with that ATC code
-    atc_code_to_drugbank_indices = defaultdict(set)
-    for atc_column in [
-        column
-        for column in DRUGBANK_DF.columns
-        if column.startswith(DRUGBANK_ATC_NAME_PREFIX)
-    ]:
-        for index, atc_codes in DRUGBANK_DF[atc_column].dropna().items():
-            for atc_code in atc_codes.split(DRUGBANK_DELIMITER):
-                atc_code_to_drugbank_indices[atc_code.lower()].add(index)
+    DRUGBANK_DF = read_drugbank_data(drugbank_path)
 
     # Save ATC code to indices mapping to global variable and convert set to sorted list
-    ATC_CODE_TO_DRUGBANK_INDICES = {
+    ATC_CODE_TO_DRUGBANK_INDICES = create_atc_code_mapping(DRUGBANK_DF)
+
+
+def read_drugbank_data(drugbank_path: Path) -> pd.DataFrame:
+    """Load the drugbank data and returns a dataframe"""
+    if not drugbank_path.exists():
+        raise FileNotFoundError(
+            f"The path to the drugbank archive is not correct: {drugbank_path}"
+        )
+
+    drugbank = pd.read_csv(drugbank_path)
+    return drugbank
+
+
+def create_atc_code_mapping(drugbank: pd.DataFrame) -> dict:
+    """Map ATC codes to drugbank indices."""
+    atc_code_to_drugbank_indices = defaultdict(set)
+
+    # Map ATC codes to all indices of the drugbank with that ATC code
+    for column in drugbank.columns:
+        if column.startswith(DRUGBANK_ATC_NAME_PREFIX):
+            for idx, atc_codes in drugbank[column].dropna().items():
+                for atc_code in atc_codes.split(DRUGBANK_DELIMITER):
+                    atc_code_to_drugbank_indices[atc_code.lower()].add(idx)
+
+    return {
         atc_code: sorted(indices)
         for atc_code, indices in atc_code_to_drugbank_indices.items()
     }
+
+
+def filter_drugbank_by_atc(atc_code: str, drugbank: pd.DataFrame) -> pd.DataFrame:
+    """Filter DrugBank data by ATC code."""
+    if not atc_code:
+        return drugbank
+
+    atc_code_to_drugbank_indices = create_atc_code_mapping(drugbank)
+
+    if atc_code not in atc_code_to_drugbank_indices:
+        raise ValueError(f"Invalid ATC code: {atc_code}")
+    return drugbank.loc[atc_code_to_drugbank_indices[atc_code]]
 
 
 def get_drugbank(atc_code: str | None = None) -> pd.DataFrame:

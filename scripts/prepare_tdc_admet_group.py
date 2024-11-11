@@ -1,4 +1,5 @@
 """Download and prepare the Therapeutics Data Commons (TDC) ADMET Benchmark Group datasets."""
+
 from pathlib import Path
 
 import pandas as pd
@@ -24,15 +25,51 @@ def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
 
     # Download/access the ADMET group
     raw_data_dir.mkdir(parents=True, exist_ok=True)
+    save_dir.mkdir(parents=True, exist_ok=True)
+
     group = admet_group(path=raw_data_dir)
 
     # Create list of dataset stats
     dataset_stats = []
+    all_data = []
 
     # Prepare each dataset
     for data_name in tqdm(data_names):
         # Load dataset
         benchmark = group.get(data_name)
+
+        # Add split labels to each row in train_val and test sets
+        train_val_data = benchmark["train_val"].copy()
+        test_data = benchmark["test"].copy()
+        train_val_data["split"] = "train"  # Start with train, adjust later for val
+        test_data["split"] = "test"
+
+        # Split train_val into 5-fold CV
+        for seed in ADMET_GROUP_SEEDS:
+
+            dataset_dir = save_dir / data_name / str(seed)
+            dataset_dir.mkdir(parents=True, exist_ok=True)
+            # Get train and val split
+            train, valid = group.get_train_valid_split(
+                benchmark=benchmark["name"], split_type="default", seed=seed
+            )
+
+            # Assign 'train' and 'val' to corresponding rows
+            train_val_data.loc[train.index, "split"] = "train"
+            train_val_data.loc[valid.index, "split"] = "val"
+
+            # Combine train_val and test into a single dataset
+            combined_data = pd.concat([train_val_data, test_data]).reset_index(
+                drop=True
+            )
+
+            # Add dataset name and seed for reference
+            combined_data["dataset"] = data_name
+            combined_data["seed"] = seed
+            combined_data.to_csv(dataset_dir / "data.csv", index=False)
+
+            # Append combined dataset to all_data
+            all_data.append(combined_data)
 
         # Create a single dataset for computing statistics
         data = pd.concat((benchmark["train_val"], benchmark["test"]))
@@ -56,37 +93,6 @@ def prepare_tdc_admet_group(raw_data_dir: Path, save_dir: Path) -> None:
             }
         )
 
-        # Get name
-        name = benchmark["name"]
-
-        # Make data directory
-        benchmark_dir = save_dir / name
-        benchmark_dir.mkdir(parents=True, exist_ok=True)
-
-        # Split data into train_val and test
-        train_val, test = benchmark["train_val"], benchmark["test"]
-
-        # Save test data
-        test.to_csv(benchmark_dir / "test.csv")
-
-        # Split train_val into 5-fold CV
-        for seed in ADMET_GROUP_SEEDS:
-            # Split train_val into train and val
-            train, valid = group.get_train_valid_split(
-                benchmark=name, split_type="default", seed=seed
-            )
-
-            # Make seed directory
-            seed_dir = benchmark_dir / str(seed)
-            seed_dir.mkdir(parents=True, exist_ok=True)
-
-            # Save train and val data
-            train.to_csv(seed_dir / "train.csv")
-            valid.to_csv(seed_dir / "val.csv")
-
-    # Print dataset stats
-    dataset_stats = pd.DataFrame(dataset_stats).set_index("name")
-    pd.set_option("display.max_rows", None)
     print(dataset_stats)
 
 

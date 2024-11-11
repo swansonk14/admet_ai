@@ -1,5 +1,5 @@
 chemfunc==1.0.4
-chemprop==1.6.1
+chemprop==2.1.0
 flask==3.0.0
 gunicorn==21.2.0
 numpy==1.25.2
