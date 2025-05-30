@@ -33,10 +33,11 @@ setup(
     },
     install_requires=[
         "chemfunc>=1.0.4",
-        "chemprop==1.6.1",
-        "numpy",
-        "pandas>=2.0.0,<2.2.0",  # remove this limit once rdkit implements a fix to PandasTools
-        "rdkit>=2023.3.3",
+        "chemprop<2.0",
+        "numpy<2.0",
+        "pandas",
+        "rdkit>=2025",
+        "torch<2.6",
         "seaborn",
         "tqdm",
         "typed-argument-parser>=1.9.0",
@@ -45,7 +46,7 @@ setup(
         "tdc": ["openpyxl", "PyTDC>=0.4.1"],
         "web": ["flask", "gunicorn"],
     },
-    python_requires=">=3.10",
+    python_requires=">=3.12",
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.10",
