@@ -58,7 +58,12 @@ admet_web = "admet_ai.web.run:admet_web"
 packages = { find = {} }
 
 [tool.setuptools.package-data]
-admet_ai = ["py.typed", "resources/**/*"]
+admet_ai = [
+  "py.typed",
+  "resources/**/*",
+  "web/app/templates/**/*",
+  "web/app/static/**/*"
+]
 
 [tool.black]
 line-length = 121

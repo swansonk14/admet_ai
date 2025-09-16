@@ -17,7 +17,7 @@ USER $MAMBA_USER
 
 # Create a new conda environment named "base"
 # Then, clean up the micromamba cache and other unnecessary files
-RUN micromamba install -y -n base -c conda-forge python=3.10 xorg-libxrender && \
+RUN micromamba install -y -n base -c conda-forge python=3.12 xorg-libxrender && \
     micromamba clean --all --yes
 
 # Copy the current directory from the host to the container's "/opt/admet_ai" directory
