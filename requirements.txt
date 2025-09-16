@@ -8,5 +8,6 @@ pandas==2.1.0
 PyTDC==0.4.1
 rdkit==2023.3.3
 seaborn==0.13.0
+torch==2.5.0
 tqdm==4.66.1
 typed-argument-parser==1.9.0

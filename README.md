@@ -33,7 +33,7 @@ a GPU is available, it will be used by default, but the code can also run on CPU
 Optionally, create a conda environment.
 
 ```bash
-conda create -y -n admet_ai python=3.10
+conda create -y -n admet_ai python=3.12
 conda activate admet_ai
 ```
 

@@ -12,7 +12,7 @@ from flask import (
     session,
 )
 
-from admet_ai._version import __version__
+from admet_ai import __version__
 from admet_ai.admet_info import get_admet_info
 from admet_ai.drugbank import (
     get_drugbank,

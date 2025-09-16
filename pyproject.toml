@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "admet_ai"
+dynamic = ["version"]
+description = "ADMET-AI"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = "MIT"
+license-files = [ "LICENSE.txt" ]
+authors = [
+    { name = "Kyle Swanson", email = "swansonk.14@gmail.com" }
+]
+maintainers = [
+    { name = "Kyle Swanson", email = "swansonk.14@gmail.com" }
+]
+keywords = [
+    "machine learning",
+    "drug design",
+    "ADMET",
+    "molecular property prediction",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+dependencies = [
+    "chemfunc>=1.0.4",
+    "chemprop==1.6.1",
+    "numpy",
+    "pandas>=2.0.0,<2.2.0",
+    "rdkit>=2023.3.3",
+    "seaborn",
+    "torch==2.5.0",
+    "tqdm",
+    "typed-argument-parser>=1.9.0",
+]
+
+[project.optional-dependencies]
+tdc = ["openpyxl", "PyTDC>=0.4.1"]
+web = ["flask", "gunicorn"]
+
+[project.urls]
+Homepage = "https://github.com/swansonk14/admet_ai"
+Issues = "https://github.com/swansonk14/admet_ai/issues"
+
+[project.scripts]
+admet_predict = "admet_ai.admet_predict:admet_predict_command_line"
+admet_web = "admet_ai.web.run:admet_web"
+
+[tool.setuptools]
+packages = { find = {} }
+
+[tool.setuptools.package-data]
+admet_ai = ["py.typed", "resources/**/*"]
+
+[tool.black]
+line-length = 121
+
+[tool.setuptools.dynamic]
+version = { attr = "admet_ai.__version__" }
